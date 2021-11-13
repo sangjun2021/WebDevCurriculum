@@ -1,20 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 	<head>
 		<meta charset="UTF-8">
-		<!-- TODO: 또 무엇이 필요할까요? -->
+		<meta http-equiv="content-language" content="ko">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="describe" content="네이버 메인 페이지로 검색창과 날씨등 다양한 정보를 제공하는 페이지입니다.">
+		<meta name="keywords" content="네이버,naver,Naver,네이버메인,포털">
+		<title>Naver</title>
 	</head>
 	<body>
 		<header>
-			<!-- TODO: 어디까지를 header로 보는 것이 좋을까요? -->
+			<button>더보기</button>
+			<nav>
+				<ul>
+					<li>
+						<a href="">QR체크인 바로가기</a>
+						<a href="">네이버 페이 바로가기</a>
+						<a href="">메일 바로가기</a>
+					</li>
+				</ul>
+			</nav>
+			<h1>Naver</h1>
+				<form action="">
+				<input type="text" placeholder="검색어를 입력해주세요">
+				<button>
+					<img src="" alt="검색">
+				</button>
+				<button>
+					<img src="" alt="사진검색">
+				</button>
+				<button>
+					<img src="" alt="위치검색">
+				</button>
+			</form>
+			<nav>
+				<ul>
+					<li>
+						<a href="">
+							<img src="" alt="신문 모양">
+						</a>
+						<span>뉴스판</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="우상향 차트 그래프">
+						</a>
+						<span>경제 지표판</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="핑크 별모양">
+						</a>
+						<span>연예판</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="하트모양">
+						</a>
+						<span>트랜드판</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="네이버 메일 모양">
+						</a>
+						<span>메일</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="네이버 카페 모양">
+						</a>
+						<span>카페</span>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="네이버 블로그 모양">
+						</a>
+						<span>블로그</span>
+					</li>
+					<li>
+						<button>
+							<img src="" alt="더보기...">
+						</button>
+					</li>
+				</ul>
+			</nav>
 		</header>
 
 		<section class="main">
-			<!-- TODO: main은 어떤 식으로 나눌 수 있을까요? -->
+			<section>
+				<div>
+				<img src="" alt="초승달">
+				<span>10º 맑음</span>
+				<span>어제보다 2º 높아요</span>
+			</div>
+			<div>
+				<div>
+				<img src="" alt="now. 로고">
+				<span>지금 방송중</span>
+				</div>
+				<ul>
+					<li>
+						<a href="">
+							<img src="" alt="광고이미지">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="광고이미지">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="" alt="광고이미지">
+						</a>
+					</li>
+				</ul>
+			</div>
+			</section>
+			<section>
+				<div>
+					<div>
+					<h2>날씨</h2>
+					<span>
+						서울시 잠실동
+						<img src="" alt="스코프">
+					</span>
+				</div>
+				<div>
+					<button>
+						<img src="" alt="upper-arrow">
+					</button>
+				</div>
+				</div>
+				<div>
+					<form>
+						<h3>
+							<label for="hourlyWeather">시간대별 날씨</label>
+						</h3>
+						<input type="radio" id="hourlyWeather" name="weather-select" value="hourlyWeather">
+						<h3>
+							<label for="hourlyFineDust">시간대별 미세먼지</label>
+						</h3>
+					<input type="radio" id="hourlyFineDust" name="weather-select" value="hourlyFineDust">
+					  <h3>
+						<label for="weeklyWeather">주간 날씨</label>
+					</h3>
+					<input type="radio" id="weeklyWeather" name="weather-select" value="weeklyWeather" checked="true">
+					  <h3>
+						<label for="weeklyFineDust">주간 미세먼지</label>
+					</h3>
+					<input type="radio" id="weeklyFineDust" name="weather-select" value="weeklyFineDust">
+					</form>
+					<ol>
+						<li>
+							<div>
+								<h4>어제</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>8º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>19º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>오늘</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>7º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>22º</span>
+							</div>
+
+						</li>
+						<li>
+							<div>
+								<h4>월</h4>
+								<div>
+									<img src="" alt="비오는날씨,비구름">
+								</div>
+								<span>11º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>17º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>화</h4>
+								<div>
+									<img src="" alt="비오는날씨,비구름">
+								</div>
+								<span>12º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>18º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>수</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>4º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>7º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>목</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>4º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>19º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>금</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>6º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>19º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>토</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>8º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>19º</span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<h4>일</h4>
+								<div>
+									<img src="" alt="맑은날씨,해">
+								</div>
+								<span>6º</span>
+								<img src="" alt="최저온도와 최고온도의 온도차를 보여주는 회색 선">
+								<span>18º</span>
+							</div>
+						</li>
+					</ol>
+				</div>
+			</section>
+			<section>
+				<div>
+					<a href="">
+						<img src="" alt="파란원에 빨간색 사선">
+						<span>코로나 19</span>
+						<span>국내외 확진 현황</span>
+					</a>
+				</div>
+				<div>
+					<a href="">
+						<img src="" alt="o,x로 나뉜 원">
+						<span>코로나 19 펙트체크</span>
+						<span>백신 정보 팩트는?</span>
+					</a>
+				</div>
+			</section>
+			<section>
+				<a href="">
+					<img src="" alt="제102년 대한민국 임시정부 수립일">
+				</a>
+			</section>
+			<section>
+				<img src="" alt="네이버 로고">
+				<span> 앱으로 <strong>새로운 네이버</strong>를 더 쾌적하게 사용해 보세요.</span>
+				<button>앱 사용하기</button>
+			</section>
+			<section>
+				<h2>웹툰</h2>
+				<button>
+					<img src="" alt="down-arrow">
+				</button>
+			</section>
+			<section>
+				<div>
+					<h2>인기 주제 판을 확인해 보세요!</h2>
+					<span>판관리</span>
+				</div>
+				<ul>
+					<li>
+						<a href="">
+							<span>
+								<img src="" alt="영화 필름">
+								<span>영화판</span>
+							</span>
+							<img src="" alt="right-arrow">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<span>
+								<img src="" alt="뿜 채팅 메세지">
+								<span>뿜판</span>
+							</span>
+							<img src="" alt="right-arrow">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<span>
+								<img src="" alt="네이버 웹툰로고">
+								<span>웹툰판</span>
+							</span>
+							<img src="" alt="right-arrow">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<span>
+								<img src="" alt="우상향 차트 와 화살표">
+								<span>경제M판</span>
+							</span>
+							<img src="" alt="right-arrow">
+						</a>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<div>
+				<span>알립니다.</span>
+				<h3>네이버앱 업데이트 사전  안내</h3>
+				</div>
+				<a href="">
+					<img src="" alt="right-arrow">
+				</a>
+			</section>
 		</section>
 
 		<footer>
-			<!-- TODO: 하단의 여러 가지 링크들은 어떻게 처리하면 좋을까요? -->
+			<nav>
+				<ul>
+					<li>
+						<h5><a href="">로그인</a></h5>
+					</li>
+					<li>
+						<h5><a href="">전체서비스</a></h5>
+					</li>
+					<li>
+						<h5><a href="">PC버전</a></h5>
+					</li>
+					<li>
+						<h5><a href="">이용약관</a></h5>
+					</li>
+					<li>
+						<h4><a href="">개인정보처리방침</a></h4>
+					</li>
+				</ul>
+				<h3><a href="">Naver</a></h3>
+			</nav>
 		</footer>
 	</body>
 </html>

@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header>
-			<div class="header-top">
+			<div class="header__top">
 				<button>
 					<img src="https://cdn-icons.flaticon.com/png/512/4254/premium/4254068.png?token=exp=1637053370~hmac=e42ea88c091be74dbf26e84a633a8c8c" alt="메뉴바">
 				</button>
@@ -30,7 +30,7 @@
 					</ul>
 				</nav>
 			</div>
-			<div class="header-middle">
+			<div class="header__middle">
 				<h1>NAVER</h1>
 					<form class="search-container">
 					<input type="text" placeholder="검색어를 입력해주세요" />
@@ -45,7 +45,7 @@
 					</button>
 				</form>
 			</div>
-			<nav class="header-bottom">
+			<nav class="header__bottom">
 				<ul>
 					<li>
 						<a href="">
@@ -99,73 +99,74 @@
 		</header>
 
 		<section class="main">
-			<section>
+			<section class="main__summary">
 				<div>
-				<img src="" alt="초승달" />
-				<span>10º 맑음</span>
-				<span>어제보다 2º 높아요</span>
+				<img src="https://cdn-icons.flaticon.com/png/512/2021/premium/2021391.png?token=exp=1637070551~hmac=55316282f77f0c171fe0b2ea5c7ebcd0" alt="초승달" />
+				<div class="weather-now-summary">
+					<span class="weather-now">10º 맑음</span>
+					<span class="weather-compare">어제보다 2º 높아요</span>
+				</div>
 			</div>
 			<div>
-				<div>
-				<img src="" alt="now. 로고" />
+				<div class="now-broadcast">
+				<img src="https://cdn-icons-png.flaticon.com/128/5307/5307535.png" alt="now. 로고" />
 				<span>지금 방송중</span>
 				</div>
-				<ul>
+				<ul class="ad-image">
 					<li>
 						<a href="">
-							<img src="" alt="광고이미지" />
+							<img src="https://cdn-icons-png.flaticon.com/128/3487/3487026.png" alt="광고이미지" />
 						</a>
 					</li>
 					<li>
 						<a href="">
-							<img src="" alt="광고이미지" />
+							<img src="https://cdn-icons.flaticon.com/png/128/2888/premium/2888415.png?token=exp=1637071938~hmac=220dc2396aa24fd77fe87b258320141f" alt="광고이미지" />
 						</a>
 					</li>
 					<li>
 						<a href="">
-							<img src="" alt="광고이미지" />
+							<img src="https://cdn-icons-png.flaticon.com/128/4660/4660421.png" alt="광고이미지" />
 						</a>
 					</li>
 				</ul>
 			</div>
 			</section>
-			<section>
-				<div>
+			<section class="main__weather">
+
+				<div class="main__weather__header">
 					<div>
-					<h2>날씨</h2>
-					<span>
-						서울시 잠실동
-						<img src="" alt="스코프" />
-					</span>
-				</div>
-				<div>
+						<h2>날씨</h2>
+						<span>
+							서울시 잠실동
+							<img src="https://cdn-icons-png.flaticon.com/512/149/149231.png" alt="스코프" />
+						</span>
+					</div>
 					<button>
-						<img src="" alt="upper-arrow" />
+						<img src="https://cdn-icons.flaticon.com/png/512/3385/premium/3385656.png?token=exp=1637073431~hmac=9934fc9b32913b59dcd78f9ad8bcfa33" alt="upper-arrow" />
 					</button>
 				</div>
-				</div>
 				<div>
-					<form>
+					<div class="weather-select-container">
+						<input type="radio" id="hourlyWeather" name="weather-select" value="hourlyWeather" />
 						<h3>
 							<label for="hourlyWeather">시간대별 날씨</label>
 						</h3>
-						<input type="radio" id="hourlyWeather" name="weather-select" value="hourlyWeather" />
+						<input type="radio" id="hourlyFineDust" name="weather-select" value="hourlyFineDust" />
 						<h3>
 							<label for="hourlyFineDust">시간대별 미세먼지</label>
 						</h3>
-					<input type="radio" id="hourlyFineDust" name="weather-select" value="hourlyFineDust" />
+						<input type="radio" id="weeklyWeather" name="weather-select" value="weeklyWeather" checked="true" />
 					  <h3>
-						<label for="weeklyWeather">주간 날씨</label>
-					</h3>
-					<input type="radio" id="weeklyWeather" name="weather-select" value="weeklyWeather" checked="true" />
+							<label for="weeklyWeather">주간 날씨</label>
+						</h3>
+						<input type="radio" id="weeklyFineDust" name="weather-select" value="weeklyFineDust" />
 					  <h3>
-						<label for="weeklyFineDust">주간 미세먼지</label>
-					</h3>
-					<input type="radio" id="weeklyFineDust" name="weather-select" value="weeklyFineDust" />
-					</form>
+							<label for="weeklyFineDust">주간 미세먼지</label>
+						</h3>
+					</div>
 					<ol>
 						<li>
-							<div>
+							<div class="weather-list">
 								<h4>어제</h4>
 								<div>
 									<img src="" alt="맑은날씨,해" />

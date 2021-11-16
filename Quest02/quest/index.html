@@ -7,42 +7,49 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="describe" content="네이버 메인 페이지로 검색창과 날씨등 다양한 정보를 제공하는 페이지입니다." />
 		<meta name="keywords" content="네이버,naver,Naver,네이버메인,포털" />
+		<link rel="stylesheet" href="./index.css">
 		<title>Naver</title>
 	</head>
 	<body>
 		<header>
-			<button>
-				<span class="material-icons-outlined">
-					reorder
-					</span>
-			</button>
-			<nav>
-				<ul>
-					<li>
-						<a href="">QR체크인 바로가기</a>
-						<a href="">네이버 페이 바로가기</a>
-						<a href="">메일 바로가기</a>
-					</li>
-				</ul>
-			</nav>
-			<h1>Naver</h1>
-				<form action="">
-				<input type="text" placeholder="검색어를 입력해주세요" />
+			<div class="header-top">
 				<button>
-					<img src="" alt="검색" />
+					<img src="https://cdn-icons.flaticon.com/png/512/4254/premium/4254068.png?token=exp=1637053370~hmac=e42ea88c091be74dbf26e84a633a8c8c" alt="메뉴바">
 				</button>
-				<button>
-					<img src="" alt="사진검색" />
-				</button>
-				<button>
-					<img src="" alt="위치검색" />
-				</button>
-			</form>
-			<nav>
+				<nav>
+					<ul>
+						<li>
+							<a href="">QR체크인</a>
+						</li>
+						<li>
+							<a href="">네이버페이</a>
+						</li>
+						<li>
+							<a href="">메일</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div class="header-middle">
+				<h1>NAVER</h1>
+					<form class="search-container">
+					<input type="text" placeholder="검색어를 입력해주세요" />
+					<button>
+						<img src="https://cdn-icons-png.flaticon.com/512/4675/4675109.png" alt="음성검색" />
+					</button>
+					<button>
+						<img src="https://cdn-icons-png.flaticon.com/512/711/711191.png" alt="사진검색" />
+					</button>
+					<button>
+						<img src="https://cdn-icons.flaticon.com/png/512/450/premium/450016.png?token=exp=1637056021~hmac=3da0281a4e5a874cfcdfe08946b48c8c" alt="위치검색" />
+					</button>
+				</form>
+			</div>
+			<nav class="header-bottom">
 				<ul>
 					<li>
 						<a href="">
-							<img src="" alt="신문 모양" />
+							<img src="https://cdn-icons.flaticon.com/png/512/3055/premium/3055871.png?token=exp=1637056954~hmac=fb877cfab0cb107a2b0ff1a66de2001a" alt="신문 모양" />
 						</a>
 						<span>뉴스판</span>
 					</li>

@@ -7,7 +7,10 @@ header{
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom : 200px;
+  margin-bottom : 150px;
+}
+ul, li {
+  padding-left: 0;
 }
 img {
   width : 100%;
@@ -105,17 +108,27 @@ img {
   margin : 24px auto;
   display: grid;
   grid-template-columns: repeat(4,1fr);
-  grid-template-rows: repeat(2,1fr);
+  grid-template-rows: repeat(2,80px);
   gap : 16px 0;
 }
 .header-bottom  li {
   width : 60px;
   height: 60px;
-  background-color: rgb(242,245,247);
-  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   list-style: none;
 }
-
+.header-bottom a,.header-bottom button {
+  border : none;
+  background-color: rgb(242,245,247);
+  border-radius: 24px;
+  padding : 12px;
+}
+.header-bottom img {
+  width : 30px;
+  height :30px;
+}
 .main {
   margin : 0 auto;
   min-width : 500px;

@@ -10,7 +10,7 @@ header{
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom : 150px;
+  margin-bottom : 100px;
 }
 ol, ul, li {
   padding-left: 0;
@@ -41,6 +41,7 @@ img {
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
+  margin-right: 16px;
 }
 .header__top ul {
   display: flex;
@@ -52,6 +53,9 @@ img {
   border-radius:  16px;
   padding : 8px;
   margin-right : 4px;
+}
+.header__top li:hover {
+  background-color: rgb(213, 215, 218);
 }
 .header__top a {
   text-decoration: none;
@@ -125,7 +129,7 @@ img {
 }
 .header__bottom a,.header__bottom button {
   border : none;
-  background-color: rgb(242,245,247);
+  background-color: rgb(248,250,252);
   border-radius: 24px;
   padding : 12px;
 }
@@ -250,6 +254,9 @@ img {
   margin-right : 8px;
   cursor: pointer;
 }
+.weather-select-container label {
+  cursor: pointer;
+}
 .weather-select-container > input {
   display: none;
 }
@@ -271,8 +278,139 @@ img {
   flex-direction: column-reverse;
   align-items: center;
 }
+.weather-list > li span {
+  margin : 8px 0;
+}
 
 .weather-icon {
-  width : 30px;
-  height: 30px;
+  width : 32px;
+  height: 32px;
+}
+
+.corona-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.corona-info > a {
+  padding-left: 8px;
+  flex-grow: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+
+  text-decoration: none;
+  color : gray;
+}
+.corona-info img {
+  width : 24px;
+  height: 24px;
+}
+.corona-info > a > span:nth-child(1) {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  color: black;
+}
+.corona-info a:nth-child(2) {
+  border-left : 2px solid rgb(241, 243, 252);
+}
+
+.main__app {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.main__app > div {
+  display: flex;
+  align-items: center;
+}
+.main__app img {
+width : 30px;
+height: 30px;
+}
+
+.main__app button {
+background: none;
+border-radius: 4px;
+color : rgb(101,166,227);
+border: 1px solid;
+}
+.main__webtoon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main__webtoon button{
+  width : 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  padding : 0;
+}
+
+.main__pan {
+  display: flex;
+  flex-direction: column;
+}
+
+.main__pan > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main__pan > ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2,50px);
+  gap: 8px;
+}
+.main__pan li {
+  background-color: rgb(244,246,248);
+  display: flex;
+  align-items: center;
+}
+.main__pan a{
+  width : 100%;
+  display: flex;
+  color : black;
+  text-decoration: none;
+  justify-content: space-between;
+  align-items: center;
+}
+.main__pan span {
+  display: flex;
+  align-items: center;
+}
+.main__pan img {
+  margin-right: 4px;
+  width : 24px;
+  height: 24px;
+}
+
+.arrow {
+  width : 8px;
+  height: 8px;
+}
+
+.main__notification {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main__notification > div {
+  display: flex;
+  align-items: center;
+}
+
+.alarm {
+  color : rgb(0, 197, 73);
+  border-radius: 16px;
+  font-weight: bold;
+  border : 1px solid;
+  padding : 8px;
+  margin-right: 8px;
 }

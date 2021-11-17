@@ -414,3 +414,34 @@ border: 1px solid;
   padding : 8px;
   margin-right: 8px;
 }
+
+footer nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer ul {
+  margin : 0;
+  display: flex;
+  justify-content: center;
+}
+footer li {
+  display: flex;
+  justify-content: center;
+}
+footer h5,h4 {
+  margin : 4px 0;
+}
+footer a {
+  padding: 0 4px;
+  border-right: 1px solid;
+  color : rgb(183,188,198);
+  text-decoration: none;
+}
+footer > nav > ul > li:nth-child(3) a {
+  border: none;
+}
+footer h3 > a {
+  border: none;
+}

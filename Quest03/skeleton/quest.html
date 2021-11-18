@@ -34,21 +34,22 @@
 		</section>
 
 		<script>
-			let row1Squares = document.querySelectorAll('.row1 .square');
-			for(let node of row1Squares) {
-				node.addEventListener('click',(e)=>{
-					const bodyStyle = document.body.style;
+			var row1Squares = document.querySelectorAll('.row1 .square');
+			for(var node of row1Squares) {
+				(function(dom){
+					dom.addEventListener('click',(e)=>{
+					var bodyStyle = document.body.style;
 					if(bodyStyle.backgroundColor === "yellow") bodyStyle.backgroundColor = "white";
 					else bodyStyle.backgroundColor = "yellow";
-					
-				})
+				})})(node)
 			}
 
-			let row2Squares = document.querySelectorAll('.row2 .square');
-			for(let node of row2Squares) {
-				node.addEventListener('click',(e)=>{
+			var row2Squares = document.querySelectorAll('.row2 .square');
+			for(var node of row2Squares) {
+				(function(dom){
+				dom.addEventListener('click',(e)=>{
 					e.target.classList.toggle('enabled');
-				})
+				})})(node)
 			}
 		</script>
 	</body>

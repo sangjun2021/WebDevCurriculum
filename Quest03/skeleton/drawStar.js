@@ -23,7 +23,7 @@ function drawTree(array,n){
 function star(){
   const nString = prompt('삼각형의 높이를 알려주세요.');
   const n = parseInt(nString);
-  if(isNaN(n) || n < 0){
+  if(isNaN(nString) || n < 0){
     const askAgain = confirm('공백또는 문자를 입력하면 안됩니다. 다시 입력하시겠습니까?')
     if(askAgain){
       return star();

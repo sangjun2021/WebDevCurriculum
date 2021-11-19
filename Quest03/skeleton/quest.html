@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<style>
-			.square {
-				width: 100px;
-				height: 100px;
-				border: 1px dashed black;
-				display: inline-block;
-				margin: 20px;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      .square {
+        width: 100px;
+        height: 100px;
+        border: 1px dashed black;
+        display: inline-block;
+        margin: 20px;
+      }
 
-			.enabled {
-				background-color: limegreen;
-				border: 1px solid black;
-			}
-		</style>
-		<script src="./drawStar.js"></script>
-	</head>
-	<body>
-		<section class="row1">
-			<div class="square"></div>
-			<div class="square"></div>
-			<div class="square"></div>
-			<div class="square"></div>
-		</section>
+      .enabled {
+        background-color: limegreen;
+        border: 1px solid black;
+      }
+    </style>
+    <script src="./drawStar.js"></script>
+  </head>
+  <body>
+    <section class="row1">
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+    </section>
 
-		<section class="row2">
-			<div class="square"></div>
-			<div class="square"></div>
-			<div class="square"></div>
-			<div class="square"></div>
-		</section>
+    <section class="row2">
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+      <div class="square"></div>
+    </section>
 
-		<script>
-			var row1Squares = document.querySelectorAll('.row1 .square');
-			for(var node of row1Squares) {
-				(function(dom){
-					dom.addEventListener('click',(e)=>{
-					var bodyStyle = document.body.style;
-					if(bodyStyle.backgroundColor === "yellow") bodyStyle.backgroundColor = "white";
-					else bodyStyle.backgroundColor = "yellow";
-				})})(node)
-			}
+    <script>
+      var row1Squares = document.querySelectorAll(".row1 .square");
+      (function () {
+        for (var i = 0; i < row1Squares.length; i++) {
+          (function (dom) {
+            dom.addEventListener("click", (e) => {
+              var bodyStyle = document.body.style;
+              if (bodyStyle.backgroundColor === "yellow")
+                bodyStyle.backgroundColor = "white";
+              else bodyStyle.backgroundColor = "yellow";
+            });
+          })(row1Squares[i]);
+        }
+      })();
 
-			var row2Squares = document.querySelectorAll('.row2 .square');
-			for(var i = 0; i < row2Squares.length; i++) {
-				(function(dom){
-				dom.addEventListener('click',(e)=>{
-					e.target.classList.toggle('enabled');
-				})})(row2Squares[i])
-			}
-		</script>
-	</body>
+      var row2Squares = document.querySelectorAll(".row2 .square");
+      (function () {
+        for (var i = 0; i < row2Squares.length; i++) {
+          (function (dom) {
+            dom.addEventListener("click", (e) => {
+              e.target.classList.toggle("enabled");
+            });
+          })(row2Squares[i]);
+        }
+      })();
+    </script>
+  </body>
 </html>

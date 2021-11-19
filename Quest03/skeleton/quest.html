@@ -53,7 +53,12 @@
         for (var i = 0; i < row2Squares.length; i++) {
           (function (dom) {
             dom.addEventListener("click", (e) => {
-              e.target.classList.toggle("enabled");
+              if (e.target.className.indexOf("enabled") !== -1) {
+                var nextClassName = e.target.className.replace("enabled", "");
+                e.target.className = nextClassName;
+              } else {
+                e.target.className += " enabled";
+              }
             });
           })(row2Squares[i]);
         }

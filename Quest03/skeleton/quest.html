@@ -45,11 +45,11 @@
 			}
 
 			var row2Squares = document.querySelectorAll('.row2 .square');
-			for(var node of row2Squares) {
+			for(var i = 0; i < row2Squares.length; i++) {
 				(function(dom){
 				dom.addEventListener('click',(e)=>{
 					e.target.classList.toggle('enabled');
-				})})(node)
+				})})(row2Squares[i])
 			}
 		</script>
 	</body>

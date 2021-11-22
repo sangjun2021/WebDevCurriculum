@@ -1,1 +1,32 @@
 /* TODO: 자유롭게 바탕화면 시스템의 CSS를 만들어 보세요! */
+.desktop {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.icon {
+  width: 100px;
+  height: 100px;
+  color: white;
+  background-color: red;
+  border: 1px solid;
+}
+
+.folder {
+  width: 100px;
+  height: 100px;
+  color: white;
+  background-color: orange;
+  border: 1px solid;
+}
+
+.window {
+  background: blanchedalmond;
+  width: 700px;
+  height: 700px;
+  border: 3px solid;
+  position: absolute;
+  display: flex;
+  z-index: 1;
+}

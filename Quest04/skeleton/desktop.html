@@ -9,32 +9,61 @@
     <section class="desktop"></section>
 
     <script>
+      const dummyData = [
+        {
+          type: "folder",
+          name: "폴더1",
+          children: [
+            {
+              type: "icon",
+              name: "아이콘1",
+            },
+            {
+              type: "folder",
+              name: "폴더3",
+              children: [
+                {
+                  type: "icon",
+                  name: "아이콘5",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "folder",
+          name: "폴더2",
+          children: [
+            {
+              type: "icon",
+              name: "아이콘1",
+            },
+            {
+              type: "icon",
+              name: "아이콘2",
+            },
+            {
+              type: "icon",
+              name: "아이콘3",
+            },
+          ],
+        },
+        {
+          type: "icon",
+          name: "아이콘1",
+        },
+        {
+          type: "icon",
+          name: "아이콘2",
+        },
+        {
+          type: "icon",
+          name: "아이콘3",
+        },
+      ];
       let myDesktop = new Desktop({
         targetElement: document.querySelector(".desktop"),
-        children: [
-          {
-            type: "folder",
-            name: "폴더1",
-            children: [
-              {
-                type: "icon",
-                name: "아이콘1",
-              },
-            ],
-          },
-          {
-            type: "icon",
-            name: "아이콘1",
-          },
-          {
-            type: "icon",
-            name: "아이콘2",
-          },
-          {
-            type: "icon",
-            name: "아이콘3",
-          },
-        ],
+        children: dummyData,
       });
       myDesktop.renderChild(myDesktop.targetElement);
     </script>

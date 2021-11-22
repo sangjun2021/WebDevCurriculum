@@ -43,6 +43,7 @@ class Window {
   addDragEvent() {
     this.element.addEventListener("mousedown", (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.mouseOffset = {
         x: e.target.offsetLeft - e.clientX,
         y: e.target.offsetTop - e.clientY,
@@ -52,6 +53,7 @@ class Window {
     });
     this.element.addEventListener("mousemove", (e) => {
       e.preventDefault();
+      e.stopPropagation();
       if (!this.draggable) return;
       e.target.style.position = "absolute";
       const newLocationX = e.clientX + this.mouseOffset.x + "px";
@@ -84,9 +86,6 @@ class Folder extends Window {
   constructor({ targetElement, children, name }) {
     super({ targetElement, children, name });
     this.isOpen = false;
-  }
-  render() {
-    super.render();
   }
   doubleClick() {
     this.element.addEventListener("dblclick", () => {

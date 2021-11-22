@@ -10,6 +10,14 @@ class Window {
       y: 0,
     };
   }
+  makeCloseButton() {
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "x";
+    this.element.appendChild(closeButton);
+    closeButton.onclick = () => {
+      this.targetElement.removeChild(this.element);
+    };
+  }
   renderChild(targetElement) {
     this.children.forEach((child) => {
       switch (child.type) {
@@ -86,9 +94,14 @@ class Folder extends Window {
   constructor({ targetElement, children, name }) {
     super({ targetElement, children, name });
     this.isOpen = false;
+    this.openedFolder = null;
   }
   doubleClick() {
     this.element.addEventListener("dblclick", () => {
+      if (this.isOpen && this.openedFolder) {
+        this.targetElement.appendChild(this.openedFolder);
+        return;
+      }
       if (this.isOpen) return;
       const newWindow = new Window({
         targetElement: this.targetElement,
@@ -98,7 +111,9 @@ class Folder extends Window {
       newWindow.render();
       newWindow.renderChild(newWindow.element);
       newWindow.element.classList.add("window");
+      newWindow.makeCloseButton();
       this.isOpen = true;
+      this.openedFolder = newWindow.element;
     });
   }
 }

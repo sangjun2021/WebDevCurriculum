@@ -1,6 +1,7 @@
 class Window {
-  constructor({ targetElement, name = "", children = [] }) {
+  constructor({ root, targetElement, name = "", children = [] }) {
     this.targetElement = targetElement;
+    this.root = root;
     this.children = children;
     this.name = name;
     this.draggable = false;
@@ -15,7 +16,7 @@ class Window {
     closeButton.innerText = "x";
     this.element.appendChild(closeButton);
     closeButton.onclick = () => {
-      this.targetElement.removeChild(this.element);
+      this.root.removeChild(this.element);
     };
   }
   renderChild(targetElement) {
@@ -23,28 +24,30 @@ class Window {
       switch (child.type) {
         case "folder":
           const folder = new Folder({
+            root: this.root,
             targetElement,
             children: child.children,
             name: child.name,
           });
-          folder.render();
+          folder.render(targetElement);
           folder.doubleClick();
           folder.element.classList.add("folder");
           break;
         case "icon":
           const icon = new Icon({
+            root: this.root,
             targetElement,
             name: child.name,
           });
-          icon.render();
+          icon.render(targetElement);
           icon.element.classList.add("icon");
           break;
       }
     });
   }
-  render() {
+  render(targetElement) {
     this.element.innerText = this.name;
-    this.targetElement.appendChild(this.element);
+    targetElement.appendChild(this.element);
     this.addDragEvent(this.element);
   }
 
@@ -80,8 +83,8 @@ class Window {
   }
 }
 class Desktop extends Window {
-  constructor({ targetElement, children }) {
-    super({ targetElement, children });
+  constructor({ root, targetElement, children }) {
+    super({ root, targetElement, children });
   }
 }
 class Icon extends Window {
@@ -91,27 +94,29 @@ class Icon extends Window {
 }
 
 class Folder extends Window {
-  constructor({ targetElement, children, name }) {
-    super({ targetElement, children, name });
+  constructor({ root, targetElement, children, name }) {
+    super({ root, targetElement, children, name });
     this.isOpen = false;
     this.openedFolder = null;
   }
   doubleClick() {
     this.element.addEventListener("dblclick", () => {
       if (this.isOpen && this.openedFolder) {
-        this.targetElement.appendChild(this.openedFolder);
+        this.root.appendChild(this.openedFolder);
         return;
       }
       if (this.isOpen) return;
       const newWindow = new Window({
+        root: this.root,
         targetElement: this.targetElement,
         name: this.name,
         children: this.children,
       });
-      newWindow.render();
+      newWindow.render(this.root);
       newWindow.renderChild(newWindow.element);
       newWindow.element.classList.add("window");
       newWindow.makeCloseButton();
+      console.log(this.targetElement, newWindow.element);
       this.isOpen = true;
       this.openedFolder = newWindow.element;
     });

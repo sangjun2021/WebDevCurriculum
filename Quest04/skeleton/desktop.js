@@ -75,6 +75,7 @@ class Window {
   addDragEvent() {
     this.element.addEventListener("mousedown", (e) => {
       e.stopPropagation();
+      e.preventDefault();
       if (!e.target.classList.contains("drag")) return;
       this.draggable = true;
       this.element.style.zIndex = 2;
@@ -151,9 +152,9 @@ class Folder extends Window {
         name: this.name,
         children: this.children,
       });
+      newWindow.element.classList.add("window");
       newWindow.render(this.root, true);
       newWindow.renderChild(newWindow.element);
-      newWindow.element.classList.add("window");
       newWindow.makeCloseButton();
       this.isOpen = true;
       this.#openedFolder = newWindow.element;

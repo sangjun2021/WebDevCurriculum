@@ -7,6 +7,7 @@
   </head>
   <body>
     <section class="desktop"></section>
+    <section class="desktop2"></section>
 
     <script>
       const dummyData = [
@@ -66,11 +67,15 @@
         },
       ];
       let myDesktop = new Desktop({
-        root: document.querySelector(".desktop"),
         targetElement: document.querySelector(".desktop"),
         children: dummyData,
       });
       myDesktop.renderChild(myDesktop.targetElement);
+      let yourDesktop = new Desktop({
+        targetElement: document.querySelector(".desktop2"),
+        folder: 5,
+        icon: 4,
+      });
     </script>
   </body>
 </html>

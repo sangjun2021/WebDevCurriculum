@@ -1,7 +1,7 @@
 class Window {
   constructor({ root, targetElement, name = "", children = [] }) {
     this.targetElement = targetElement;
-    this.root = root;
+    this.root = root || targetElement;
     this.children = children;
     this.name = name;
     this.draggable = false;
@@ -26,6 +26,7 @@ class Window {
             targetElement,
             children: child.children,
             name: child.name,
+            type: child.type,
           });
           folder.render(targetElement);
           folder.addDoubleClickEvent();
@@ -36,6 +37,7 @@ class Window {
             root: this.root,
             targetElement,
             name: child.name,
+            type: child.type,
           });
           icon.render(targetElement);
           icon.element.classList.add("icon");
@@ -43,8 +45,8 @@ class Window {
       }
     });
   }
-  render(targetElement, title) {
-    if (title) {
+  render(targetElement, menubar) {
+    if (menubar) {
       const titleElement = document.createElement("div");
       titleElement.innerText = this.name;
       titleElement.classList.add("title", "drag");
@@ -59,9 +61,8 @@ class Window {
 
   addDragEvent() {
     this.element.addEventListener("mousedown", (e) => {
-      if (!e.target.classList.contains("drag")) return;
-      e.preventDefault();
       e.stopPropagation();
+      if (!e.target.classList.contains("drag")) return;
       this.draggable = true;
       this.element.style.zIndex = 2;
       this.mouseOffset = {
@@ -70,6 +71,7 @@ class Window {
       };
     });
     this.element.addEventListener("mousemove", (e) => {
+      e.stopPropagation();
       if (!e.target.classList.contains("drag")) return;
       if (!this.draggable) return;
       const newLocationX = e.clientX + this.mouseOffset.x + "px";
@@ -82,16 +84,32 @@ class Window {
       this.draggable = false;
       this.element.style.zIndex = 0;
     });
-    this.element.addEventListener("mouseup", (e) => {
-      e.stopPropagation();
+    this.element.addEventListener("mouseup", () => {
       this.draggable = false;
       this.element.style.zIndex = 0;
     });
   }
 }
 class Desktop extends Window {
-  constructor({ root, targetElement, children }) {
+  constructor({ root, targetElement, children, folder = 0, icon = 0 }) {
     super({ root, targetElement, children });
+    this.folder = folder;
+    this.icon = icon;
+    if (this.icon || this.folder) this.autoRender();
+  }
+  autoRender() {
+    const folderNumber = this.folder;
+    const iconNumber = this.icon;
+    const folder = new Array(folderNumber).fill(0).map((child, index) => ({
+      type: "folder",
+      name: `${index}폴더`,
+    }));
+    const icon = new Array(iconNumber).fill(0).map((child, index) => ({
+      type: "icon",
+      name: `${index}아이콘`,
+    }));
+    this.children = folder.concat(icon);
+    this.renderChild(this.targetElement);
   }
 }
 class Icon extends Window {
@@ -107,7 +125,8 @@ class Folder extends Window {
     super({ root, targetElement, children, name });
   }
   addDoubleClickEvent() {
-    this.element.addEventListener("dblclick", () => {
+    this.element.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
       if (this.#isOpen && this.#openedFolder) {
         this.root.appendChild(this.#openedFolder);
         return;

@@ -114,11 +114,11 @@ class Desktop extends Window {
   autoRender() {
     const folderNumber = this.folder;
     const iconNumber = this.icon;
-    const folder = new Array(folderNumber).fill(0).map((child, index) => ({
+    const folder = new Array(folderNumber).fill(0).map((_, index) => ({
       type: "folder",
       name: `${index}폴더`,
     }));
-    const icon = new Array(iconNumber).fill(0).map((child, index) => ({
+    const icon = new Array(iconNumber).fill(0).map((_, index) => ({
       type: "icon",
       name: `${index}아이콘`,
     }));
@@ -133,19 +133,17 @@ class Icon extends Window {
 }
 
 class Folder extends Window {
-  #isOpen = false;
-  #openedFolder = null;
   constructor({ root, targetElement, children, name }) {
     super({ root, targetElement, children, name });
+    this.openedFolder = null;
   }
   addDoubleClickEvent() {
     this.element.addEventListener("dblclick", (e) => {
       e.stopPropagation();
-      if (this.#isOpen && this.#openedFolder) {
-        this.root.appendChild(this.#openedFolder);
+      if (this.openedFolder) {
+        this.root.appendChild(this.openedFolder);
         return;
       }
-      if (this.#isOpen) return;
       const newWindow = new Window({
         root: this.root,
         targetElement: this.targetElement,
@@ -156,8 +154,7 @@ class Folder extends Window {
       newWindow.render(this.root, true);
       newWindow.renderChild(newWindow.element);
       newWindow.makeCloseButton();
-      this.isOpen = true;
-      this.#openedFolder = newWindow.element;
+      this.openedFolder = newWindow.element;
     });
   }
 }

@@ -31,6 +31,7 @@ class Window {
           folder.render(targetElement);
           folder.addDoubleClickEvent();
           folder.element.classList.add("folder");
+          folder.setPostion();
           break;
         case "icon":
           const icon = new Icon({
@@ -41,6 +42,7 @@ class Window {
           });
           icon.render(targetElement);
           icon.element.classList.add("icon");
+          icon.setPostion();
           break;
       }
     });
@@ -58,7 +60,18 @@ class Window {
     targetElement.appendChild(this.element);
     this.addDragEvent(this.element);
   }
-
+  setPostion() {
+    this.position = {
+      leftPosition: this.element.offsetLeft,
+      topPosition: this.element.offsetTop,
+    };
+    setTimeout(() => {
+      this.element.style.position = "absolute";
+      const { leftPosition, topPosition } = this.position;
+      this.element.style.left = leftPosition + "px";
+      this.element.style.top = topPosition + "px";
+    }, 0);
+  }
   addDragEvent() {
     this.element.addEventListener("mousedown", (e) => {
       e.stopPropagation();

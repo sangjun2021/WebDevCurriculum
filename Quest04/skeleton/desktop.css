@@ -16,7 +16,7 @@ section {
   width: 70px;
   height: 70px;
   vertical-align: bottom;
-  background-image: url("https://cdn-icons-png.flaticon.com/512/2965/2965335.png");
+  background-image: url("./img/google-docs.png");
   background-size: cover;
 }
 
@@ -27,7 +27,7 @@ section {
   padding-left: 20px;
   width: 80px;
   height: 80px;
-  background-image: url("https://cdn-icons.flaticon.com/png/512/3139/premium/3139112.png?token=exp=1637633390~hmac=6bc8e2350745574c1d3a73b9d205a8ea");
+  background-image: url("./img/folder.png");
   background-size: cover;
 }
 

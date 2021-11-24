@@ -167,13 +167,13 @@ const AddDoubleClickEventMixin = (superClass) =>
         newWindow.element.classList.add("window");
         newWindow.render({
           targetElement: root,
+          name,
           element: newWindow.element,
-          name: newWindow.name,
           addDragEvent: newWindow.addDragEvent,
           menubar: true,
         });
         newWindow.renderChild({
-          root: newWindow.targetElement,
+          root,
           targetElement: newWindow.element,
           children,
         });
@@ -185,7 +185,6 @@ const AddDoubleClickEventMixin = (superClass) =>
 class WindowBasic {
   constructor({ targetElement, name = "", children = [] }) {
     this.targetElement = targetElement;
-    this.root = targetElement;
     this.children = children;
     this.name = name;
     this.element = document.createElement("div");
@@ -193,10 +192,10 @@ class WindowBasic {
 }
 class FolderBasic {
   constructor({ root, targetElement, children = [], name = "" }) {
-    this.root = root;
-    this.name = name;
-    this.children = children;
     this.targetElement = targetElement;
+    this.root = root || targetElement;
+    this.children = children;
+    this.name = name;
     this.element = document.createElement("div");
     this.openedFolder = [];
     this.position = {};
@@ -207,8 +206,8 @@ class DesktopBasic {
     this.targetElement = targetElement;
     this.root = root || targetElement;
     this.children = children;
-    this.folder = folder;
     this.icon = icon;
+    this.folder = folder;
   }
 }
 class IconBasic {
@@ -233,3 +232,24 @@ class Desktop extends AutoRenderMixin(RenderChildMixin(DesktopBasic)) {}
 class Icon extends RenderMixin(
   AddDragEventMixin(SetPositionMixin(IconBasic))
 ) {}
+
+// const compose =
+//   (...args) =>
+//   (Base) =>
+//     class extends args.reduce((a, f) => f(a), Base) {};
+
+// const Winodw = compose(
+//   MakeClosebuttonMixin,
+//   AddDragEventMixin,
+//   RenderChildMixin
+// )(WindowBasic);
+
+// const Folder = compose(
+//   SetPositionMixin,
+//   AddDragEventMixin,
+//   AddDoubleClickEventMixin
+// )(FolderBasic);
+
+// const Desktop = compose(RenderChildMixin, AutoRenderMixin)(DesktopBasic);
+
+// const Icon = compose(SetPositionMixin, AddDragEventMixin)(IconBasic);

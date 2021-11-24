@@ -1,3 +1,11 @@
+import Storage from "./utils/localStorage.js";
+import Aside from "./components/Aside.js";
+import Button from "./components/Button.js";
+import Editor from "./components/Editor.js";
+import Tab from "./components/Tab.js";
 class Notepad {
-	/* TODO: 그 외에 또 어떤 클래스와 메소드가 정의되어야 할까요? */
-};
+  #targetElement;
+  constructor(targetElement) {
+    this.#targetElement = targetElement;
+  }
+}

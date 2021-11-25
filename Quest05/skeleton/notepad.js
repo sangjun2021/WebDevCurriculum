@@ -97,6 +97,7 @@ class Notepad {
             if (nextTitle.trim().length < 1) {
               throw new Error("공백만 입력하면 안됩니다.");
             }
+            localStorage.checkOverLap(nextTitle);
             this.#currentFile.title = nextTitle;
           }
           localStorage.saveFile(this.#currentFile);
@@ -114,7 +115,26 @@ class Notepad {
       text: "저장",
     });
     button.createButton({
-      callback: () => console.log("테스트", editor.text),
+      callback: () => {
+        try {
+          const nextTitle = prompt("저장할 파일이름을 입력해주세요");
+          if (nextTitle.trim().length < 1) {
+            throw new Error("공백만 입력하면 안됩니다.");
+          }
+          localStorage.checkOverLap(nextTitle);
+          this.#currentFile.title = nextTitle;
+          localStorage.saveFile(this.#currentFile);
+          sessionStorage.saveFile({
+            id: this.#currentFile.id,
+            title: this.#currentFile.title,
+          });
+          const nextFileList = localStorage.getList();
+          const nextTabList = sessionStorage.getList();
+          this.setState({ nextFileList, file, nextTabList, tab });
+        } catch (e) {
+          alert(e.message);
+        }
+      },
       text: "다른이름으로 저장",
     });
     this.init({ localStorage, sessionStorage, file, tab, editor });

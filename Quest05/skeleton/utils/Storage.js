@@ -46,7 +46,11 @@ class Storage {
       return [];
     }
   }
-  checkOverLap(title) {}
+  checkOverLap(title) {
+    const prevState = this.getList();
+    const result = prevState.find((file) => file.title === title);
+    if (result) throw new Error("중복된 제목입니다.");
+  }
   saveFile({ id, title, text, edit }) {
     let result;
     const prevState = this.getList();
@@ -56,6 +60,7 @@ class Storage {
       file.text = text || file.text;
       file.isEdited = edit;
       result = file;
+      file.text = text === "" ? "" : file.text;
       return file;
     });
     this.setList(nextState);

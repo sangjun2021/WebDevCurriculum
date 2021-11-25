@@ -14,9 +14,6 @@ class Editor {
     this.#file = nextState;
     this.render();
   }
-  get text() {
-    return this.#targetElement.innerText;
-  }
 }
 
 export default Editor;

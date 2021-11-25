@@ -17,10 +17,11 @@ class List {
       this.#targetElement.innerHTML = this.#state
         .map((file) => {
           if (typeof file.title !== "string") {
-            console.log(file.title);
             throw new Error("리스트에는 문자만 들어와야합니다.");
           }
-          return `<li class="tab" data-id="${file.id}">
+          return `<li class="tab ${
+            file.isSelected ? "selected" : ""
+          }" data-id="${file.id}">
           <span class="title ${file.isEdited ? "js-edited" : ""}">${
             file.title
           }</span>

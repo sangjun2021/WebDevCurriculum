@@ -34,8 +34,9 @@ class Notepad {
       targetElement: tabTarget,
       initialState: [],
       onClick: (id) => {
+        const nextTabList = sessionStorage.getList();
         const nextFile = sessionStorage.getFile(id);
-        this.setState({ nextFile, editor });
+        this.setState({ nextFile, editor, nextTabList, tab });
       },
       onDelete: (id) => {
         const file = sessionStorage.getFile(id);
@@ -60,12 +61,12 @@ class Notepad {
       initialState: [],
       onClick: (id) => {
         const isExist = sessionStorage.getFile(id);
-        const nextTabList = isExist
-          ? false
-          : sessionStorage.insertFile(nextFile);
         const nextFile = isExist
           ? sessionStorage.getFile(id)
           : localStorage.getFile(id);
+        const nextTabList = isExist
+          ? false
+          : sessionStorage.insertFile(nextFile);
         this.setState({ nextFile, editor, nextTabList, tab });
       },
       onDelete: (id) => {
@@ -171,7 +172,11 @@ class Notepad {
       this.#currentFile = nextFile;
       editor && editor.setState(this.#currentFile);
     }
-    if (nextTabList) {
+    nextTabList = (nextTabList || this.#tabList).map((tab) => {
+      if (tab.id !== this.#currentFile.id) return { ...tab, isSelected: false };
+      return { ...tab, isSelected: true };
+    });
+    if (nextTabList !== [] && nextTabList) {
       this.#tabList = nextTabList;
       tab && tab.setState(this.#tabList);
     }

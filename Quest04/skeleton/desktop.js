@@ -28,7 +28,7 @@ const RenderChildMixin = (superclass) =>
               targetElement,
               element: folder.element,
               name: folder.name,
-              addDragEvent: folder.addDragEvent,
+              func: folder.addDragEvent,
               menubar: false,
             });
             folder.addDoubleClickEvent({
@@ -55,7 +55,7 @@ const RenderChildMixin = (superclass) =>
               targetElement,
               element: icon.element,
               name: icon.name,
-              addDragEvent: icon.addDragEvent,
+              func: icon.addDragEvent,
               menubar: false,
             });
             icon.element.classList.add("icon");
@@ -71,17 +71,17 @@ const RenderChildMixin = (superclass) =>
 
 const RenderMixin = (superClass) =>
   class extends superClass {
-    render({ targetElement, element, name, addDragEvent, menubar }) {
+    render({ targetElement, element, name, func, menubar }) {
       if (menubar) {
         const titleElement = document.createElement("div");
         titleElement.innerText = name;
         titleElement.classList.add("title", "js-drag");
         element.appendChild(titleElement);
-        addDragEvent({ element: titleElement, targetElement: element });
+        func({ element: titleElement, targetElement: element });
       } else {
         element.innerText = name;
         element.classList.add("js-drag");
-        addDragEvent({ element, targetElement: element });
+        func({ element, targetElement: element });
       }
       targetElement.appendChild(element);
     }
@@ -169,7 +169,7 @@ const AddDoubleClickEventMixin = (superClass) =>
           targetElement: root,
           name,
           element: newWindow.element,
-          addDragEvent: newWindow.addDragEvent,
+          func: newWindow.addDragEvent,
           menubar: true,
         });
         newWindow.renderChild({

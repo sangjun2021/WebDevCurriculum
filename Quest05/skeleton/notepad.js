@@ -38,6 +38,13 @@ class Notepad {
         this.setState({ nextFile, editor });
       },
       onDelete: (id) => {
+        const file = sessionStorage.getFile(id);
+        if (
+          file.isEdited &&
+          !confirm("저장안된 파일입니다. 정말 삭제하시겠습니까?")
+        )
+          return;
+
         const nextTabList = sessionStorage.removeFile(id);
         this.setState({ nextTabList, tab });
         if (this.#currentFile.id === id) {
@@ -62,6 +69,7 @@ class Notepad {
         this.setState({ nextFile, editor, nextTabList, tab });
       },
       onDelete: (id) => {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
         const nextFileList = localStorage.removeFile(id);
         const nextTabList = sessionStorage.removeFile(id);
         if (this.#currentFile.id === id)

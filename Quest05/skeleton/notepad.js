@@ -6,20 +6,26 @@ import List from "./components/List.js";
 class Notepad {
   #tabList = [];
   #fileList = [];
-  #currentFile;
+  #currentFile = {};
   constructor({ editorTarget, tabTarget, buttonTarget, filesTarget }) {
     const sessionStorage = new Storage(window.sessionStorage);
     const localStorage = new Storage(window.localStorage);
     const editor = new Editor({
       targetElement: editorTarget,
       onInput: (text) => {
-        const nextFile = sessionStorage.saveFile({
-          id: this.#currentFile.id,
-          text,
-          edit: true,
-        });
-        const nextTabList = sessionStorage.getList();
-        this.setState({ nextFile, nextTabList, tab });
+        try {
+          if (!this.#currentFile.hasOwnProperty("id"));
+          const nextFile = sessionStorage.saveFile({
+            id: this.#currentFile.id,
+            text,
+            edit: true,
+          });
+          const nextTabList = sessionStorage.getList();
+          this.setState({ nextFile, nextTabList, tab });
+        } catch (e) {
+          alert(e.message);
+          return;
+        }
       },
     });
     const tab = new List({

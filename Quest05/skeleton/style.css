@@ -44,6 +44,10 @@ body {
   display: flex;
   flex-direction: column;
 }
+.file-container .list {
+  padding-right: 0;
+  margin: 4px 0;
+}
 
 .tab-container {
   height: 40px;
@@ -64,7 +68,7 @@ body {
   color: grey;
 }
 
-.tab {
+.list {
   padding: 0 4px;
   flex-grow: 1;
   flex-shrink: 1;
@@ -87,6 +91,6 @@ body {
   height: 12px;
 }
 
-.selected {
+.js-selected {
   background: rgb(217, 216, 213);
 }

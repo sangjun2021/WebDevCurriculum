@@ -1,11 +1,9 @@
 class List {
   #state;
   #targetElement;
-  #store;
-  constructor({ targetElement, initialState, onClick, onDelete, store }) {
+  constructor({ targetElement, initialState, onClick, onDelete }) {
     this.#state = initialState;
     this.#targetElement = targetElement;
-    this.#store = store;
     targetElement.addEventListener("click", (e) => {
       const id = e.target.closest("li").dataset.id;
       if (e.target.id === "js-close-button") onDelete(id);
@@ -19,8 +17,8 @@ class List {
           if (typeof file.title !== "string") {
             throw new Error("리스트에는 문자만 들어와야합니다.");
           }
-          return `<li class="tab ${
-            file.isSelected ? "selected" : ""
+          return `<li class="list ${
+            file.isSelected ? "js-selected" : ""
           }" data-id="${file.id}">
           <span class="title ${file.isEdited ? "js-edited" : ""}">${
             file.title

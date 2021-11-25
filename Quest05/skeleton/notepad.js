@@ -116,6 +116,7 @@ class Notepad {
         try {
           if (this.#currentFile.title === "untitled") {
             const nextTitle = prompt("저장할 파일이름을 입력해주세요");
+            console.log(nextTitle);
             if (nextTitle.trim().length < 1) {
               throw new Error("공백만 입력하면 안됩니다.");
             }
@@ -186,10 +187,14 @@ class Notepad {
     }
   }
 }
+const editorTarget = document.querySelector(".text-editor");
+const tabTarget = document.querySelector(".tab-list");
+const buttonTarget = document.querySelector(".button-container");
+const filesTarget = document.querySelector(".file-container");
+
 new Notepad({
-  editorTarget: document.querySelector(".text-editor"),
-  tabTarget: document.querySelector(".tab-list"),
-  buttonTarget: document.querySelector(".button-container"),
-  filesTarget: document.querySelector(".file-container"),
+  editorTarget,
+  tabTarget,
+  buttonTarget,
+  filesTarget,
 });
-export default Notepad;

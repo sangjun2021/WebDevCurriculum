@@ -73,11 +73,11 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.indicator {
+.title {
   display: flex;
   align-items: center;
 }
-.edited::after {
+.js-edited::after {
   margin-left: 4px;
   content: " ";
   display: block;

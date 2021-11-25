@@ -19,6 +19,7 @@ class Storage {
     const prevState = this.getList();
     const nextState = [...prevState, file];
     this.setList(nextState);
+    return nextState;
   }
   createFile({ title, text }) {
     try {
@@ -45,14 +46,15 @@ class Storage {
       return [];
     }
   }
-  saveFile({ id, title, text }) {
+  checkOverLap(title) {}
+  saveFile({ id, title, text, edit }) {
     let result;
     const prevState = this.getList();
     const nextState = prevState.map((file) => {
       if (file.id !== id) return file;
       file.title = title || file.title;
-      file.text = text || text;
-      file.isEdited = false;
+      file.text = text || file.text;
+      file.isEdited = edit;
       result = file;
       return file;
     });

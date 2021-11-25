@@ -1,14 +1,14 @@
-class Tab {
+class List {
   #state;
   #targetElement;
   #store;
-  constructor({ targetElement, initialState, onClick, onCloseTab, store }) {
+  constructor({ targetElement, initialState, onClick, onDelete, store }) {
     this.#state = initialState;
     this.#targetElement = targetElement;
     this.#store = store;
     targetElement.addEventListener("click", (e) => {
       const id = e.target.closest("li").dataset.id;
-      if (e.target.id === "js-close-button") onCloseTab(id);
+      if (e.target.id === "js-close-button") onDelete(id);
       else onClick(id);
     });
   }
@@ -21,7 +21,7 @@ class Tab {
             throw new Error("리스트에는 문자만 들어와야합니다.");
           }
           return `<li class="tab" data-id="${file.id}">
-          <span class="indicator ${file.isEdited ? "edited" : ""}">${
+          <span class="title ${file.isEdited ? "js-edited" : ""}">${
             file.title
           }</span>
             <button id="js-close-button" class=>X</button>
@@ -38,4 +38,4 @@ class Tab {
   }
 }
 
-export default Tab;
+export default List;

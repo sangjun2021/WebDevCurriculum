@@ -1,53 +1,69 @@
 import Storage from "./utils/Storage.js";
-import Aside from "./components/Files.js";
 import Button from "./components/Button.js";
 import Editor from "./components/Editor.js";
-import Tab from "./components/Tab.js";
-
-const data = [
-  {
-    title: "javascript.js",
-    text: "console.log('hello')",
-    id: "1",
-    isEdited: true,
-  },
-  { title: "index.html", text: "<html>", id: "2", isEdited: false },
-  { title: "style.css", text: "width : 100px", id: "3", isEdited: false },
-];
+import List from "./components/List.js";
 
 class Notepad {
-  #list;
+  #tabList = [];
+  #fileList = [];
   #currentFile;
-  constructor({ editorTarget, tabTarget, buttonTarget }) {
-    this.#list = data;
+  constructor({ editorTarget, tabTarget, buttonTarget, filesTarget }) {
     const sessionStorage = new Storage(window.sessionStorage);
     const localStorage = new Storage(window.localStorage);
     const editor = new Editor({
       targetElement: editorTarget,
       onInput: (text) => {
-        const nextState = sessionStorage.saveFile({
+        const nextFile = sessionStorage.saveFile({
           id: this.#currentFile.id,
           text,
+          edit: true,
         });
-        this.setState({ nextFile: nextState });
+        const nextTabList = sessionStorage.getList();
+        this.setState({ nextFile, nextTabList, tab });
       },
     });
-    const tab = new Tab({
+    const tab = new List({
       targetElement: tabTarget,
-      initialState: data,
+      initialState: [],
       onClick: (id) => {
         const nextFile = sessionStorage.getFile(id);
         this.setState({ nextFile, editor });
       },
-      onCloseTab: (id) => {
-        const nextList = sessionStorage.removeFile(id);
-        this.setState({ nextList, tab });
+      onDelete: (id) => {
+        const nextTabList = sessionStorage.removeFile(id);
+        this.setState({ nextTabList, tab });
         if (this.#currentFile.id === id) {
-          const nextFile = this.#list[0] || {
+          const nextFile = this.#tabList[0] || {
             text: "",
           };
           this.setState({ nextFile, editor });
         }
+      },
+    });
+    const file = new List({
+      targetElement: filesTarget,
+      initialState: [],
+      onClick: (id) => {
+        const nextFile = localStorage.getFile(id);
+        const nextTabList = sessionStorage.insertFile(nextFile);
+        this.setState({ nextFile, editor, nextTabList, tab });
+      },
+      onDelete: (id) => {
+        const nextFileList = localStorage.removeFile(id);
+        const nextTabList = sessionStorage.removeFile(id);
+        if (this.#currentFile.id === id)
+          this.#currentFile = nextTabList[0] || {
+            text: "",
+          };
+        const nextFile = this.#currentFile;
+        this.setState({
+          nextFileList,
+          nextTabList,
+          file,
+          tab,
+          nextFile,
+          editor,
+        });
       },
     });
     const button = new Button({
@@ -59,37 +75,68 @@ class Notepad {
           title: "untitled",
           text: "",
         });
-        const nextList = sessionStorage.getList();
-        localStorage.insertFile(newFile);
+        const nextTabList = sessionStorage.getList();
+        const nextFileList = localStorage.insertFile(newFile);
         this.setState({
           nextFile: newFile,
-          nextList,
+          nextTabList,
           editor,
           tab,
           editorTarget,
+          nextFileList,
+          file,
         });
       },
       text: "새파일 생성",
     });
     button.createButton({
-      callback: () => console.log("테스트", editor.text),
+      callback: () => {
+        try {
+          if (this.#currentFile.title === "untitled") {
+            const nextTitle = prompt("저장할 파일이름을 입력해주세요");
+            if (nextTitle.trim().length < 1) {
+              throw new Error("공백만 입력하면 안됩니다.");
+            }
+            this.#currentFile.title = nextTitle;
+          }
+          localStorage.saveFile(this.#currentFile);
+          sessionStorage.saveFile({
+            id: this.#currentFile.id,
+            title: this.#currentFile.title,
+          });
+          const nextFileList = localStorage.getList();
+          const nextTabList = sessionStorage.getList();
+          this.setState({ nextFileList, file, nextTabList, tab });
+        } catch (e) {
+          alert(e.message);
+        }
+      },
       text: "저장",
     });
     button.createButton({
       callback: () => console.log("테스트", editor.text),
       text: "다른이름으로 저장",
     });
+    this.init({ localStorage, sessionStorage, file, tab, editor });
   }
-  setState({ nextFile, nextList, editor, tab, editorTarget }) {
+  init({ localStorage, sessionStorage, file, tab, editor }) {
+    const nextFileList = localStorage.getList();
+    const nextTabList = sessionStorage.getList();
+    const nextFile = nextTabList[0];
+    this.setState({ nextFileList, file, nextTabList, tab, nextFile, editor });
+  }
+  setState({ nextFile, nextTabList, nextFileList, file, editor, tab }) {
     if (nextFile) {
       this.#currentFile = nextFile;
       editor && editor.setState(this.#currentFile);
-      editorTarget && editorTarget.setAttribute("contenteditable", true);
     }
-    if (nextList) {
-      this.#list = nextList;
-      tab && tab.setState(this.#list);
-      // file.setState(this.#list);
+    if (nextTabList) {
+      this.#tabList = nextTabList;
+      tab && tab.setState(this.#tabList);
+    }
+    if (nextFileList) {
+      this.#fileList = nextFileList;
+      file && file.setState(this.#fileList);
     }
   }
 }
@@ -97,5 +144,6 @@ new Notepad({
   editorTarget: document.querySelector(".text-editor"),
   tabTarget: document.querySelector(".tab-list"),
   buttonTarget: document.querySelector(".button-container"),
+  filesTarget: document.querySelector(".file-container"),
 });
 export default Notepad;

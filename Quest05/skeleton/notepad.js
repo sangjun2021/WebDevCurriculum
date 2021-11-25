@@ -14,7 +14,9 @@ class Notepad {
       targetElement: editorTarget,
       onInput: (text) => {
         try {
-          if (!this.#currentFile.hasOwnProperty("id"));
+          if (!this.#currentFile.hasOwnProperty("id")) {
+            throw new Error("문서를 선택해주세요.");
+          }
           const nextFile = sessionStorage.saveFile({
             id: this.#currentFile.id,
             text,
@@ -50,8 +52,13 @@ class Notepad {
       targetElement: filesTarget,
       initialState: [],
       onClick: (id) => {
-        const nextFile = localStorage.getFile(id);
-        const nextTabList = sessionStorage.insertFile(nextFile);
+        const isExist = sessionStorage.getFile(id);
+        const nextTabList = isExist
+          ? false
+          : sessionStorage.insertFile(nextFile);
+        const nextFile = isExist
+          ? sessionStorage.getFile(id)
+          : localStorage.getFile(id);
         this.setState({ nextFile, editor, nextTabList, tab });
       },
       onDelete: (id) => {

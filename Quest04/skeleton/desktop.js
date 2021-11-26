@@ -2,28 +2,24 @@ class Button {
   #button = document.createElement("button");
   #targetElement;
   #removeElement;
-
   constructor({ targetElement, removeElement }) {
     this.#targetElement = targetElement;
     this.#removeElement = removeElement;
     this.#renderButton();
     this.#addRemoveListener(removeElement);
   }
-
   #renderButton() {
     this.#targetElement.appendChild(this.#button);
     this.#button.innerText = "x";
     this.#button.classList.add("close-button");
   }
-
   #addRemoveListener() {
-    this.#targetElement.addEventListener("onclick", (e) => {
+    this.#button.addEventListener("click", (e) => {
       e.stopPropagation();
-      this.#removeElement.classList.classList.add("js-remove");
+      this.#removeElement.classList.add("js-remove");
     });
   }
 }
-
 class DragHandler {
   #listenerElement;
   #targetElement;
@@ -68,31 +64,33 @@ class DragHandler {
 
 class DoubleClickHanlder {
   #targetElement;
+  #root;
   #newWindow;
   #name;
   #children;
-  constructor({ targetElement, name, children = [] }) {
+  constructor({ root, targetElement, name, children = [] }) {
     this.#targetElement = targetElement;
     this.#name = name;
+    this.#root = root;
     this.#children = children;
     this.#addDoubleClickEvent();
   }
   #addDoubleClickEvent() {
-    if (this.#newWindow) {
-      this.#reRenderWindow();
-      return;
-    }
     this.#targetElement.addEventListener("dblclick", (e) => {
+      if (this.#newWindow) {
+        this.#reRenderWindow();
+        return;
+      }
       e.stopPropagation();
       this.#newWindow = new Window({
-        targetElement: this.#targetElement,
+        targetElement: this.#root,
         name: this.#name,
         children: this.#children,
       });
     });
   }
   #reRenderWindow() {
-    this.#newWindow.classList.remove("js-remove");
+    this.#newWindow.element.classList.remove("js-remove");
   }
 }
 
@@ -109,8 +107,8 @@ class Position {
     setTimeout(() => {
       this.#element.style.position = "absolute";
       const { leftPosition, topPosition } = this.#position;
-      element.style.left = leftPosition + "px";
-      element.style.top = topPosition + "px";
+      this.#element.style.left = leftPosition + "px";
+      this.#element.style.top = topPosition + "px";
     }, 0);
   }
 }
@@ -159,70 +157,153 @@ class Children {
     this.#children.push(...newFolder.concat(newIcon));
   }
 }
-
-class Render {
+class RenderDesktop {
   #targetElement;
-  #element = document.createElement("div");
-  #type;
-  #dragHander;
-  #name;
-  constructor({ name, targetElement, type, children = [] }) {
+  #children;
+  #icon;
+  #folder;
+  constructor({ targetElement, children = [], icon = 0, folder = 0 }) {
     this.#targetElement = targetElement;
-    this.#type = type;
-    this.#name = name;
-    switch (this.#type) {
-      case "icon":
-        this.#renderIcon(this.#name);
-        this.#addDragEvent({ targetElement: this.#element });
-        break;
-      case "folder":
-        this.#renderIcon(this.#name);
-        this.#addDragEvent({ targetElement: this.#element });
-        break;
-      case "desktop":
-        break;
-      case "window":
-        break;
-    }
+    this.#children = children;
+    this.#icon = icon;
+    this.#folder = folder;
+    new Children({
+      children: this.#children,
+      targetElement: this.#targetElement,
+      icon: this.#icon,
+      folder: this.#folder,
+    });
   }
-  #renderIcon(name) {
-    this.#element.innerText = name;
-    this.#element.classList.add(this.#type);
-    this.#targetElement.appendChild(this.#element);
+}
+
+class RenderIcon {
+  #element = document.createElement("div");
+  #targetElement;
+  #name;
+  #type = "icon";
+  #dragHandler;
+  constructor({ targetElement, name }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#renderIcon({ name: this.#name, element: this.#element });
+    this.#addDragEvent({ targetElement: this.#element });
   }
   #addDragEvent({ listenerElement, targetElement }) {
-    this.#dragHander = new DragHandler({ listenerElement, targetElement });
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
   }
 }
 
-class Window {
+class RenderFolder {
+  #element = document.createElement("div");
   #targetElement;
   #children;
+  #type = "folder";
   #name;
+  #dragHandler;
+  #doubleClickHandler;
   constructor({ targetElement, name = "", children = [] }) {
-    this.targetElement = targetElement;
-    this.children = children;
-    this.name = name;
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#children = children;
+    this.#renderIcon({ name: this.#name, element: this.#element });
+    this.#addDragEvent({ targetElement: this.#element });
+    this.#addDoubleClickEvent({
+      root: this.#targetElement,
+      targetElement: this.#element,
+      name: this.#name,
+      children: this.#children,
+    });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #addDoubleClickEvent({ targetElement, name, children, root }) {
+    this.#doubleClickHandler = new DoubleClickHanlder({
+      targetElement,
+      name,
+      children,
+      root,
+    });
   }
 }
 
-class Folder {
+class RenderWindow {
+  #element = document.createElement("div");
   #targetElement;
   #children;
   #name;
+  #type = "window";
+  #dragHandler;
+  #button;
   constructor({ targetElement, children = [], name = "" }) {
     this.#targetElement = targetElement;
     this.#children = children;
     this.#name = name;
+    this.#renderWindow({
+      name: this.#name,
+      element: this.#element,
+      children: this.#children,
+    });
+    new Children({
+      children: this.#children,
+      targetElement: this.#element,
+    });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #renderWindow({ name, element }) {
+    this.#renderIcon({ element });
+    const barElement = document.createElement("div");
+    barElement.innerText = name;
+    barElement.classList.add("bar");
+    element.appendChild(barElement);
+    this.#button = new Button({
+      targetElement: barElement,
+      removeElement: this.#element,
+    });
+    this.#addDragEvent({
+      listenerElement: barElement,
+      targetElement: this.#element,
+    });
+  }
+  get element() {
+    return this.#element;
   }
 }
+
 class Desktop {
   #targetElement;
   #children;
-  constructor({ targetElement, children = [] }) {
+  #render;
+  constructor({ targetElement, children = [], icon, folder }) {
     this.#targetElement = targetElement;
     this.#children = children;
-    new Icon({ targetElement, name: "테스트" });
+    this.#render = new RenderDesktop({
+      targetElement: this.#targetElement,
+      type: "desktop",
+      children: this.#children,
+      icon,
+      folder,
+    });
   }
 }
 class Icon {
@@ -232,10 +313,52 @@ class Icon {
   constructor({ targetElement, name }) {
     this.#targetElement = targetElement;
     this.#name = name;
-    this.#render = new Render({
+    this.#render = new RenderIcon({
       targetElement: this.#targetElement,
       name: this.#name,
       type: "icon",
     });
+  }
+}
+
+class Folder {
+  #targetElement;
+  #children;
+  #name;
+  #render;
+  constructor({ targetElement, children = [], name = "" }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
+    this.#render = new RenderFolder({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "folder",
+      children: this.#children,
+    });
+  }
+  get element() {
+    return this.#render.element;
+  }
+}
+
+class Window {
+  #targetElement;
+  #children;
+  #name;
+  #render;
+  constructor({ targetElement, name = "", children = [] }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
+    this.#render = new RenderWindow({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "window",
+      children: this.#children,
+    });
+  }
+  get element() {
+    return this.#render.element;
   }
 }

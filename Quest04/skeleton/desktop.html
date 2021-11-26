@@ -19,20 +19,6 @@
               type: "icon",
               name: "아이콘1",
             },
-            {
-              type: "folder",
-              name: "폴더3",
-              children: [
-                {
-                  type: "icon",
-                  name: "아이콘5",
-                },
-                {
-                  type: "icon",
-                  name: "아이콘6",
-                },
-              ],
-            },
           ],
         },
         {
@@ -66,29 +52,14 @@
           name: "아이콘3",
         },
       ];
+      const myTargetElement = document.querySelector(".desktop");
+      const yourTargetElement = document.querySelector(".desktop2");
       let myDesktop = new Desktop({
-        root: document.querySelector(".desktop"),
-        targetElement: document.querySelector(".desktop"),
+        targetElement: myTargetElement,
         children: dummyData,
       });
-      myDesktop.renderChild({
-        targetElement: myDesktop.targetElement,
-        children: myDesktop.children,
-        root: myDesktop.root,
-      });
       let yourDesktop = new Desktop({
-        root: document.querySelector(".desktop2"),
-        targetElement: document.querySelector(".desktop2"),
-        folder: 5,
-        icon: 4,
-      });
-      yourDesktop.autoRender({
-        folder: 5,
-        icon: 3,
-        children: yourDesktop.children,
-        renderChild: yourDesktop.renderChild,
-        targetElement: yourDesktop.targetElement,
-        root: yourDesktop.root,
+        targetElement: yourTargetElement,
       });
     </script>
   </body>

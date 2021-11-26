@@ -1,255 +1,241 @@
-const MakeClosebuttonMixin = (superclass) =>
-  class extends superclass {
-    makeCloseButton({ targetElement, root }) {
-      const closeButton = document.createElement("button");
-      closeButton.innerText = "x";
-      closeButton.classList.add("close-button");
-      targetElement.appendChild(closeButton);
-      closeButton.onclick = (e) => {
-        e.stopPropagation();
-        root.removeChild(targetElement);
-      };
-    }
-  };
-const RenderChildMixin = (superclass) =>
-  class extends superclass {
-    renderChild({ targetElement, children, root }) {
-      children.forEach((child) => {
-        switch (child.type) {
-          case "folder":
-            const folder = new Folder({
-              root,
-              targetElement,
-              children: child.children,
-              name: child.name,
-              type: child.type,
-            });
-            folder.render({
-              targetElement,
-              element: folder.element,
-              name: folder.name,
-              func: folder.addDragEvent,
-              menubar: false,
-            });
-            folder.addDoubleClickEvent({
-              targetElement,
-              name: folder.name,
-              children: folder.children,
-              element: folder.element,
-              root: folder.root,
-              openedFolder: folder.openedFolder,
-            });
-            folder.element.classList.add("folder");
-            folder.setPosition({
-              position: folder.position,
-              element: folder.element,
-            });
-            break;
-          case "icon":
-            const icon = new Icon({
-              targetElement,
-              name: child.name,
-              type: child.type,
-            });
-            icon.render({
-              targetElement,
-              element: icon.element,
-              name: icon.name,
-              func: icon.addDragEvent,
-              menubar: false,
-            });
-            icon.element.classList.add("icon");
-            icon.setPosition({
-              position: icon.position,
-              element: icon.element,
-            });
-            break;
-        }
-      });
-    }
-  };
+class Button {
+  #button = document.createElement("button");
+  #targetElement;
+  #removeElement;
 
-const RenderMixin = (superClass) =>
-  class extends superClass {
-    render({ targetElement, element, name, func, menubar }) {
-      if (menubar) {
-        const titleElement = document.createElement("div");
-        titleElement.innerText = name;
-        titleElement.classList.add("title", "js-drag");
-        element.appendChild(titleElement);
-        func({ element: titleElement, targetElement: element });
-      } else {
-        element.innerText = name;
-        element.classList.add("js-drag");
-        func({ element, targetElement: element });
+  constructor({ targetElement, removeElement }) {
+    this.#targetElement = targetElement;
+    this.#removeElement = removeElement;
+    this.#renderButton();
+    this.#addRemoveListener(removeElement);
+  }
+
+  #renderButton() {
+    this.#targetElement.appendChild(this.#button);
+    this.#button.innerText = "x";
+    this.#button.classList.add("close-button");
+  }
+
+  #addRemoveListener() {
+    this.#targetElement.addEventListener("onclick", (e) => {
+      e.stopPropagation();
+      this.#removeElement.classList.classList.add("js-remove");
+    });
+  }
+}
+
+class DragHandler {
+  #listenerElement;
+  #targetElement;
+  #mouseOffset = {};
+  constructor({ listenerElement, targetElement }) {
+    this.#targetElement = targetElement;
+    this.#listenerElement = listenerElement || targetElement;
+    this.#onMouseDown();
+    this.#onMouseMove();
+    this.#onMouseUp();
+    this.#onMouseLeave();
+  }
+  #onMouseDown() {
+    this.#listenerElement.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.#targetElement.classList.add("js-drag-on");
+      this.#mouseOffset.x = this.#targetElement.offsetLeft - e.clientX;
+      this.#mouseOffset.y = this.#targetElement.offsetTop - e.clientY;
+    });
+  }
+  #onMouseMove() {
+    this.#listenerElement.addEventListener("mousemove", (e) => {
+      e.stopPropagation();
+      if (!this.#targetElement.classList.contains("js-drag-on")) return;
+      this.#targetElement.style.left = e.clientX + this.#mouseOffset.x + "px";
+      this.#targetElement.style.top = e.clientY + this.#mouseOffset.y + "px";
+      this.#targetElement.style.position = "absolute";
+    });
+  }
+  #onMouseLeave() {
+    this.#listenerElement.addEventListener("mouseleave", () => {
+      this.#targetElement.classList.remove("js-drag-on");
+    });
+  }
+  #onMouseUp() {
+    this.#listenerElement.addEventListener("mouseup", () => {
+      this.#targetElement.classList.remove("js-drag-on");
+    });
+  }
+}
+
+class DoubleClickHanlder {
+  #targetElement;
+  #newWindow;
+  #name;
+  #children;
+  constructor({ targetElement, name, children = [] }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#children = children;
+    this.#addDoubleClickEvent();
+  }
+  #addDoubleClickEvent() {
+    if (this.#newWindow) {
+      this.#reRenderWindow();
+      return;
+    }
+    this.#targetElement.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      this.#newWindow = new Window({
+        targetElement: this.#targetElement,
+        name: this.#name,
+        children: this.#children,
+      });
+    });
+  }
+  #reRenderWindow() {
+    this.#newWindow.classList.remove("js-remove");
+  }
+}
+
+class Position {
+  #element;
+  #position = {};
+  constructor(element) {
+    this.#element = element;
+    this.#setPosition();
+  }
+  #setPosition() {
+    this.#position.leftPosition = this.#element.offsetLeft;
+    this.#position.topPosition = this.#element.offsetTop;
+    setTimeout(() => {
+      this.#element.style.position = "absolute";
+      const { leftPosition, topPosition } = this.#position;
+      element.style.left = leftPosition + "px";
+      element.style.top = topPosition + "px";
+    }, 0);
+  }
+}
+
+class Children {
+  #children;
+  #targetElement;
+  #icon;
+  #folder;
+  constructor({ targetElement, children = [], icon = 0, folder = 0 }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#icon = icon;
+    this.#folder = folder;
+    this.#addChildren({ icon: this.#icon, folder: this.#folder });
+    this.#renderChildren(this.#children);
+  }
+  #renderChildren(children) {
+    children.forEach((child) => {
+      switch (child.type) {
+        case "folder":
+          new Folder({
+            targetElement: this.#targetElement,
+            children: child.children,
+            name: child.name,
+          });
+          break;
+        case "icon":
+          new Icon({
+            targetElement: this.#targetElement,
+            name: child.name,
+          });
+          break;
       }
-      targetElement.appendChild(element);
-    }
-  };
+    });
+  }
+  #addChildren({ icon, folder }) {
+    const newIcon = new Array(icon).fill(0).map((_, index) => ({
+      type: "icon",
+      name: `${index}아이콘`,
+    }));
+    const newFolder = new Array(folder).fill(0).map((_, index) => ({
+      type: "folder",
+      name: `${index}폴더`,
+    }));
+    this.#children.push(...newFolder.concat(newIcon));
+  }
+}
 
-const SetPositionMixin = (superClass) =>
-  class extends superClass {
-    setPosition({ position, element }) {
-      position.leftPosition = element.offsetLeft;
-      position.topPosition = element.offsetTop;
-      setTimeout(() => {
-        element.style.position = "absolute";
-        const { leftPosition, topPosition } = position;
-        element.style.left = leftPosition + "px";
-        element.style.top = topPosition + "px";
-      }, 0);
+class Render {
+  #targetElement;
+  #element = document.createElement("div");
+  #type;
+  #dragHander;
+  #name;
+  constructor({ name, targetElement, type, children = [] }) {
+    this.#targetElement = targetElement;
+    this.#type = type;
+    this.#name = name;
+    switch (this.#type) {
+      case "icon":
+        this.#renderIcon(this.#name);
+        this.#addDragEvent({ targetElement: this.#element });
+        break;
+      case "folder":
+        this.#renderIcon(this.#name);
+        this.#addDragEvent({ targetElement: this.#element });
+        break;
+      case "desktop":
+        break;
+      case "window":
+        break;
     }
-  };
+  }
+  #renderIcon(name) {
+    this.#element.innerText = name;
+    this.#element.classList.add(this.#type);
+    this.#targetElement.appendChild(this.#element);
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHander = new DragHandler({ listenerElement, targetElement });
+  }
+}
 
-const AddDragEventMixin = (superClass) =>
-  class extends superClass {
-    addDragEvent({ element, targetElement }) {
-      const mouseOffset = {};
-      element.addEventListener("mousedown", (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if (!e.target.classList.contains("js-drag")) return;
-        targetElement.classList.add("js-drag-on");
-        targetElement.style.zIndex = 2;
-        mouseOffset.x = targetElement.offsetLeft - e.clientX;
-        mouseOffset.y = targetElement.offsetTop - e.clientY;
-      });
-      element.addEventListener("mousemove", (e) => {
-        e.stopPropagation();
-        if (!e.target.classList.contains("js-drag")) return;
-        if (!targetElement.classList.contains("js-drag-on")) return;
-        targetElement.style.left = e.clientX + mouseOffset.x + "px";
-        targetElement.style.top = e.clientY + mouseOffset.y + "px";
-        targetElement.style.position = "absolute";
-      });
-      element.addEventListener("mouseleave", () => {
-        targetElement.classList.remove("js-drag-on");
-        targetElement.style.zIndex = 0;
-      });
-      element.addEventListener("mouseup", () => {
-        targetElement.classList.remove("js-drag-on");
-        targetElement.style.zIndex = 0;
-      });
-    }
-  };
-
-const AutoRenderMixin = (superClass) =>
-  class extends superClass {
-    autoRender({ folder, icon, children, renderChild, targetElement, root }) {
-      const folderNumber = folder;
-      const iconNumber = icon;
-      const newFolder = new Array(folderNumber).fill(0).map((_, index) => ({
-        type: "folder",
-        name: `${index}폴더`,
-      }));
-      const newIcon = new Array(iconNumber).fill(0).map((_, index) => ({
-        type: "icon",
-        name: `${index}아이콘`,
-      }));
-      children.push(...newFolder.concat(newIcon));
-      renderChild({ targetElement, children, root });
-    }
-  };
-const AddDoubleClickEventMixin = (superClass) =>
-  class extends superClass {
-    addDoubleClickEvent({ name, children, element, root, openedFolder }) {
-      element.addEventListener("dblclick", (e) => {
-        e.stopPropagation();
-        if (openedFolder.length) {
-          root.appendChild(openedFolder[0]);
-          return;
-        }
-        const newWindow = new Window({
-          targetElement: root,
-          name,
-          children,
-        });
-        newWindow.element.classList.add("window");
-        newWindow.render({
-          targetElement: root,
-          name,
-          element: newWindow.element,
-          func: newWindow.addDragEvent,
-          menubar: true,
-        });
-        newWindow.renderChild({
-          root,
-          targetElement: newWindow.element,
-          children,
-        });
-        newWindow.makeCloseButton({ targetElement: newWindow.element, root });
-        openedFolder[0] = newWindow.element;
-      });
-    }
-  };
-class WindowBasic {
+class Window {
+  #targetElement;
+  #children;
+  #name;
   constructor({ targetElement, name = "", children = [] }) {
     this.targetElement = targetElement;
     this.children = children;
     this.name = name;
-    this.element = document.createElement("div");
   }
 }
-class FolderBasic {
-  constructor({ root, targetElement, children = [], name = "" }) {
-    this.targetElement = targetElement;
-    this.root = root || targetElement;
-    this.children = children;
-    this.name = name;
-    this.element = document.createElement("div");
-    this.openedFolder = [];
-    this.position = {};
+
+class Folder {
+  #targetElement;
+  #children;
+  #name;
+  constructor({ targetElement, children = [], name = "" }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
   }
 }
-class DesktopBasic {
-  constructor({ root, targetElement, children = [], folder = 0, icon = 0 }) {
-    this.targetElement = targetElement;
-    this.root = root || targetElement;
-    this.children = children;
-    this.icon = icon;
-    this.folder = folder;
+class Desktop {
+  #targetElement;
+  #children;
+  constructor({ targetElement, children = [] }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    new Icon({ targetElement, name: "테스트" });
   }
 }
-class IconBasic {
+class Icon {
+  #targetElement;
+  #name;
+  #render;
   constructor({ targetElement, name }) {
-    this.targetElement = targetElement;
-    this.name = name;
-    this.element = document.createElement("div");
-    this.position = {};
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#render = new Render({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "icon",
+    });
   }
 }
-
-class Window extends RenderMixin(
-  RenderChildMixin(AddDragEventMixin(MakeClosebuttonMixin(WindowBasic)))
-) {}
-
-class Folder extends RenderMixin(
-  AddDragEventMixin(AddDoubleClickEventMixin(SetPositionMixin(FolderBasic)))
-) {}
-
-class Desktop extends AutoRenderMixin(RenderChildMixin(DesktopBasic)) {}
-
-class Icon extends RenderMixin(
-  AddDragEventMixin(SetPositionMixin(IconBasic))
-) {}
-
-// const compose =
-//   (...args) =>
-//   (Base) =>
-//     class extends args.reduce((a, f) => f(a), Base) {};
-
-// const Winodw = compose(
-//   MakeClosebuttonMixin,
-//   AddDragEventMixin,
-//   RenderChildMixin
-// )(WindowBasic);
-
-// const Folder = compose(
-//   SetPositionMixin,
-//   AddDragEventMixin,
-//   AddDoubleClickEventMixin
-// )(FolderBasic);
-
-// const Desktop = compose(RenderChildMixin, AutoRenderMixin)(DesktopBasic);
-
-// const Icon = compose(SetPositionMixin, AddDragEventMixin)(IconBasic);

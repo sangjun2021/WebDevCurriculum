@@ -1,6 +1,6 @@
 class Editor {
   #targetElement;
-  #file;
+  #state;
   constructor({ targetElement, onInput }) {
     this.#targetElement = targetElement;
     this.#targetElement.addEventListener("input", (e) =>
@@ -8,10 +8,10 @@ class Editor {
     );
   }
   render() {
-    this.#targetElement.innerText = this.#file.text || "";
+    this.#targetElement.innerText = this.#state.text || "";
   }
   setState(nextState) {
-    this.#file = nextState;
+    this.#state = nextState;
     this.render();
   }
 }

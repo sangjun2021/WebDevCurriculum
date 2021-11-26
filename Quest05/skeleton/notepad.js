@@ -115,11 +115,7 @@ class Notepad {
       callback: () => {
         try {
           if (this.#currentFile.title === "untitled") {
-            const nextTitle = prompt("저장할 파일이름을 입력해주세요");
-            console.log(nextTitle);
-            if (nextTitle.trim().length < 1) {
-              throw new Error("공백만 입력하면 안됩니다.");
-            }
+            const nextTitle = this.validTitle();
             localStorage.checkOverLap(nextTitle);
             this.#currentFile.title = nextTitle;
           }
@@ -140,10 +136,7 @@ class Notepad {
     button.createButton({
       callback: () => {
         try {
-          const nextTitle = prompt("저장할 파일이름을 입력해주세요");
-          if (nextTitle.trim().length < 1) {
-            throw new Error("공백만 입력하면 안됩니다.");
-          }
+          const nextTitle = this.validTitle();
           localStorage.checkOverLap(nextTitle);
           this.#currentFile.title = nextTitle;
           localStorage.saveFile(this.#currentFile);
@@ -167,6 +160,13 @@ class Notepad {
     const nextTabList = sessionStorage.getList();
     const nextFile = nextTabList[0];
     this.setState({ nextFileList, file, nextTabList, tab, nextFile, editor });
+  }
+  validTitle() {
+    const nextTitle = prompt("저장할 파일이름을 입력해주세요");
+    if (nextTitle.trim().length < 1) {
+      throw new Error("공백만 입력하면 안됩니다.");
+    }
+    return nextTitle;
   }
   setState({ nextFile, nextTabList, nextFileList, file, editor, tab }) {
     if (nextFile) {

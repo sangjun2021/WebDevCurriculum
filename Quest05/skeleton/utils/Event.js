@@ -1,10 +1,10 @@
 class Event {
   constructor() {}
-  dispatch(type, payLoad) {
-    const event = new CustomEvent(type, payLoad);
+  dispatch(type, data) {
+    const event = new CustomEvent(type, { detail: data });
     window.dispatchEvent(event);
   }
-  addEventListener(type, func) {
+  setEvent(type, func) {
     window.addEventListener(type, (e) => {
       func(e);
     });

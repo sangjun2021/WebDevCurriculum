@@ -12,25 +12,19 @@ class Editor {
     });
   }
   #onInput(text) {
-    try {
-      const nextState = this.#sessionStorage.saveFile({
-        id: this.#state.id,
-        text,
-        edit: true,
-      });
-      this.setState(nextState);
-    } catch (e) {
-      console.log(e.message);
-      return;
-    }
+    const nextState = this.#sessionStorage.updateFile({
+      id: this.#state.id,
+      text,
+      title: this.#state.title,
+      edit: true,
+    });
+    this.#event.dispatch("updateText", nextState.text);
   }
   #render() {
     this.#targetElement.innerText = this.#state.text || "";
   }
   setState(id) {
-    const nextState = this.#sessionStorage.getFile(id);
-    this.#state = nextState;
-    this.#event.dispatch("updateFile", this.#state);
+    this.#state = this.#sessionStorage.getFile(id);
     this.#render();
   }
 }

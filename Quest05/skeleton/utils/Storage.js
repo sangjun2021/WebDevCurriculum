@@ -38,25 +38,25 @@ class Storage {
     const nextFile = this.getList().find((file) => file.id === id);
     return nextFile;
   }
-  #checkOverLap(title) {
+  checkOverLap(title) {
     const prevState = this.getList().find((file) => file.title === title);
+    if (prevState) throw new Error("중복된 파일이름입니다.");
     return prevState;
   }
   updateFile({ id, title, text, edit }) {
-    if (this.#checkOverLap(title)) {
-      throw new Error("중복된 제목입니다.");
-      return;
-    }
+    let result;
     const prevState = this.getList();
     const nextState = prevState.map((file) => {
       if (file.id !== id) return file;
       file.title = title || file.title;
       file.text = text || file.text;
       file.isEdited = edit;
-      file.text = text === "" ? "" : file.text;
+      // file.text = text === "" ? "" : file.text;
+      result = file;
       return file;
     });
     this.#setList(nextState);
+    return result;
   }
   removeFile(id) {
     const prevState = this.getList();

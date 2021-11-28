@@ -8,7 +8,7 @@ class Notepad {
   #sessionStorage = new Storage(window.sessionStorage);
   #localStorage = new Storage(window.localStorage);
   #event = new Event();
-  #state = {};
+  #state;
   #editor;
   #tab;
   #files;
@@ -21,7 +21,7 @@ class Notepad {
     this.#button.createButton("new");
     this.#button.createButton("save");
     this.#button.createButton("save as");
-    this.#setAddEvent();
+    this.#setNewEvent();
     this.#setSaveEvent();
     this.#setSaveAsEvent();
     this.#setInputEvent();
@@ -31,29 +31,31 @@ class Notepad {
     this.#setFileClickEvent();
     this.#init();
   }
-  #setAddEvent() {
+  #checkTitle() {
+    const title = prompt("이름을 입력해주세요");
+    this.#localStorage.checkOverLap(title) ||
+      this.#setState({ ...this.#state, title });
+  }
+  #saveFile() {
+    this.#localStorage.updateFile(this.#state);
+    this.#sessionStorage.updateFile(this.#state);
+    const { id } = this.#state;
+    this.#files.setState(id);
+    this.#tab.setState(id);
+  }
+  #setNewEvent() {
     this.#event.setEvent("new", () => {
-      this.#state = this.#localStorage.createFile({});
-      this.#sessionStorage.insertFile(this.#state);
-      const { id } = this.#state;
-      this.#files.setState(id);
-      this.#tab.setState(id);
-      this.#editor.setState(id);
+      const nextState = this.#localStorage.createFile({});
+      this.#sessionStorage.insertFile(nextState);
+      this.#setState(nextState);
+      this.#editor.setState(this.#state.id);
     });
   }
   #setSaveEvent() {
     this.#event.setEvent("save", () => {
       try {
-        if (this.#state.title === "untitled") {
-          const title = prompt("이름을 입력해주세요");
-          this.#localStorage.checkOverLap(title) ||
-            this.#setState({ ...this.#state, title });
-        }
-        this.#localStorage.updateFile(this.#state);
-        this.#sessionStorage.updateFile(this.#state);
-        const { id } = this.#state;
-        this.#files.setState(id);
-        this.#tab.setState(id);
+        if (this.#state.title === "untitled") this.#checkTitle();
+        this.#saveFile();
       } catch (e) {
         alert(e.message);
       }
@@ -62,25 +64,11 @@ class Notepad {
   #setSaveAsEvent() {
     this.#event.setEvent("save as", () => {
       try {
-        const title = prompt("이름을 입력해주세요");
-        this.#localStorage.checkOverLap(title) ||
-          this.#setState({ ...this.#state, title });
-        this.#localStorage.updateFile(this.#state);
-        this.#sessionStorage.updateFile(this.#state);
-        const { id } = this.#state;
-        this.#files.setState(id);
-        this.#tab.setState(id);
+        this.#checkTitle();
+        this.#saveFile();
       } catch (e) {
         alert(e.message);
       }
-    });
-  }
-  #setFileClickEvent() {
-    this.#event.setEvent("onClickFile", (e) => {
-      const nextState = this.#localStorage.getFile(e.detail);
-      this.#sessionStorage.insertFile(nextState);
-      this.#setState(nextState);
-      this.#editor.setState(this.#state.id);
     });
   }
   #setFileDeleteEvent() {
@@ -98,13 +86,6 @@ class Notepad {
       this.#tab.setState(id);
     });
   }
-  #setTabClickEvent() {
-    this.#event.setEvent("onClickTab", (e) => {
-      const nextState = this.#sessionStorage.getFile(e.detail);
-      this.#setState(nextState);
-      this.#editor.setState(this.#state.id);
-    });
-  }
   #setTabDeleteEvent() {
     this.#event.setEvent("onDeleteTab", (e) => {
       const removeTab = this.#sessionStorage.getFile(e.detail);
@@ -115,11 +96,26 @@ class Notepad {
         return;
       this.#sessionStorage.removeFile(e.detail);
       if (this.#state.id === e.detail) {
-        const nextState = this.#sessionStorage.getList()[0] || {};
+        const nextState = this.#sessionStorage.getList()[0] || { id: null };
         this.#setState(nextState);
+        this.#editor.setState(this.#state.id);
       }
-      this.#editor.setState(this.#state.id);
       this.#tab.setState(this.#state.id);
+    });
+  }
+  #setFileClickEvent() {
+    this.#event.setEvent("onClickFile", (e) => {
+      const nextState = this.#localStorage.getFile(e.detail);
+      this.#sessionStorage.insertFile(nextState);
+      this.#setState(nextState);
+      this.#editor.setState(this.#state.id);
+    });
+  }
+  #setTabClickEvent() {
+    this.#event.setEvent("onClickTab", (e) => {
+      const nextState = this.#sessionStorage.getFile(e.detail);
+      this.#setState(nextState);
+      this.#editor.setState(this.#state.id);
     });
   }
   #setInputEvent() {

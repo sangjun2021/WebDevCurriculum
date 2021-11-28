@@ -69,7 +69,7 @@ body {
 }
 
 .tab,
-.list {
+.file {
   padding: 0 4px;
   flex-grow: 1;
   flex-shrink: 1;

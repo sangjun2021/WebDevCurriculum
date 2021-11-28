@@ -20,9 +20,6 @@ class Files {
     try {
       this.#targetElement.innerHTML = this.#state
         .map((file) => {
-          if (typeof file.title !== "string") {
-            throw new Error("파일제목에는 문자만 들어와야합니다.");
-          }
           return `<li class="file ${
             file.isSelected ? "js-selected" : ""
           }" data-id="${file.id}">

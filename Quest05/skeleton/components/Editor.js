@@ -1,18 +1,37 @@
+import Storage from "../utils/Storage.js";
+import Event from "../utils/Event.js";
 class Editor {
   #targetElement;
-  #state;
-  constructor({ targetElement, onInput }) {
+  #sessionStorage = new Storage(window.sessionStorage);
+  #state = {};
+  #event = new Event();
+  constructor(targetElement) {
     this.#targetElement = targetElement;
-    this.#targetElement.addEventListener("input", (e) =>
-      onInput(e.target.innerText)
-    );
+    this.#targetElement.addEventListener("input", (e) => {
+      this.#onInput(e.target.innerText);
+    });
   }
-  render() {
+  #onInput(text) {
+    try {
+      const nextState = this.#sessionStorage.saveFile({
+        id: this.#state.id,
+        text,
+        edit: true,
+      });
+      this.setState(nextState);
+    } catch (e) {
+      console.log(e.message);
+      return;
+    }
+  }
+  #render() {
     this.#targetElement.innerText = this.#state.text || "";
   }
-  setState(nextState) {
+  setState(id) {
+    const nextState = this.#sessionStorage.getFile(id);
     this.#state = nextState;
-    this.render();
+    this.#event.dispatch("updateFile", this.#state);
+    this.#render();
   }
 }
 

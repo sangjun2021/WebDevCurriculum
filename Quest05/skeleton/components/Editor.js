@@ -24,6 +24,7 @@ class Editor {
     this.#targetElement.innerText = this.#state.text || "";
   }
   setState(id) {
+    if (!id) return;
     this.#state = this.#sessionStorage.getFile(id);
     this.#render();
   }

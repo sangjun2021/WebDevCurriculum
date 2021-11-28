@@ -10,9 +10,9 @@ class Files {
     this.#targetElement.addEventListener("click", (e) => {
       const id = e.target.closest("li").dataset.id;
       if (e.target.id === "js-close-button") {
-        this.#event.dispatch("delteFile", id);
+        this.#event.dispatch("onDeleteFile", id);
       } else {
-        this.#event.dispatch("clickFile", id);
+        this.#event.dispatch("onClickFile", id);
       }
     });
   }

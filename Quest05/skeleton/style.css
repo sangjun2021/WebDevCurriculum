@@ -68,6 +68,7 @@ body {
   color: grey;
 }
 
+.tab,
 .list {
   padding: 0 4px;
   flex-grow: 1;

@@ -14,21 +14,22 @@ class Notepad {
   #files;
   #button;
   constructor({ editorTarget, tabTarget, buttonTarget, filesTarget }) {
-    try {
-      this.#editor = new Editor(editorTarget);
-      this.#tab = new Tab(tabTarget);
-      this.#files = new Files(filesTarget);
-      this.#button = new Button(buttonTarget);
-      this.#button.createButton("new");
-      this.#button.createButton("save");
-      this.#button.createButton("save as");
-      this.#setAddEvent();
-      this.#setSaveEvent();
-      this.#setSaveAsEvent();
-      this.#setInputEvent();
-    } catch (e) {
-      alert(e.message);
-    }
+    this.#editor = new Editor(editorTarget);
+    this.#tab = new Tab(tabTarget);
+    this.#files = new Files(filesTarget);
+    this.#button = new Button(buttonTarget);
+    this.#button.createButton("new");
+    this.#button.createButton("save");
+    this.#button.createButton("save as");
+    this.#setAddEvent();
+    this.#setSaveEvent();
+    this.#setSaveAsEvent();
+    this.#setInputEvent();
+    this.#setTabClickEvent();
+    this.#setTabDeleteEvent();
+    this.#setFileDeleteEvent();
+    this.#setFileClickEvent();
+    this.#init();
   }
   #setAddEvent() {
     this.#event.setEvent("new", () => {
@@ -42,39 +43,102 @@ class Notepad {
   }
   #setSaveEvent() {
     this.#event.setEvent("save", () => {
-      if (this.#state.title === "untitled") {
+      try {
+        if (this.#state.title === "untitled") {
+          const title = prompt("이름을 입력해주세요");
+          this.#localStorage.checkOverLap(title) ||
+            this.#setState({ ...this.#state, title });
+        }
+        this.#localStorage.updateFile(this.#state);
+        this.#sessionStorage.updateFile(this.#state);
+        const { id } = this.#state;
+        this.#files.setState(id);
+        this.#tab.setState(id);
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+  }
+  #setSaveAsEvent() {
+    this.#event.setEvent("save as", () => {
+      try {
         const title = prompt("이름을 입력해주세요");
         this.#localStorage.checkOverLap(title) ||
           this.#setState({ ...this.#state, title });
+        this.#localStorage.updateFile(this.#state);
+        this.#sessionStorage.updateFile(this.#state);
+        const { id } = this.#state;
+        this.#files.setState(id);
+        this.#tab.setState(id);
+      } catch (e) {
+        alert(e.message);
       }
-      this.#localStorage.updateFile(this.#state);
-      this.#sessionStorage.updateFile(this.#state);
+    });
+  }
+  #setFileClickEvent() {
+    this.#event.setEvent("onClickFile", (e) => {
+      const nextState = this.#localStorage.getFile(e.detail);
+      this.#sessionStorage.insertFile(nextState);
+      this.#setState(nextState);
+      this.#editor.setState(this.#state.id);
+    });
+  }
+  #setFileDeleteEvent() {
+    this.#event.setEvent("onDeleteFile", (e) => {
+      if (!confirm("정말 삭제하시겠습니까?")) return;
+      this.#sessionStorage.removeFile(e.detail);
+      this.#localStorage.removeFile(e.detail);
+      if (this.#state.id === e.detail) {
+        const nextState = this.#localStorage.getList()[0] || { id: null };
+        this.#setState(nextState);
+        this.#editor.setState(nextState.id);
+      }
       const { id } = this.#state;
       this.#files.setState(id);
       this.#tab.setState(id);
     });
   }
-  #setSaveAsEvent() {
-    this.#event.setEvent("save as", () => {
-      const title = prompt("이름을 입력해주세요");
-      this.#localStorage.checkOverLap(title) ||
-        this.#setState({ ...this.#state, title });
-      this.#localStorage.updateFile(this.#state);
-      this.#sessionStorage.updateFile(this.#state);
-      const { id } = this.#state;
-      this.#files.setState(id);
-      this.#tab.setState(id);
+  #setTabClickEvent() {
+    this.#event.setEvent("onClickTab", (e) => {
+      const nextState = this.#sessionStorage.getFile(e.detail);
+      this.#setState(nextState);
+      this.#editor.setState(this.#state.id);
+    });
+  }
+  #setTabDeleteEvent() {
+    this.#event.setEvent("onDeleteTab", (e) => {
+      const removeTab = this.#sessionStorage.getFile(e.detail);
+      if (
+        removeTab.isEdited &&
+        !confirm("저장되지 않은탭입니다. 정말 삭제하시겠습니까?")
+      )
+        return;
+      this.#sessionStorage.removeFile(e.detail);
+      if (this.#state.id === e.detail) {
+        const nextState = this.#sessionStorage.getList()[0] || {};
+        this.#setState(nextState);
+      }
+      this.#editor.setState(this.#state.id);
+      this.#tab.setState(this.#state.id);
     });
   }
   #setInputEvent() {
     this.#event.setEvent("updateText", (e) => {
       this.#setState({ ...this.#state, text: e.detail });
       this.#sessionStorage.updateFile({ ...this.#state, edit: true });
-      this.#tab.setState(this.#state.id);
     });
   }
   #setState(nextState) {
     this.#state = nextState;
+    const { id } = this.#state;
+    this.#tab.setState(id);
+    this.#files.setState(id);
+  }
+  #init() {
+    const initList = this.#localStorage.getList();
+    const nextState = initList[0] || { id: null };
+    this.#setState(nextState);
+    this.#editor.setState(nextState.id);
   }
 }
 const editorTarget = document.querySelector(".text-editor");

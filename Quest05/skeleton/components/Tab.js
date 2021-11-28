@@ -10,9 +10,9 @@ class Tab {
     this.#targetElement.addEventListener("click", (e) => {
       const id = e.target.closest("li").dataset.id;
       if (e.target.id === "js-close-button") {
-        this.#event.dispatch("deleteTab", id);
+        this.#event.dispatch("onDeleteTab", id);
       } else {
-        this.#event.dispatch("deleteTab", id);
+        this.#event.dispatch("onClickTab", id);
       }
     });
   }

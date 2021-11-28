@@ -51,7 +51,6 @@ class Storage {
       file.title = title || file.title;
       file.text = text || file.text;
       file.isEdited = edit;
-      // file.text = text === "" ? "" : file.text;
       result = file;
       return file;
     });

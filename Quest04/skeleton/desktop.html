@@ -19,20 +19,6 @@
               type: "icon",
               name: "아이콘1",
             },
-            {
-              type: "folder",
-              name: "폴더3",
-              children: [
-                {
-                  type: "icon",
-                  name: "아이콘5",
-                },
-                {
-                  type: "icon",
-                  name: "아이콘6",
-                },
-              ],
-            },
           ],
         },
         {
@@ -66,15 +52,16 @@
           name: "아이콘3",
         },
       ];
+      const myTargetElement = document.querySelector(".desktop");
+      const yourTargetElement = document.querySelector(".desktop2");
       let myDesktop = new Desktop({
-        targetElement: document.querySelector(".desktop"),
+        targetElement: myTargetElement,
         children: dummyData,
       });
-      myDesktop.renderChild(myDesktop.targetElement);
       let yourDesktop = new Desktop({
-        targetElement: document.querySelector(".desktop2"),
+        targetElement: yourTargetElement,
+        icon: 5,
         folder: 5,
-        icon: 4,
       });
     </script>
   </body>

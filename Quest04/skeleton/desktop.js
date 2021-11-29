@@ -1,160 +1,364 @@
-class Window {
-  constructor({ root, targetElement, name = "", children = [] }) {
-    this.targetElement = targetElement;
-    this.root = root || targetElement;
-    this.children = children;
-    this.name = name;
-    this.draggable = false;
-    this.element = document.createElement("div");
+class Button {
+  #button = document.createElement("button");
+  #targetElement;
+  #removeElement;
+  constructor({ targetElement, removeElement }) {
+    this.#targetElement = targetElement;
+    this.#removeElement = removeElement;
+    this.#renderButton();
+    this.#addRemoveListener(removeElement);
   }
-  makeCloseButton() {
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "x";
-    closeButton.classList.add("close-button");
-    this.element.appendChild(closeButton);
-    closeButton.onclick = (e) => {
+  #renderButton() {
+    this.#targetElement.appendChild(this.#button);
+    this.#button.innerText = "x";
+    this.#button.classList.add("close-button");
+  }
+  #addRemoveListener() {
+    this.#button.addEventListener("click", (e) => {
       e.stopPropagation();
-      this.root.removeChild(this.element);
-    };
-  }
-  renderChild(targetElement) {
-    this.children.forEach((child) => {
-      switch (child.type) {
-        case "folder":
-          const folder = new Folder({
-            root: this.root,
-            targetElement,
-            children: child.children,
-            name: child.name,
-            type: child.type,
-          });
-          folder.render(targetElement);
-          folder.addDoubleClickEvent();
-          folder.element.classList.add("folder");
-          folder.setPostion();
-          break;
-        case "icon":
-          const icon = new Icon({
-            root: this.root,
-            targetElement,
-            name: child.name,
-            type: child.type,
-          });
-          icon.render(targetElement);
-          icon.element.classList.add("icon");
-          icon.setPostion();
-          break;
-      }
+      this.#removeElement.classList.add("js-remove");
     });
   }
-  render(targetElement, menubar) {
-    if (menubar) {
-      const titleElement = document.createElement("div");
-      titleElement.innerText = this.name;
-      titleElement.classList.add("title", "drag");
-      this.element.appendChild(titleElement);
-    } else {
-      this.element.innerText = this.name;
-      this.element.classList.add("drag");
-    }
-    targetElement.appendChild(this.element);
-    this.addDragEvent(this.element);
+}
+class DragHandler {
+  #listenerElement;
+  #targetElement;
+  #mouseOffset = {};
+  constructor({ listenerElement, targetElement }) {
+    this.#targetElement = targetElement;
+    this.#listenerElement = listenerElement || targetElement;
+    this.#onMouseDown();
+    this.#onMouseMove();
+    this.#onMouseUp();
+    this.#onMouseLeave();
   }
-  setPostion() {
-    this.position = {
-      leftPosition: this.element.offsetLeft,
-      topPosition: this.element.offsetTop,
-    };
-    setTimeout(() => {
-      this.element.style.position = "absolute";
-      const { leftPosition, topPosition } = this.position;
-      this.element.style.left = leftPosition + "px";
-      this.element.style.top = topPosition + "px";
-    }, 0);
-  }
-  addDragEvent() {
-    this.element.addEventListener("mousedown", (e) => {
+  #onMouseDown() {
+    this.#listenerElement.addEventListener("mousedown", (e) => {
       e.stopPropagation();
       e.preventDefault();
-      if (!e.target.classList.contains("drag")) return;
-      this.draggable = true;
-      this.element.style.zIndex = 2;
-      this.mouseOffset = {
-        x: this.element.offsetLeft - e.clientX,
-        y: this.element.offsetTop - e.clientY,
-      };
+      this.#targetElement.classList.add("js-drag-on");
+      this.#mouseOffset.x = this.#targetElement.offsetLeft - e.clientX;
+      this.#mouseOffset.y = this.#targetElement.offsetTop - e.clientY;
     });
-    this.element.addEventListener("mousemove", (e) => {
+  }
+  #onMouseMove() {
+    this.#listenerElement.addEventListener("mousemove", (e) => {
       e.stopPropagation();
-      if (!e.target.classList.contains("drag")) return;
-      if (!this.draggable) return;
-      const newLocationX = e.clientX + this.mouseOffset.x + "px";
-      const newLocationY = e.clientY + this.mouseOffset.y + "px";
-      this.element.style.left = newLocationX;
-      this.element.style.top = newLocationY;
-      e.target.style.position = "absolute";
-    });
-    this.element.addEventListener("mouseleave", () => {
-      this.draggable = false;
-      this.element.style.zIndex = 0;
-    });
-    this.element.addEventListener("mouseup", () => {
-      this.draggable = false;
-      this.element.style.zIndex = 0;
+      if (!this.#targetElement.classList.contains("js-drag-on")) return;
+      this.#targetElement.style.left = e.clientX + this.#mouseOffset.x + "px";
+      this.#targetElement.style.top = e.clientY + this.#mouseOffset.y + "px";
+      this.#targetElement.style.position = "absolute";
     });
   }
-}
-class Desktop extends Window {
-  constructor({ root, targetElement, children, folder = 0, icon = 0 }) {
-    super({ root, targetElement, children });
-    this.folder = folder;
-    this.icon = icon;
-    if (this.icon || this.folder) this.autoRender();
+  #onMouseLeave() {
+    this.#listenerElement.addEventListener("mouseleave", () => {
+      this.#targetElement.classList.remove("js-drag-on");
+    });
   }
-  autoRender() {
-    const folderNumber = this.folder;
-    const iconNumber = this.icon;
-    const folder = new Array(folderNumber).fill(0).map((_, index) => ({
-      type: "folder",
-      name: `${index}폴더`,
-    }));
-    const icon = new Array(iconNumber).fill(0).map((_, index) => ({
-      type: "icon",
-      name: `${index}아이콘`,
-    }));
-    this.children = folder.concat(icon);
-    this.renderChild(this.targetElement);
-  }
-}
-class Icon extends Window {
-  constructor({ targetElement, name }) {
-    super({ targetElement, name });
+  #onMouseUp() {
+    this.#listenerElement.addEventListener("mouseup", () => {
+      this.#targetElement.classList.remove("js-drag-on");
+    });
   }
 }
 
-class Folder extends Window {
-  constructor({ root, targetElement, children, name }) {
-    super({ root, targetElement, children, name });
-    this.openedFolder = null;
+class DoubleClickHanlder {
+  #targetElement;
+  #root;
+  #newWindow;
+  #name;
+  #children;
+  constructor({ root, targetElement, name, children = [] }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#root = root;
+    this.#children = children;
+    this.#addDoubleClickEvent();
   }
-  addDoubleClickEvent() {
-    this.element.addEventListener("dblclick", (e) => {
-      e.stopPropagation();
-      if (this.openedFolder) {
-        this.root.appendChild(this.openedFolder);
+  #addDoubleClickEvent() {
+    this.#targetElement.addEventListener("dblclick", (e) => {
+      if (this.#newWindow) {
+        this.#reRenderWindow();
         return;
       }
-      const newWindow = new Window({
-        root: this.root,
-        targetElement: this.targetElement,
-        name: this.name,
-        children: this.children,
+      e.stopPropagation();
+      this.#newWindow = new Window({
+        targetElement: this.#root,
+        name: this.#name,
+        children: this.#children,
       });
-      newWindow.element.classList.add("window");
-      newWindow.render(this.root, true);
-      newWindow.renderChild(newWindow.element);
-      newWindow.makeCloseButton();
-      this.openedFolder = newWindow.element;
     });
+  }
+  #reRenderWindow() {
+    this.#newWindow.element.classList.remove("js-remove");
+  }
+}
+
+class Position {
+  #element;
+  #position = {};
+  constructor(element) {
+    this.#element = element;
+    this.#setPosition();
+  }
+  #setPosition() {
+    this.#position.leftPosition = this.#element.offsetLeft;
+    this.#position.topPosition = this.#element.offsetTop;
+    setTimeout(() => {
+      this.#element.style.position = "absolute";
+      const { leftPosition, topPosition } = this.#position;
+      this.#element.style.left = leftPosition + "px";
+      this.#element.style.top = topPosition + "px";
+    }, 0);
+  }
+}
+
+class Children {
+  #children;
+  #targetElement;
+  #icon;
+  #folder;
+  constructor({ targetElement, children = [], icon = 0, folder = 0 }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#icon = icon;
+    this.#folder = folder;
+    this.#addChildren({ icon: this.#icon, folder: this.#folder });
+    this.#renderChildren(this.#children);
+  }
+  #renderChildren(children) {
+    children.forEach((child) => {
+      switch (child.type) {
+        case "folder":
+          new Folder({
+            targetElement: this.#targetElement,
+            children: child.children,
+            name: child.name,
+          });
+          break;
+        case "icon":
+          new Icon({
+            targetElement: this.#targetElement,
+            name: child.name,
+          });
+          break;
+      }
+    });
+  }
+  #addChildren({ icon, folder }) {
+    const newIcon = new Array(icon).fill(0).map((_, index) => ({
+      type: "icon",
+      name: `${index}아이콘`,
+    }));
+    const newFolder = new Array(folder).fill(0).map((_, index) => ({
+      type: "folder",
+      name: `${index}폴더`,
+    }));
+    this.#children.push(...newFolder.concat(newIcon));
+  }
+}
+class RenderDesktop {
+  #targetElement;
+  #children;
+  #icon;
+  #folder;
+  constructor({ targetElement, children = [], icon = 0, folder = 0 }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#icon = icon;
+    this.#folder = folder;
+    new Children({
+      children: this.#children,
+      targetElement: this.#targetElement,
+      icon: this.#icon,
+      folder: this.#folder,
+    });
+  }
+}
+
+class RenderIcon {
+  #element = document.createElement("div");
+  #targetElement;
+  #name;
+  #type = "icon";
+  #dragHandler;
+  constructor({ targetElement, name }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#renderIcon({ name: this.#name, element: this.#element });
+    this.#addDragEvent({ targetElement: this.#element });
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
+  }
+}
+
+class RenderFolder {
+  #element = document.createElement("div");
+  #targetElement;
+  #children;
+  #type = "folder";
+  #name;
+  #dragHandler;
+  #doubleClickHandler;
+  constructor({ targetElement, name = "", children = [] }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#children = children;
+    this.#renderIcon({ name: this.#name, element: this.#element });
+    this.#addDragEvent({ targetElement: this.#element });
+    this.#addDoubleClickEvent({
+      root: this.#targetElement,
+      targetElement: this.#element,
+      name: this.#name,
+      children: this.#children,
+    });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #addDoubleClickEvent({ targetElement, name, children, root }) {
+    this.#doubleClickHandler = new DoubleClickHanlder({
+      targetElement,
+      name,
+      children,
+      root,
+    });
+  }
+}
+
+class RenderWindow {
+  #element = document.createElement("div");
+  #targetElement;
+  #children;
+  #name;
+  #type = "window";
+  #dragHandler;
+  #button;
+  constructor({ targetElement, children = [], name = "" }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
+    this.#renderWindow({
+      name: this.#name,
+      element: this.#element,
+      children: this.#children,
+    });
+    new Children({
+      children: this.#children,
+      targetElement: this.#element,
+    });
+  }
+  #renderIcon({ name = "", element }) {
+    element.innerText = name;
+    element.classList.add(this.#type);
+    this.#targetElement.appendChild(element);
+    new Position(this.#element);
+  }
+  #addDragEvent({ listenerElement, targetElement }) {
+    this.#dragHandler = new DragHandler({ listenerElement, targetElement });
+  }
+  #renderWindow({ name, element }) {
+    this.#renderIcon({ element });
+    const barElement = document.createElement("div");
+    barElement.innerText = name;
+    barElement.classList.add("bar");
+    element.appendChild(barElement);
+    this.#button = new Button({
+      targetElement: barElement,
+      removeElement: this.#element,
+    });
+    this.#addDragEvent({
+      listenerElement: barElement,
+      targetElement: this.#element,
+    });
+  }
+  get element() {
+    return this.#element;
+  }
+}
+
+class Desktop {
+  #targetElement;
+  #children;
+  #render;
+  constructor({ targetElement, children = [], icon, folder }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#render = new RenderDesktop({
+      targetElement: this.#targetElement,
+      type: "desktop",
+      children: this.#children,
+      icon,
+      folder,
+    });
+  }
+}
+class Icon {
+  #targetElement;
+  #name;
+  #render;
+  constructor({ targetElement, name }) {
+    this.#targetElement = targetElement;
+    this.#name = name;
+    this.#render = new RenderIcon({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "icon",
+    });
+  }
+}
+
+class Folder {
+  #targetElement;
+  #children;
+  #name;
+  #render;
+  constructor({ targetElement, children = [], name = "" }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
+    this.#render = new RenderFolder({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "folder",
+      children: this.#children,
+    });
+  }
+  get element() {
+    return this.#render.element;
+  }
+}
+
+class Window {
+  #targetElement;
+  #children;
+  #name;
+  #render;
+  constructor({ targetElement, name = "", children = [] }) {
+    this.#targetElement = targetElement;
+    this.#children = children;
+    this.#name = name;
+    this.#render = new RenderWindow({
+      targetElement: this.#targetElement,
+      name: this.#name,
+      type: "window",
+      children: this.#children,
+    });
+  }
+  get element() {
+    return this.#render.element;
   }
 }

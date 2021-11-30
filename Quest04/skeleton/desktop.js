@@ -24,40 +24,33 @@ class DragHandler {
   #listenerElement;
   #targetElement;
   #mouseOffset = {};
+  #mouseEvent;
   constructor({ listenerElement, targetElement }) {
     this.#targetElement = targetElement;
     this.#listenerElement = listenerElement || targetElement;
-    this.#onMouseDown();
-    this.#onMouseMove();
-    this.#onMouseUp();
-    this.#onMouseLeave();
+    this.#dragStartEvent();
+    this.#dragEndEvent();
   }
-  #onMouseDown() {
+  #dragStartEvent() {
     this.#listenerElement.addEventListener("mousedown", (e) => {
       e.stopPropagation();
       e.preventDefault();
       this.#targetElement.classList.add("js-drag-on");
       this.#mouseOffset.x = this.#targetElement.offsetLeft - e.clientX;
       this.#mouseOffset.y = this.#targetElement.offsetTop - e.clientY;
+      this.#mouseEvent = document.addEventListener("mousemove", (e) => {
+        e.stopPropagation();
+        if (!this.#targetElement.classList.contains("js-drag-on")) return;
+        this.#targetElement.style.left = e.clientX + this.#mouseOffset.x + "px";
+        this.#targetElement.style.top = e.clientY + this.#mouseOffset.y + "px";
+        this.#targetElement.style.position = "absolute";
+      });
     });
   }
-  #onMouseMove() {
-    this.#listenerElement.addEventListener("mousemove", (e) => {
-      e.stopPropagation();
-      if (!this.#targetElement.classList.contains("js-drag-on")) return;
-      this.#targetElement.style.left = e.clientX + this.#mouseOffset.x + "px";
-      this.#targetElement.style.top = e.clientY + this.#mouseOffset.y + "px";
-      this.#targetElement.style.position = "absolute";
-    });
-  }
-  #onMouseLeave() {
-    this.#listenerElement.addEventListener("mouseleave", () => {
+  #dragEndEvent() {
+    document.addEventListener("mouseup", () => {
       this.#targetElement.classList.remove("js-drag-on");
-    });
-  }
-  #onMouseUp() {
-    this.#listenerElement.addEventListener("mouseup", () => {
-      this.#targetElement.classList.remove("js-drag-on");
+      this.#listenerElement.removeEventListener("mousemove", this.#mouseEvent);
     });
   }
 }

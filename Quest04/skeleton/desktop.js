@@ -150,12 +150,13 @@ class Children {
     this.#children.push(...newFolder.concat(newIcon));
   }
 }
-class RenderDesktop {
+
+class Desktop {
   #targetElement;
   #children;
   #icon;
   #folder;
-  constructor({ targetElement, children = [], icon = 0, folder = 0 }) {
+  constructor({ targetElement, children = [], icon, folder }) {
     this.#targetElement = targetElement;
     this.#children = children;
     this.#icon = icon;
@@ -168,8 +169,7 @@ class RenderDesktop {
     });
   }
 }
-
-class RenderIcon {
+class Icon {
   #element = document.createElement("div");
   #targetElement;
   #name;
@@ -192,7 +192,7 @@ class RenderIcon {
   }
 }
 
-class RenderFolder {
+class Folder {
   #element = document.createElement("div");
   #targetElement;
   #children;
@@ -232,7 +232,7 @@ class RenderFolder {
   }
 }
 
-class RenderWindow {
+class Window {
   #element = document.createElement("div");
   #targetElement;
   #children;
@@ -280,78 +280,5 @@ class RenderWindow {
   }
   get element() {
     return this.#element;
-  }
-}
-
-class Desktop {
-  #targetElement;
-  #children;
-  #render;
-  constructor({ targetElement, children = [], icon, folder }) {
-    this.#targetElement = targetElement;
-    this.#children = children;
-    this.#render = new RenderDesktop({
-      targetElement: this.#targetElement,
-      type: "desktop",
-      children: this.#children,
-      icon,
-      folder,
-    });
-  }
-}
-class Icon {
-  #targetElement;
-  #name;
-  #render;
-  constructor({ targetElement, name }) {
-    this.#targetElement = targetElement;
-    this.#name = name;
-    this.#render = new RenderIcon({
-      targetElement: this.#targetElement,
-      name: this.#name,
-      type: "icon",
-    });
-  }
-}
-
-class Folder {
-  #targetElement;
-  #children;
-  #name;
-  #render;
-  constructor({ targetElement, children = [], name = "" }) {
-    this.#targetElement = targetElement;
-    this.#children = children;
-    this.#name = name;
-    this.#render = new RenderFolder({
-      targetElement: this.#targetElement,
-      name: this.#name,
-      type: "folder",
-      children: this.#children,
-    });
-  }
-  get element() {
-    return this.#render.element;
-  }
-}
-
-class Window {
-  #targetElement;
-  #children;
-  #name;
-  #render;
-  constructor({ targetElement, name = "", children = [] }) {
-    this.#targetElement = targetElement;
-    this.#children = children;
-    this.#name = name;
-    this.#render = new RenderWindow({
-      targetElement: this.#targetElement,
-      name: this.#name,
-      type: "window",
-      children: this.#children,
-    });
-  }
-  get element() {
-    return this.#render.element;
   }
 }

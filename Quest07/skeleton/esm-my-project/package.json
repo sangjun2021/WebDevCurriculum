@@ -1,3 +1,14 @@
 {
-    "name": "esm-my-project"
+  "name": "esm-my-project",
+  "version": "1.0.0",
+  "main": "./index.mjs",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "cjs-package": "file:../cjs-package",
+    "esm-package": "file:../esm-package"
+  },
+  "author": "sangjun",
+  "license": "MIT"
 }

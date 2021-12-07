@@ -1,3 +1,7 @@
 {
-    "name": "quest08"
+  "name": "quest08",
+  "main": "./server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  }
 }

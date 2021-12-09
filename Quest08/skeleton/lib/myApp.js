@@ -21,19 +21,35 @@ class MyApp {
         }
       })
       .listen(port);
-    console.log(`server is running at :${port}`);
+    console.error(`server is running at :${port}`);
   }
   get(url, callback) {
-    this.#map["GET" + url] = callback;
+    try {
+      this.#map["GET" + url] = callback;
+    } catch (e) {
+      console.error(e.message);
+    }
   }
   post(url, callback) {
-    this.#map["POST" + url] = callback;
+    try {
+      this.#map["POST" + url] = callback;
+    } catch (e) {
+      console.error(e.message);
+    }
   }
   put(url, callback) {
-    this.#map["PUT" + url] = callback;
+    try {
+      this.#map["PUT" + url] = callback;
+    } catch (e) {
+      console.error(e.message);
+    }
   }
   delete(url, callback) {
-    this.#map["DELETE" + url] = callback;
+    try {
+      this.#map["DELETE" + url] = callback;
+    } catch (e) {
+      console.error(e.meesage);
+    }
   }
   #notFound() {
     this.#res.writeHeader(404);
@@ -44,17 +60,37 @@ class MyApp {
     this.#res.end("server Error");
   }
   setMimeType(content) {
-    this.#res.setHeader("Content-Type", contentType[content]);
+    try {
+      this.#res.setHeader("Content-Type", contentType[content]);
+    } catch (e) {
+      console.error(e.message);
+      this.#serverError();
+    }
   }
   dataUpload(fileName, callback) {
-    this.#File.dataUpload(fileName, callback);
+    try {
+      this.#File.dataUpload(fileName, callback);
+    } catch (e) {
+      console.error(e.message);
+      this.#serverError();
+    }
   }
 
   dataSend(fileName, callback) {
-    this.#File.dataSend(fileName, callback);
+    try {
+      this.#File.dataSend(fileName, callback);
+    } catch (e) {
+      console.error(e.message);
+      this.#serverError();
+    }
   }
   readFile(file) {
-    return this.#File.readFile(file, "utf-8");
+    try {
+      return this.#File.readFile(file, "utf-8");
+    } catch (e) {
+      console.error(e.message);
+      this.#serverError();
+    }
   }
 }
 

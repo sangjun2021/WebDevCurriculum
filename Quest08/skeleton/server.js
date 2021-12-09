@@ -1,0 +1,40 @@
+const myApp = require("./lib/myApp");
+const app = new myApp(8080);
+
+app.get("/", (_req, res) => {
+  app.setMimeType("html");
+  res.end("<h1>hello world</h1>");
+});
+
+app.get("/foo", (_req, res, query) => {
+  app.setMimeType("text");
+  res.end(`Hello, ${query.bar}`);
+});
+
+app.get("/pic/show", (_req, res) => {
+  app.setMimeType("jpg");
+  app.dataSend("pic.jpg", () => {
+    res.end("ok");
+  });
+});
+
+app.get("/pic/download", (_req, res) => {
+  app.setMimeType("binary");
+  res.setHeader("Content-Disposition", "filename=pic.jpg");
+  app.dataSend("pic.jpg", () => {
+    res.end("ok");
+  });
+});
+
+app.post("/foo", (_req, res) => {
+  app.dataUpload("foo.json", () => {
+    const data = app.readFile("foo.json");
+    res.end(JSON.parse(data).bar);
+  });
+});
+
+app.post("/pic/upload", (_req, res) => {
+  app.dataUpload("pic.jpg", () => {
+    res.end("ok");
+  });
+});

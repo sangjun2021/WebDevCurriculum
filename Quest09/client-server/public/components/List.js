@@ -54,6 +54,10 @@ class List {
     this.#state = nextState;
     this.#render();
   }
+  setStateByApi(nextState) {
+    this.#state = nextState;
+    this.#render();
+  }
 }
 
 export default List;

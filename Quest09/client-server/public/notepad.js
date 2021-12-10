@@ -4,9 +4,10 @@ import Button from "./components/Button.js";
 import Editor from "./components/Editor.js";
 import Tab from "./components/Tab.js";
 import Files from "./components/Files.js";
+import HandleApi from "./utils/HandleAPI.js";
 class Notepad {
   #sessionStorage = new Storage(window.sessionStorage);
-  #localStorage = new Storage(window.localStorage);
+  #handleApi = new HandleApi();
   #event = new Event();
   #state;
   #editor;
@@ -34,12 +35,14 @@ class Notepad {
   //api
   #checkTitle() {
     const title = prompt("이름을 입력해주세요");
-    this.#localStorage.checkOverLap(title) ||
-      this.#setState({ ...this.#state, title });
+    if (!this.#handleApi.checkOverLap(title)) {
+      return false;
+    }
+    this.#setState({ ...this.#state, title });
   }
   //api
-  #saveFile() {
-    this.#localStorage.updateFile(this.#state);
+  async #saveFile() {
+    await this.#handleApi.updateFile(this.#state);
     this.#sessionStorage.updateFile(this.#state);
     const { id } = this.#state;
     this.#files.setState(id);
@@ -47,8 +50,8 @@ class Notepad {
   }
   //api
   #setNewEvent() {
-    this.#event.setEvent("new", () => {
-      const nextState = this.#localStorage.createFile({});
+    this.#event.setEvent("new", async () => {
+      const nextState = await this.#handleApi.createFile();
       this.#sessionStorage.insertFile(nextState);
       this.#setState(nextState);
       this.#editor.setState(this.#state.id);
@@ -56,20 +59,26 @@ class Notepad {
   }
   //api
   #setSaveEvent() {
-    this.#event.setEvent("save", () => {
+    this.#event.setEvent("save", async () => {
       try {
-        if (this.#state.title === "untitled") this.#checkTitle();
-        this.#saveFile();
+        if (this.#state.title === "untitled") {
+          const checking = await this.#checkTitle();
+          if (checking) {
+            return;
+          }
+        }
+        await this.#saveFile();
       } catch (e) {
         alert(e.message);
       }
     });
   }
   #setSaveAsEvent() {
-    this.#event.setEvent("save as", () => {
+    this.#event.setEvent("save as", async () => {
       try {
-        this.#checkTitle();
-        this.#saveFile();
+        const checking = await this.#checkTitle();
+        if (checking) return;
+        await this.#saveFile();
       } catch (e) {
         alert(e.message);
       }
@@ -77,12 +86,13 @@ class Notepad {
   }
   //api
   #setFileDeleteEvent() {
-    this.#event.setEvent("onDeleteFile", (e) => {
+    this.#event.setEvent("onDeleteFile", async (e) => {
       if (!confirm("정말 삭제하시겠습니까?")) return;
       this.#sessionStorage.removeFile(e.detail);
-      this.#localStorage.removeFile(e.detail);
+      await this.#handleApi.removeFile(e.detail);
       if (this.#state.id === e.detail) {
-        const nextState = this.#localStorage.getList()[0] || { id: null };
+        const list = await this.#handleApi.getList();
+        const nextState = list[0] || { id: null };
         this.#setState(nextState);
         this.#editor.setState(nextState.id);
       }
@@ -110,10 +120,10 @@ class Notepad {
   }
   //api
   #setFileClickEvent() {
-    this.#event.setEvent("onClickFile", (e) => {
-      const nextState = this.#localStorage.getFile(e.detail);
-      this.#sessionStorage.insertFile(nextState);
-      this.#setState(nextState);
+    this.#event.setEvent("onClickFile", async (e) => {
+      const data = await this.#handleApi.getFile(e.detail);
+      this.#sessionStorage.insertFile(data);
+      this.#setState(data);
       this.#editor.setState(this.#state.id);
     });
   }
@@ -136,8 +146,8 @@ class Notepad {
     this.#tab.setState(id);
     this.#files.setState(id);
   }
-  #init() {
-    const initList = this.#localStorage.getList();
+  async #init() {
+    const initList = await this.#handleApi.getList();
     const nextState = initList[0] || { id: null };
     this.#setState(nextState);
     this.#editor.setState(nextState.id);

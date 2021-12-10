@@ -1,7 +1,8 @@
 import List from "./List.js";
-
+import API from "../api/index.js";
 class File {
   #list;
+  #API = new API("http://localhost:8080");
   constructor(targetElement) {
     this.#list = new List({
       targetElement,
@@ -11,8 +12,9 @@ class File {
       storage: window.localStorage,
     });
   }
-  setState(id) {
-    this.#list.setState(id);
+  async setState() {
+    const list = await this.#API.getFileList();
+    this.#list.setStateByApi(list);
   }
 }
 

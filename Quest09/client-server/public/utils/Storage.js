@@ -6,7 +6,8 @@ class Storage {
   }
   getList() {
     try {
-      return JSON.parse(this.#storage.getItem(this.#key)) || [];
+      const list = JSON.parse(this.#storage.getItem(this.#key)) || [];
+      return list;
     } catch (e) {
       console.log(e.message);
       return [];

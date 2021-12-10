@@ -11,30 +11,26 @@ app.get("/foo", (_req, res, query) => {
   res.end(`Hello, ${query.bar}`);
 });
 
-app.get("/pic/show", (_req, res) => {
+app.get("/pic/show", async (_req, res) => {
+  await app.dataSend("pic.jpg");
   app.setMimeType("jpg");
-  app.dataSend("pic.jpg", () => {
-    res.end("ok");
-  });
+  res.end("ok");
 });
 
-app.get("/pic/download", (_req, res) => {
+app.get("/pic/download", async (_req, res) => {
   app.setMimeType("binary");
   res.setHeader("Content-Disposition", "filename=pic.jpg");
-  app.dataSend("pic.jpg", () => {
-    res.end("ok");
-  });
+  await app.dataSend("pic.jpg");
+  res.end("ok");
 });
 
-app.post("/foo", (_req, res) => {
-  app.dataUpload("foo.json", () => {
-    const data = app.readFile("foo.json");
-    res.end(JSON.parse(data).bar);
-  });
+app.post("/foo", async (_req, res) => {
+  await app.dataUpload("foo.json");
+  const data = app.readFile("foo.json");
+  res.end(JSON.parse(data).bar);
 });
 
-app.post("/pic/upload", (_req, res) => {
-  app.dataUpload("pic.jpg", () => {
-    res.end("ok");
-  });
+app.post("/pic/upload", async (_req, res) => {
+  await app.dataUpload("pic.jpg");
+  res.end("ok");
 });

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { finished } = require("stream/promises");
 
 class File {
   #req;
@@ -7,22 +8,18 @@ class File {
     this.#req = req;
     this.#res = res;
   }
-  dataUpload(fileName, callback) {
+  async dataUpload(fileName) {
     const writeStream = fs.createWriteStream(fileName);
     this.#req.pipe(writeStream);
-    writeStream.on("finish", () => {
-      callback();
-    });
+    return finished(writeStream);
   }
 
-  dataSend(fileName, callback) {
+  dataSend(fileName) {
     const readStream = fs.createReadStream(fileName);
     readStream.on("open", () => {
       readStream.pipe(this.#res);
     });
-    readStream.on("finish", () => {
-      callback();
-    });
+    return finished(readStream);
   }
   readFile(fileName, encode) {
     return fs.readFileSync(fileName, encode);

@@ -67,18 +67,18 @@ class MyApp {
       this.#serverError();
     }
   }
-  dataUpload(fileName, callback) {
+  dataUpload(fileName) {
     try {
-      this.#File.dataUpload(fileName, callback);
+      return this.#File.dataUpload(fileName);
     } catch (e) {
       console.error(e.message);
       this.#serverError();
     }
   }
 
-  dataSend(fileName, callback) {
+  dataSend(fileName) {
     try {
-      this.#File.dataSend(fileName, callback);
+      return this.#File.dataSend(fileName);
     } catch (e) {
       console.error(e.message);
       this.#serverError();

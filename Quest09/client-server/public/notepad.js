@@ -6,6 +6,7 @@ import Tab from "./components/Tab.js";
 import Files from "./components/Files.js";
 import HandleApi from "./utils/HandleAPI.js";
 class Notepad {
+  #isLoading = false;
   #sessionStorage = new Storage(window.sessionStorage);
   #handleApi = new HandleApi();
   #event = new Event();
@@ -33,11 +34,10 @@ class Notepad {
     this.#init();
   }
   //api
-  #checkTitle() {
+  async #checkTitle() {
     const title = prompt("이름을 입력해주세요");
-    if (!this.#handleApi.checkOverLap(title)) {
-      return false;
-    }
+    const checking = await this.#handleApi.checkOverLap(title);
+    if (checking) return true;
     this.#setState({ ...this.#state, title });
   }
   //api
@@ -45,42 +45,61 @@ class Notepad {
     await this.#handleApi.updateFile(this.#state);
     this.#sessionStorage.updateFile(this.#state);
     const { id } = this.#state;
-    this.#files.setState(id);
+    await this.#files.setState(id);
     this.#tab.setState(id);
   }
   //api
   #setNewEvent() {
     this.#event.setEvent("new", async () => {
-      const nextState = await this.#handleApi.createFile();
-      this.#sessionStorage.insertFile(nextState);
-      this.#setState(nextState);
-      this.#editor.setState(this.#state.id);
+      try {
+        if (this.#isLoading) {
+          console.log("아직 로딩중입니다.");
+          return;
+        }
+        this.#isLoading = true;
+        const nextState = await this.#handleApi.createFile();
+        this.#sessionStorage.insertFile(nextState);
+        this.#setState(nextState);
+        this.#editor.setState(this.#state.id);
+        this.#isLoading = false;
+      } catch (e) {
+        console.log(e.message);
+        this.#isLoading = false;
+        return;
+      }
     });
   }
   //api
-  #setSaveEvent() {
+  async #setSaveEvent() {
     this.#event.setEvent("save", async () => {
+      if (this.#isLoading) return;
+      this.#isLoading = true;
       try {
+        let checking = false;
         if (this.#state.title === "untitled") {
-          const checking = await this.#checkTitle();
-          if (checking) {
-            return;
-          }
+          checking = await this.#checkTitle();
         }
+        if (checking) throw new Error("중복된 이름입니다.");
         await this.#saveFile();
+        this.#isLoading = false;
       } catch (e) {
         alert(e.message);
+        this.#isLoading = false;
       }
     });
   }
   #setSaveAsEvent() {
     this.#event.setEvent("save as", async () => {
+      if (this.#isLoading) return;
+      this.#isLoading = true;
       try {
         const checking = await this.#checkTitle();
-        if (checking) return;
+        if (checking) throw new Error("중복된 이름입니다.");
         await this.#saveFile();
+        this.#isLoading = false;
       } catch (e) {
         alert(e.message);
+        this.#isLoading = false;
       }
     });
   }
@@ -136,8 +155,9 @@ class Notepad {
   }
   #setInputEvent() {
     this.#event.setEvent("updateText", (e) => {
-      this.#setState({ ...this.#state, text: e.detail });
+      this.#state = { ...this.#state, text: e.detail };
       this.#sessionStorage.updateFile({ ...this.#state, edit: true });
+      this.#tab.setState(this.#state.id);
     });
   }
   #setState(nextState) {

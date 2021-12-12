@@ -3,7 +3,9 @@ class File {
   async getFile(id) {
     try {
       const fileHandler = await fsPromise.open(`files/${id}.json`);
-      return fileHandler.readFile({ encoding: "utf-8" });
+      const data = fileHandler.readFile({ encoding: "utf-8" });
+      fileHandler.close();
+      return data;
     } catch (e) {
       return false;
     }
@@ -28,22 +30,27 @@ class File {
   async #addFileList(id, title) {
     const fileHandler = await fsPromise.open("files/fileList.txt");
     const file = await fileHandler.readFile({ encoding: "utf-8" });
-    console.log("file : ", JSON.parse(file));
     const parsing = JSON.parse(file);
     const data = [...parsing, { id, title }];
     const newData = JSON.stringify(data);
-    return fsPromise.writeFile("files/fileList.txt", newData);
+    const result = fsPromise.writeFile("files/fileList.txt", newData);
+    fileHandler.close();
+    return result;
   }
   async #deleteFileList(id) {
     const fileHandler = await fsPromise.open("files/fileList.txt");
     const file = await fileHandler.readFile({ encoding: "utf-8" });
     const data = JSON.parse(file).filter((post) => post.id !== id);
     const newData = JSON.stringify(data);
-    return fsPromise.writeFile("files/fileList.txt", newData);
+    const result = fsPromise.writeFile("files/fileList.txt", newData);
+    fileHandler.close();
+    return result;
   }
   async getFileList() {
     const fileHandler = await fsPromise.open("files/fileList.txt");
-    return fileHandler.readFile({ encoding: "utf-8" });
+    const result = await fileHandler.readFile({ encoding: "utf-8" });
+    await fileHandler.close();
+    return result;
   }
 }
 

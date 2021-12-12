@@ -3,8 +3,8 @@ class File {
   async getFile(id) {
     try {
       const fileHandler = await fsPromise.open(`files/${id}.json`);
-      const data = fileHandler.readFile({ encoding: "utf-8" });
-      fileHandler.close();
+      const data = await fileHandler.readFile({ encoding: "utf-8" });
+      await fileHandler.close();
       return data;
     } catch (e) {
       return false;
@@ -13,7 +13,7 @@ class File {
   async deleteFile(id) {
     try {
       await fsPromise.unlink(`files/${id}.json`);
-      return this.#deleteFileList(id);
+      return await this.#deleteFileList(id);
     } catch (e) {
       return false;
     }
@@ -33,8 +33,8 @@ class File {
     const parsing = JSON.parse(file);
     const data = [...parsing, { id, title }];
     const newData = JSON.stringify(data);
-    const result = fsPromise.writeFile("files/fileList.txt", newData);
-    fileHandler.close();
+    const result = await fsPromise.writeFile("files/fileList.txt", newData);
+    await fileHandler.close();
     return result;
   }
   async #deleteFileList(id) {
@@ -42,8 +42,8 @@ class File {
     const file = await fileHandler.readFile({ encoding: "utf-8" });
     const data = JSON.parse(file).filter((post) => post.id !== id);
     const newData = JSON.stringify(data);
-    const result = fsPromise.writeFile("files/fileList.txt", newData);
-    fileHandler.close();
+    const result = await fsPromise.writeFile("files/fileList.txt", newData);
+    await fileHandler.close();
     return result;
   }
   async getFileList() {

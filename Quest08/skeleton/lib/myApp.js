@@ -8,48 +8,31 @@ class MyApp {
   #File;
   constructor(port) {
     http
-      .createServer((req, res) => {
+      .createServer(async (req, res) => {
         const { path, query } = urlUtil(req.url);
         this.#res = res;
         this.#File = new File(req, res);
         !this.#map[req.method + path] && this.#notFound();
         try {
-          this.#map[req.method + path](req, res, query);
+          await this.#map[req.method + path](req, res, query);
         } catch (e) {
           console.error(e.message);
           this.#serverError();
         }
       })
-      .listen(port);
-    console.error(`server is running at :${port}`);
+      .listen(port, () => console.log(`server is running at :${port}`));
   }
-  get(url, callback) {
-    try {
-      this.#map["GET" + url] = callback;
-    } catch (e) {
-      console.error(e.message);
-    }
+  get(url, handleRequest) {
+    this.#map["GET" + url] = handleRequest;
   }
-  post(url, callback) {
-    try {
-      this.#map["POST" + url] = callback;
-    } catch (e) {
-      console.error(e.message);
-    }
+  async post(url, handleRequest) {
+    this.#map["POST" + url] = await handleRequest;
   }
-  put(url, callback) {
-    try {
-      this.#map["PUT" + url] = callback;
-    } catch (e) {
-      console.error(e.message);
-    }
+  async put(url, handleRequest) {
+    this.#map["PUT" + url] = await handleRequest;
   }
-  delete(url, callback) {
-    try {
-      this.#map["DELETE" + url] = callback;
-    } catch (e) {
-      console.error(e.meesage);
-    }
+  async delete(url, handleRequest) {
+    this.#map["DELETE" + url] = await handleRequest;
   }
   #notFound() {
     this.#res.writeHeader(404);
@@ -60,37 +43,17 @@ class MyApp {
     this.#res.end("server Error");
   }
   setMimeType(content) {
-    try {
-      this.#res.setHeader("Content-Type", contentType[content]);
-    } catch (e) {
-      console.error(e.message);
-      this.#serverError();
-    }
+    this.#res.setHeader("Content-Type", contentType[content]);
   }
-  dataUpload(fileName) {
-    try {
-      return this.#File.dataUpload(fileName);
-    } catch (e) {
-      console.error(e.message);
-      this.#serverError();
-    }
+  async dataUpload(fileName) {
+    return await this.#File.dataUpload(fileName);
   }
 
-  dataSend(fileName) {
-    try {
-      return this.#File.dataSend(fileName);
-    } catch (e) {
-      console.error(e.message);
-      this.#serverError();
-    }
+  async dataSend(fileName) {
+    return await this.#File.dataSend(fileName);
   }
-  readFile(file) {
-    try {
-      return this.#File.readFile(file, "utf-8");
-    } catch (e) {
-      console.error(e.message);
-      this.#serverError();
-    }
+  async readFile(file) {
+    return await this.#File.readFile(file, "utf-8");
   }
 }
 

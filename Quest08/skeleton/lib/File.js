@@ -1,6 +1,10 @@
 const fs = require("fs");
+const fsPromise = require("fs/promises");
 const { finished } = require("stream/promises");
-
+const delay = (second) =>
+  new Promise((res) => {
+    setTimeout(() => res(), second * 1000);
+  });
 class File {
   #req;
   #res;
@@ -9,20 +13,21 @@ class File {
     this.#res = res;
   }
   async dataUpload(fileName) {
+    await delay(2);
     const writeStream = fs.createWriteStream(fileName);
     this.#req.pipe(writeStream);
-    return finished(writeStream);
+    return await finished(writeStream);
   }
 
-  dataSend(fileName) {
+  async dataSend(fileName) {
     const readStream = fs.createReadStream(fileName);
     readStream.on("open", () => {
       readStream.pipe(this.#res);
     });
-    return finished(readStream);
+    return await finished(readStream);
   }
-  readFile(fileName, encode) {
-    return fs.readFileSync(fileName, encode);
+  async readFile(fileName, encode) {
+    return await fsPromise.readFile(fileName, { encoding: encode });
   }
 }
 

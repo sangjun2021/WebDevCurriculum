@@ -12,21 +12,19 @@ app.get("/foo", (_req, res, query) => {
 });
 
 app.get("/pic/show", async (_req, res) => {
-  await app.dataSend("pic.jpg");
   app.setMimeType("jpg");
-  res.end("ok");
+  await app.dataSend("pic.jpg");
 });
 
 app.get("/pic/download", async (_req, res) => {
   app.setMimeType("binary");
   res.setHeader("Content-Disposition", "filename=pic.jpg");
   await app.dataSend("pic.jpg");
-  res.end("ok");
 });
 
 app.post("/foo", async (_req, res) => {
   await app.dataUpload("foo.json");
-  const data = app.readFile("foo.json");
+  const data = await app.readFile("foo.json");
   res.end(JSON.parse(data).bar);
 });
 

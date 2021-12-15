@@ -17,6 +17,12 @@ class Storage {
       return [];
     }
   }
+  setCurrentPage(id) {
+    this.#storage.setItem(`${this.#key}_currentPage`, id);
+  }
+  getCurrentPage() {
+    return this.#storage.getItem(`${this.#key}_currentPage`) || null;
+  }
   #onKey() {
     this.#event.setEvent("onKey", (e) => {
       this.#setKey(e.detail);

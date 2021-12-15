@@ -233,8 +233,8 @@ class Notepad {
     const auth = await this.#fileStorage.auth();
     if (!auth) return;
     this.#event.dispatch("onKey", auth);
-    const initList = await this.#fileStorage.getList();
-    const nextState = initList[0] || { id: null };
+    const currentPage = this.#tabStorage.getCurrentPage();
+    const nextState = { id: currentPage };
     this.#setState(nextState);
     this.#editor.setState(nextState.id);
   }

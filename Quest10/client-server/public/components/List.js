@@ -51,6 +51,7 @@ class List {
       if (tab.id !== id) return { ...tab, isSelected: false };
       return { ...tab, isSelected: true };
     });
+    this.#storage.setCurrentPage(id);
     this.#state = nextState;
     this.#render();
   }

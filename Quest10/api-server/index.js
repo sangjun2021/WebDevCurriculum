@@ -50,6 +50,7 @@ app.post("/login", async (req, res) => {
   });
   res.send(JSON.stringify({ username }));
 });
+
 app.get("/auth", (req, res) => {
   const { sid } = req.cookies;
   const result = session.filter((item) => item.sid === sid);

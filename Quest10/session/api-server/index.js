@@ -13,9 +13,9 @@ const corsOptions = {
   credentials: true,
 };
 const session = [
-  { username: "user1", sid: "" },
-  { username: "user2", sid: "" },
-  { username: "user3", sid: "" },
+  { username: "user1", authKey: "" },
+  { username: "user2", authKey: "" },
+  { username: "user3", authKey: "" },
 ];
 app.use(cookieParser());
 app.use(express.json());
@@ -23,8 +23,8 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
   try {
     res.setHeader("content-type", "application/json");
-    const { sid } = req.cookies;
-    const result = session.filter((item) => item.sid === sid);
+    const { authKey } = req.cookies;
+    const result = session.filter((item) => item.authKey === authKey);
     if (result.length) dataHandler.setUser(result[0].username);
     next();
   } catch (e) {
@@ -42,12 +42,12 @@ app.post("/login", async (req, res) => {
     const key = password;
     const result = auth.validate(key, value);
     if (!result) throw new Error("");
-    const sid = uuidv4();
+    const authKey = uuidv4();
     session.forEach((item) => {
-      if (item.username === username) item.sid = sid;
+      if (item.username === username) item.authKey = authKey;
     });
     dataHandler.setUser(username);
-    res.cookie("sid", sid, {
+    res.cookie("authKey", authKey, {
       maxAge: 60 * 60 * 12,
     });
     res.send(JSON.stringify({ username }));
@@ -58,8 +58,8 @@ app.post("/login", async (req, res) => {
 
 app.get("/auth", (req, res) => {
   try {
-    const { sid } = req.cookies;
-    const result = session.filter((item) => item.sid === sid);
+    const { authKey } = req.cookies;
+    const result = session.filter((item) => item.authKey === authKey);
     if (result.length) dataHandler.setUser(result[0].username);
     result.length
       ? res.send(JSON.stringify(result[0].username))
@@ -118,12 +118,12 @@ app.delete("/post/:id", async (req, res) => {
 });
 app.delete("/logout", (req, res) => {
   try {
-    const { sid } = req.cookies;
+    const { authKey } = req.cookies;
     session.forEach((item) => {
-      if (item.sid === sid) item.sid = "";
+      if (item.authKey === authKey) item.authKey = "";
     });
     dataHandler.setUser("");
-    res.cookie("sid", 0, {
+    res.cookie("authKey", 0, {
       maxAge: 0,
     });
     res.send();

@@ -48,7 +48,7 @@ app.post("/login", async (req, res) => {
     });
     dataHandler.setUser(username);
     res.cookie("sid", sid, {
-      maxAge: 60 * 60 * 3600,
+      maxAge: 60 * 60 * 12,
     });
     res.send(JSON.stringify({ username }));
   } catch (e) {
@@ -113,6 +113,22 @@ app.delete("/post/:id", async (req, res) => {
     await dataHandler.deleteFile(id);
     res.status(200).send("ok");
   } catch (e) {
+    res.status(500).send();
+  }
+});
+app.delete("/logout", (req, res) => {
+  try {
+    const { sid } = req.cookies;
+    session.forEach((item) => {
+      if (item.sid === sid) item.sid = "";
+    });
+    dataHandler.setUser("");
+    res.cookie("sid", 0, {
+      maxAge: 0,
+    });
+    res.send();
+  } catch (e) {
+    console.log(e);
     res.status(500).send();
   }
 });

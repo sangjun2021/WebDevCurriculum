@@ -17,6 +17,9 @@ class HandleApi {
   async auth() {
     return await this.#API.auth();
   }
+  async logOut() {
+    return await this.#API.logOut();
+  }
   async createFile() {
     const file = {
       title: "untitled",

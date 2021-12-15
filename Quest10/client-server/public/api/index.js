@@ -16,8 +16,18 @@ class API {
     const result = await this.#request("auth", {
       credentials: "include",
     }).then((res) => res.json());
-    console.log(result);
     return result;
+  }
+  async logOut() {
+    try {
+      await this.#request("logout", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
   async login(username, password) {
     const data = await this.#request(`login`, {
@@ -44,8 +54,12 @@ class API {
     return data;
   }
   async getFileList() {
-    const data = await this.#request(`post/list`).then((res) => res.json());
-    return data;
+    try {
+      const data = await this.#request(`post/list`).then((res) => res.json());
+      return data;
+    } catch (e) {
+      return [];
+    }
   }
   async deleteFile(id) {
     await this.#request(`post/${id}`, {

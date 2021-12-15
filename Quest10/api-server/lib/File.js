@@ -16,6 +16,9 @@ class File {
     this.#user = user;
     return true;
   }
+  getUser() {
+    return this.#user;
+  }
   async getUserPasswordList() {
     try {
       const fileHandler = await fsPromise.open(`userList/userPassword.json`);

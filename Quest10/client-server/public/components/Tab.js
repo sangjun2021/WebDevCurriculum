@@ -8,7 +8,7 @@ class Tab {
       className: "tab",
       deleteEvent: "onDeleteTab",
       clickEvent: "onClickTab",
-      storage: window.sessionStorage,
+      storage: window.localStorage,
     });
   }
   setState(id) {

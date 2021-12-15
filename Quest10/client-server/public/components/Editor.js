@@ -2,7 +2,7 @@ import Storage from "../utils/Storage.js";
 import Event from "../utils/Event.js";
 class Editor {
   #targetElement;
-  #sessionStorage = new Storage(window.sessionStorage);
+  #Storage = new Storage(window.localStorage);
   #state = {};
   #event = new Event();
   constructor(targetElement) {
@@ -12,7 +12,7 @@ class Editor {
     });
   }
   #onInput(text) {
-    const nextState = this.#sessionStorage.updateFile({
+    const nextState = this.#Storage.updateFile({
       id: this.#state.id,
       text,
       title: this.#state.title,
@@ -24,7 +24,7 @@ class Editor {
     this.#targetElement.innerText = this.#state.text || "";
   }
   setState(id) {
-    this.#state = this.#sessionStorage.getFile(id) || { text: null };
+    this.#state = this.#Storage.getFile(id) || { text: null };
     this.#render();
   }
 }

@@ -12,7 +12,7 @@ class File {
       storage: window.localStorage,
     });
   }
-  async setState() {
+  async setState(id) {
     const list = await this.#API.getFileList();
     this.#list.setStateByApi(list);
   }

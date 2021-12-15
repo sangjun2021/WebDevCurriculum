@@ -1,8 +1,12 @@
+import Event from "./Event.js";
+
 class Storage {
   #storage;
-  #key = "notepad";
+  #key;
+  #event = new Event();
   constructor(storage) {
     this.#storage = storage;
+    this.#onKey();
   }
   getList() {
     try {
@@ -12,6 +16,14 @@ class Storage {
       console.log(e.message);
       return [];
     }
+  }
+  #onKey() {
+    this.#event.setEvent("onKey", (e) => {
+      this.#setKey(e.detail);
+    });
+  }
+  #setKey(key) {
+    this.#key = key;
   }
   #setList(nextState) {
     this.#storage.setItem(this.#key, JSON.stringify(nextState));

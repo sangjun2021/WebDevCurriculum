@@ -7,6 +7,16 @@ class HandleApi {
   async insertFile(nextFile) {
     return await this.#API.createFile(nextFile);
   }
+  async login(username, password) {
+    try {
+      return this.#API.login(username, password);
+    } catch (e) {
+      return false;
+    }
+  }
+  async auth() {
+    return await this.#API.auth();
+  }
   async createFile() {
     const file = {
       title: "untitled",

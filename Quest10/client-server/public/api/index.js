@@ -8,9 +8,29 @@ class API {
   constructor(url) {
     this.#url = url;
   }
-
   async #request(url, option) {
     const data = await fetch(`${this.#url}/${url}`, option);
+    return data;
+  }
+  async auth() {
+    const result = await this.#request("auth", {
+      credentials: "include",
+    }).then((res) => res.json());
+    console.log(result);
+    return result;
+  }
+  async login(username, password) {
+    const data = await this.#request(`login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    }).then((res) => res.json());
     return data;
   }
   async CheckOverLap(title) {

@@ -7,7 +7,16 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const dataHandler = new File();
 const auth = new Auth();
+const { sequelize } = require("./models");
 
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결 성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200,

@@ -1,9 +1,9 @@
 import List from "./List.js";
-import API from "../api/index.js";
 class File {
   #list;
-  #API = new API("http://localhost:8080");
-  constructor(targetElement) {
+  #API;
+  constructor(targetElement, api) {
+    this.#API = api;
     this.#list = new List({
       targetElement,
       className: "file",
@@ -13,7 +13,7 @@ class File {
     });
   }
   async setState(id) {
-    const list = await this.#API.getFileList();
+    const list = await this.#API.getList();
     this.#list.setStateByApi(list);
   }
 }

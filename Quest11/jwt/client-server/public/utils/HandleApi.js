@@ -1,6 +1,8 @@
-import API from "../api/index.js";
 class HandleApi {
-  #API = new API("http://localhost:8080");
+  #API;
+  constructor(api) {
+    this.#API = api;
+  }
   async getList() {
     return await this.#API.getFileList();
   }
@@ -9,7 +11,8 @@ class HandleApi {
   }
   async login(username, password) {
     try {
-      return this.#API.login(username, password);
+      const result = await this.#API.login(username, password);
+      return result;
     } catch (e) {
       return false;
     }

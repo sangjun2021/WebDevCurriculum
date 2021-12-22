@@ -6,6 +6,7 @@ import Tab from "./components/Tab.js";
 import Files from "./components/Files.js";
 import HandleApi from "./utils/HandleAPI.js";
 import Login from "./components/Login.js";
+import API from "./api/tokenApi.js";
 class Notepad {
   #isLoading = false;
   #tabStorage;
@@ -27,7 +28,7 @@ class Notepad {
   }) {
     this.#editor = new Editor(editorTarget);
     this.#tab = new Tab(tabTarget);
-    this.#files = new Files(filesTarget);
+    this.#files = new Files(filesTarget, fileStorage);
     this.#button = new Button(buttonTarget);
     this.#fileStorage = fileStorage;
     this.#tabStorage = tabStorage;
@@ -249,5 +250,5 @@ new Notepad({
   buttonTarget,
   filesTarget,
   tabStorage: new Storage(window.localStorage),
-  fileStorage: new HandleApi(),
+  fileStorage: new HandleApi(new API("http://localhost:8080")),
 });

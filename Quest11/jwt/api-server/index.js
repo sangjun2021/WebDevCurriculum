@@ -20,8 +20,10 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
   try {
     res.setHeader("content-type", "application/json");
-    const { authKey } = req.cookies;
-    if (!authKey) {
+    const authKey = req.headers.authorization;
+    console.log(typeof authKey);
+    if (authKey === "undefined") {
+      console.log("토큰없음");
       next();
       return;
     }
@@ -46,8 +48,7 @@ app.post("/login", async (req, res) => {
     if (!result) throw new Error("");
     const authKey = auth.createToken(username);
     dataHandler.setUser(username);
-    res.cookie("authKey", authKey);
-    res.send(JSON.stringify({ username }));
+    res.send(JSON.stringify({ username, authKey }));
   } catch (e) {
     res.status(404).send("user info not found");
   }
@@ -55,8 +56,9 @@ app.post("/login", async (req, res) => {
 
 app.get("/auth", (req, res) => {
   try {
-    const { authKey } = req.cookies;
-    if (!authKey) {
+    console.log("인증요청 들어옴");
+    const authKey = req.headers.authorization;
+    if (authKey === "undefined") {
       res.status(200).send("false");
       return;
     }

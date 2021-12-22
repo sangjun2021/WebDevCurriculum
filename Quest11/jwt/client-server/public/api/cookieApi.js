@@ -15,7 +15,8 @@ class API {
   async auth() {
     const result = await this.#request("auth", {
       credentials: "include",
-    }).then((res) => res.json());
+    });
+    result.json();
     return result;
   }
   async logOut() {
@@ -40,22 +41,24 @@ class API {
         username,
         password,
       }),
-    }).then((res) => res.json());
+    });
+    data.json();
     return data;
   }
   async CheckOverLap(title) {
-    const data = await this.#request(`check/${title}`).then((res) =>
-      res.json()
-    );
+    const data = await this.#request(`check/${title}`);
+    data.json();
     return data;
   }
   async getFile(id) {
-    const data = await this.#request(`post/${id}`).then((res) => res.json());
+    const data = await this.#request(`post/${id}`);
+    data.json();
     return data;
   }
   async getFileList() {
     try {
-      const data = await this.#request(`post/list`).then((res) => res.json());
+      const data = await this.#request(`post/list`);
+      data.json();
       return data;
     } catch (e) {
       return [];
@@ -73,7 +76,8 @@ class API {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payLoad),
-    }).then((res) => res.json());
+    });
+    data.json();
     return data;
   }
   async updateFile(payLoad) {
@@ -83,7 +87,8 @@ class API {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payLoad),
-    }).then((res) => res.json());
+    });
+    data.json();
     return data;
   }
 }

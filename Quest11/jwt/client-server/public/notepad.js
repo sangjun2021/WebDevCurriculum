@@ -36,6 +36,7 @@ class Notepad {
     this.#button.createButton("save");
     this.#button.createButton("save as");
     this.#button.createButton("logIn");
+    this.#button.createButton("logOut");
     this.#setNewEvent();
     this.#setSaveEvent();
     this.#setSaveAsEvent();
@@ -45,6 +46,7 @@ class Notepad {
     this.#setFileDeleteEvent();
     this.#setFileClickEvent();
     this.#setLoginEvent();
+    this.#setLogOutEvent();
     this.#init();
   }
   //api
@@ -214,6 +216,17 @@ class Notepad {
       await this.#init();
       this.#event.dispatch("onKey", result.username);
       this.#event.dispatch("modalOff");
+    });
+  }
+  #setLogOutEvent() {
+    this.#event.setEvent("logOut", async () => {
+      await this.#fileStorage.logOut();
+      this.#event.dispatch("onKey", "");
+      const currentPage = this.#tabStorage.getCurrentPage();
+      const nextState = { id: currentPage };
+      this.#editor.setState(nextState.id);
+      this.#files.logout();
+      this.#tab.logout();
     });
   }
   #setInputEvent() {

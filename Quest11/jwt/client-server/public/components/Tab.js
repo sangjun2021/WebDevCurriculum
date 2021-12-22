@@ -14,6 +14,9 @@ class Tab {
   setState(id) {
     this.#list.setState(id);
   }
+  logout() {
+    this.#list.setStateByList([]);
+  }
 }
 
 export default Tab;

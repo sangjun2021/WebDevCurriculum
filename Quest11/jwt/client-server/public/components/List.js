@@ -55,7 +55,7 @@ class List {
     this.#state = nextState;
     this.#render();
   }
-  setStateByApi(nextState) {
+  setStateByList(nextState) {
     this.#state = nextState;
     this.#render();
   }

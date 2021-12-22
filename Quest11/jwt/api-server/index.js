@@ -1,28 +1,19 @@
 const express = require("express");
-const File = require("./lib/File");
 const Auth = require("./lib/Auth");
 const { v4: uuidv4 } = require("uuid");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const app = express();
-const dataHandler = new File();
-const auth = new Auth();
 const { sequelize } = require("./models");
-
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("데이터베이스 연결 성공");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+const DB = require("./lib/Db");
+const dataHandler = new DB(sequelize);
+const auth = new Auth();
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
   credentials: true,
 };
 
+const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors(corsOptions));

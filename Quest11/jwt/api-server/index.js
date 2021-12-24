@@ -3,9 +3,9 @@ const Auth = require("./lib/Auth");
 const { v4: uuidv4 } = require("uuid");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { sequelize } = require("./models");
-const DB = require("./lib/Db");
-const dataHandler = new DB(sequelize);
+const service = require("./lib/service");
+const Controller = require("./lib/controller");
+const dataHandler = new Controller(service);
 const auth = new Auth();
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -39,9 +39,11 @@ app.post("/login", async (req, res) => {
       "userPassword"
     );
     const { username, password } = req.body;
-    const value = JSON.parse(passwordHash)[username];
-    const key = password;
-    const result = auth.validate(key, value);
+    const hash = JSON.parse(passwordHash)[username].password;
+    const salt = JSON.parse(passwordHash)[username].salt;
+    console.log(hash);
+    console.log(salt);
+    const result = await auth.validateKey(password, salt, hash);
 
     if (!result) throw new Error("");
     const authKey = auth.createToken(username);
@@ -52,7 +54,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/auth", (req, res) => {
+app.get("/auth", async (req, res) => {
   try {
     const authKey = req.headers.authorization;
     if (authKey === "undefined") {
@@ -60,7 +62,7 @@ app.get("/auth", (req, res) => {
       return;
     }
     const result = auth.validateToken(authKey);
-    if (result) dataHandler.setUser(result.username);
+    if (result) await dataHandler.setUser(result.username);
     result
       ? res.status(200).send(JSON.stringify(result.username))
       : res.status(200).send("false");

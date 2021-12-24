@@ -1,22 +1,39 @@
-const crypto = require("crypto");
+const { pbkdf2Sync } = require("crypto");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 class Auth {
-  #hash;
+  #iterations;
+  #keylen;
   #disgest;
+  #expression;
   constructor() {
-    this.#hash = "sha512";
-    this.#disgest = "base64";
+    this.#iterations = 100000;
+    this.#keylen = 64;
+    this.#disgest = "sha512";
+    this.#expression = "hex";
   }
-  create(key) {
-    return crypto.createHash(this.#hash).update(key).digest(this.#disgest);
+  async createKey(key, salt) {
+    const hash = await pbkdf2Sync(
+      key,
+      salt,
+      this.#iterations,
+      this.#keylen,
+      this.#disgest
+    );
+    const result = hash.toString(this.#expression);
+    return { result, salt };
   }
-  validate(key, value) {
-    const hash = crypto
-      .createHash(this.#hash)
-      .update(key)
-      .digest(this.#disgest);
-    if (hash === value) return true;
+  async validateKey(key, salt, value) {
+    const hash = await pbkdf2Sync(
+      key,
+      salt,
+      this.#iterations,
+      this.#keylen,
+      this.#disgest
+    );
+    const result = hash.toString(this.#expression);
+
+    if (result === value) return true;
     else return false;
   }
   createToken(username) {

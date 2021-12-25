@@ -8,7 +8,7 @@ const app = express();
 const dataHandler = new File();
 const auth = new Auth();
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "http://127.0.0.1:5500"],
   optionsSuccessStatus: 200,
   credentials: true,
 };
@@ -17,9 +17,9 @@ const session = [
   { username: "user2", authKey: "" },
   { username: "user3", authKey: "" },
 ];
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors(corsOptions));
 app.use((req, res, next) => {
   try {
     res.setHeader("content-type", "application/json");

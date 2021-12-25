@@ -67,6 +67,7 @@ class Notepad {
       alert("로그인을 먼저 해주세요");
       return;
     }
+    console.log(this.#state);
     await this.#fileStorage.updateFile(this.#state);
     this.#tabStorage.updateFile(this.#state);
     const { id } = this.#state;

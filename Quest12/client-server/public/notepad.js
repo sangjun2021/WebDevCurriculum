@@ -263,5 +263,5 @@ new Notepad({
   buttonTarget,
   filesTarget,
   tabStorage: new Storage(window.localStorage),
-  fileStorage: new HandleApi(new API("http://localhost:8080")),
+  fileStorage: new HandleApi(new API("https://localhost:443")),
 });

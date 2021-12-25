@@ -1,4 +1,7 @@
 const express = require("express");
+const https = require("https");
+const http = require("http");
+const fs = require("fs");
 const Auth = require("./lib/Auth");
 const { v4: uuidv4 } = require("uuid");
 const cors = require("cors");
@@ -8,7 +11,7 @@ const Controller = require("./lib/controller");
 const dataHandler = new Controller(service);
 const auth = new Auth();
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://localhost:3001",
   optionsSuccessStatus: 200,
   credentials: true,
 };
@@ -129,11 +132,21 @@ app.put("/post/:id", async (req, res) => {
     res.status(500).send();
   }
 });
-
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send("Something broke!");
 });
-app.listen(8080, () => {
-  console.log("server is running at 8080");
-});
+const option = {
+  key: fs.readFileSync(__dirname + "/key.pem", "utf-8"),
+  cert: fs.readFileSync(__dirname + "/cert.pem", "utf-8"),
+};
+try {
+  https.createServer(option, app).listen(443, () => {
+    console.log("server is running with https");
+  });
+} catch (e) {
+  http.createServer(app).listen(8080, () => {
+    console.log(e.message);
+    console.log("server is running with http");
+  });
+}

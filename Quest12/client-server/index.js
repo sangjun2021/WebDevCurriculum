@@ -7,8 +7,8 @@ const app = express();
 app.use(express.static("public"));
 
 const option = {
-  key: fs.readFileSync(__dirname + "/key.pem", "utf-8"),
-  cert: fs.readFileSync(__dirname + "/cert.pem", "utf-8"),
+  key: fs.readFileSync(__dirname + "/keys/key.pem", "utf-8"),
+  cert: fs.readFileSync(__dirname + "/keys/cert.pem", "utf-8"),
 };
 
 https.createServer(option, app).listen(3001, () => {

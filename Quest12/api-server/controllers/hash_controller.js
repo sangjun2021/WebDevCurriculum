@@ -1,7 +1,6 @@
 const { pbkdf2Sync } = require("crypto");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-class Auth {
+
+class HashController {
   #iterations;
   #keylen;
   #disgest;
@@ -32,18 +31,10 @@ class Auth {
       this.#disgest
     );
     const result = hash.toString(this.#expression);
-
     if (result === value) return true;
     else return false;
   }
-  createToken(username) {
-    return jwt.sign({ username }, process.env.JWT_KEY, {
-      expiresIn: "600m",
-    });
-  }
-  validateToken(token) {
-    return jwt.verify(token, process.env.JWT_KEY);
-  }
 }
 
-module.exports = Auth;
+const hashController = new HashController();
+module.exports = hashController;

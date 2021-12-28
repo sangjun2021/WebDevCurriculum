@@ -1,4 +1,4 @@
-const { sequelize } = require("./index");
+const { sequelize } = require("./base");
 const { DataTypes } = require("sequelize");
 
 const postModel = sequelize.define("Post", {

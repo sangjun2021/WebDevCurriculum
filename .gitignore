@@ -6,8 +6,4 @@ bower_components/*
 **/.DS_Store
 **/Thumbs.db
 npm-debug.log
-.pem
-Quest12/client-server/keys/cert.pem
-Quest12/client-server/keys/key.pem
-Quest12/api-server/keys/cert.pem
-Quest12/api-server/keys/key.pem
+*.pem

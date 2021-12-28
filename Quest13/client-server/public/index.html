@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./notepad.js" type="module"></script>
+  </head>
+  <body>
+    <aside class="left-sidebar">
+      <ul class="button-container"></ul>
+      <ul class="file-container"></ul>
+    </aside>
+    <main class="editor-container">
+      <nav class="tab-container">
+        <ul class="tab-list"></ul>
+      </nav>
+      <div
+        class="text-editor"
+        data-placeholder="내용을 입력해주세요."
+        contenteditable="true"
+        tabindex="0"
+      ></div>
+    </main>
+  </body>
+</html>

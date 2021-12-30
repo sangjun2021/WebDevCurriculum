@@ -1,30 +1,35 @@
-const graphql = require("graphql");
-const postType = require("./post_schema");
-const userResolver = require("../resolvers/user_resolver");
-const postResolver = require("../resolvers/post_resolver");
-const userMutationType = new graphql.GraphQLObjectType({
-  name: "CraetePost",
+const { GraphQLObjectType, GraphQLString } = require("graphql");
+const writeResolver = require("../resolvers/write_resolver");
+const deleteResolver = require("../resolvers/delete_resolover");
+const payLoadType = require("./payLoad_schema");
+const errorType = require("./error_schema");
+const mutation = new GraphQLObjectType({
+  name: "mutation",
   fields: {
-    username: { type: graphql.GraphQLString },
-    post: { type: postType, resolve: postResolver },
-  },
-  args: {
-    id: {
-      type: graphql.GraphQLString,
-    },
-  },
-});
-const mutation = new graphql.GraphQLObjectType({
-  name: "Mutaion",
-  fields: {
-    user: {
-      type: userMutationType,
+    writeFile: {
+      type: errorType,
       args: {
         token: {
-          type: new graphql.GraphQLNonNull(graphql.GraphQLString),
+          type: GraphQLString,
+        },
+        id: {
+          type: GraphQLString,
+        },
+        payLoad: {
+          type: payLoadType,
         },
       },
-      resolve: userResolver,
+      resolve: writeResolver,
+    },
+    deleteFile: {
+      type: errorType,
+      args: {
+        token: {
+          type: GraphQLString,
+        },
+        id: { type: GraphQLString },
+      },
+      resolve: deleteResolver,
     },
   },
 });

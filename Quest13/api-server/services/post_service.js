@@ -13,7 +13,6 @@ class PostService {
           userId: userId,
         },
       });
-      console.log(result);
       return result.dataValues;
     } catch (e) {
       console.log("postService select error: ", e.message);

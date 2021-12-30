@@ -6,7 +6,7 @@ import Tab from "./components/Tab.js";
 import Files from "./components/Files.js";
 import HandleApi from "./utils/HandleAPI.js";
 import Login from "./components/Login.js";
-import API from "./api/tokenApi.js";
+import API from "./api/graphQLApi.js";
 
 class Notepad {
   #isLoading = false;

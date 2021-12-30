@@ -1,88 +1,187 @@
-class GraphQl {
+class GraphQlAPI {
   #url;
   constructor(url) {
     this.#url = url;
   }
-  async #request(body) {
-    // const dice = 3;
-    // const sides = 6;
-    // const query = `query RollDice($dice: Int!, $sides: Int) {
-    //   rollDice(numDice: $dice, numSides: $sides)
-    // }`;
-    // body: JSON.stringify({
-    //   query,
-    //   variables: { dice, sides },
-    // }),
-
-    const reuslt = fetch("https://localhost:443/graphql", {
+  async #request(query, variables) {
+    const data = await fetch(`${this.#url}/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
     });
-    const data = result.json();
-    return data;
+    const result = data.json();
+    return result;
   }
   async auth() {
-    const result = await this.#request("auth", {
-      credentials: "include",
-    });
-    return result.json();
+    try {
+      const token = window.localStorage.getItem("jwt");
+      const query = `
+    query($token : String!)
+      {
+        user(token : $token){
+          username
+        }
+      }
+    `;
+      const variables = { token };
+      const result = await this.#request(query, variables);
+      const { username } = result.data.user;
+      return username;
+    } catch (e) {
+      return false;
+    }
   }
   async logOut() {
     window.localStorage.removeItem("jwt");
   }
   async login(username, password) {
-    const result = await this.#request(`login`, {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-    const data = await result.json();
-    console.log(data);
-    window.localStorage.setItem("jwt", data.authKey);
-    return data;
+    try {
+      const query = `
+    query($username : String, $password : String)
+      {
+        login(loginForm : {username : $username, password : $password}){
+          token
+        }
+      }
+    `;
+      const variables = { username, password };
+      const result = await this.#request(query, variables);
+      console.log(result);
+      const { token } = result.data.login;
+      window.localStorage.setItem("jwt", token);
+      return token;
+    } catch (e) {
+      console.log(e);
+    }
   }
   async CheckOverLap(title) {
-    const data = await this.#request(`check/${title}`);
-    return data.json();
+    const posts = await this.getFileList();
+    const result = posts.filter((post) => post.title !== title);
+    if (result.length === 0) return true;
+    return false;
   }
   async getFile(id) {
-    const data = await this.#request(`post/${id}`);
-    return data.json();
+    try {
+      const token = window.localStorage.getItem("jwt");
+      const query = `
+    query($token : String!, $id : String){
+        user(token : $token){
+         post(id : $id){
+           id
+           title
+           text
+        }
+      }
+    }
+    `;
+      const variables = { token, id };
+      const result = await this.#request(query, variables);
+      const { post } = result.data.user;
+      return JSON.stringify(post);
+    } catch (e) {
+      return false;
+    }
   }
   async getFileList() {
     try {
-      const data = await this.#request(`post/list`);
-      return data.json();
+      const token = window.localStorage.getItem("jwt");
+      const query = `
+    query($token : String!){
+        user(token : $token){
+          posts{
+            title
+            text
+            id
+          }
+        }
+    }
+    `;
+      const variables = { token };
+      const result = await this.#request(query, variables);
+      const { posts } = result.data.user;
+      return posts;
     } catch (e) {
-      return [];
+      return false;
     }
   }
   async deleteFile(id) {
-    await this.#request(`post/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const token = window.localStorage.getItem("jwt");
+      const query = `
+    mutation($token : String,$id : String){
+        deleteFile(id : $id, token : $token){
+          error
+        }
+      }
+    `;
+      const variables = { token, id };
+      const result = await this.#request(query, variables);
+      const { error } = result.data;
+      return !error;
+    } catch (e) {
+      return false;
+    }
   }
+
   async createFile(payLoad) {
-    const data = await this.#request(`post`, {
-      method: "POST",
-      body: JSON.stringify(payLoad),
-    });
-    return data.json();
+    try {
+      const token = window.localStorage.getItem("jwt");
+      const { title, text } = payLoad;
+      const query = `
+    mutation($token : String, $title : String, $text : String){
+        writeFile(
+          payLoad : {
+          title : $title,
+          text : $text
+        }, 
+        token : $token)
+        {
+          title
+          text
+          id
+        }
+      }
+    `;
+      const variables = { token, title, text };
+      const result = await this.#request(query, variables);
+      return ({ title, text, id } = result.data.writeFile);
+    } catch (e) {
+      return false;
+    }
   }
   async updateFile(payLoad) {
-    const data = await this.#request(`post/${payLoad.id}`, {
-      method: "PUT",
-      body: JSON.stringify(payLoad),
-    });
-    return data.json();
+    try {
+      const token = window.localStorage.getItem("jwt");
+      const { title, text, id } = payLoad;
+      const query = `
+    mutation($token : String, $title : String, $text : String, $id : String){
+        writeFile(
+          id : $id,
+          payLoad : {
+          title : $title,
+          text : $text
+        }, 
+        token : $token)
+        {
+          title
+          text
+          id
+        }
+      }
+    `;
+      const variables = { token, title, text, id };
+      const result = await this.#request(query, variables);
+      return ({ title, text, id } = result.data.writeFile);
+    } catch (e) {
+      return false;
+    }
   }
 }
 
-export default GraphQl;
+export default GraphQlAPI;

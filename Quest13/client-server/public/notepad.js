@@ -7,6 +7,7 @@ import Files from "./components/Files.js";
 import HandleApi from "./utils/HandleAPI.js";
 import Login from "./components/Login.js";
 import API from "./api/tokenApi.js";
+
 class Notepad {
   #isLoading = false;
   #tabStorage;
@@ -18,6 +19,7 @@ class Notepad {
   #files;
   #button;
   #login = new Login();
+
   constructor({
     editorTarget,
     tabTarget,
@@ -252,6 +254,7 @@ class Notepad {
     this.#editor.setState(nextState.id);
   }
 }
+
 const editorTarget = document.querySelector(".text-editor");
 const tabTarget = document.querySelector(".tab-list");
 const buttonTarget = document.querySelector(".button-container");

@@ -1,6 +1,4 @@
-const controller = require("../../controllers/index");
-
-const postResolver = async (_, { id }) => {
+const postResolver = async (_, { id }, { controller }) => {
   try {
     return await controller.getFile(id);
   } catch (e) {

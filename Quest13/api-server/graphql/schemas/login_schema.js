@@ -1,13 +1,13 @@
-const graphql = require("graphql");
+const { GraphQLBoolean, GraphQLObjectType, GraphQLString } = require("graphql");
 
-const loginType = new graphql.GraphQLObjectType({
+const loginType = new GraphQLObjectType({
   name: "login",
   fields: {
     token: {
-      type: graphql.GraphQLString,
+      type: GraphQLString,
     },
     error: {
-      type: graphql.GraphQLBoolean,
+      type: GraphQLBoolean,
     },
   },
 });

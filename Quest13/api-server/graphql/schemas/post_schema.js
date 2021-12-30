@@ -1,14 +1,19 @@
-const graphql = require("graphql");
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLBoolean,
+} = require("graphql");
 
-const postType = new graphql.GraphQLObjectType({
+const postType = new GraphQLObjectType({
   name: "Post",
   fields: {
-    id: { type: graphql.GraphQLString },
-    title: { type: graphql.GraphQLString },
-    text: { type: graphql.GraphQLString },
-    userId: { type: graphql.GraphQLInt },
+    id: { type: GraphQLString },
+    title: { type: GraphQLString },
+    text: { type: GraphQLString },
+    userId: { type: GraphQLInt },
     error: {
-      type: graphql.GraphQLBoolean,
+      type: GraphQLBoolean,
     },
   },
 });

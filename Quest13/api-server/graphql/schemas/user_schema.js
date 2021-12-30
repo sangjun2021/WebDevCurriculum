@@ -6,7 +6,7 @@ const userType = new graphql.GraphQLObjectType({
   name: "User",
   fields: {
     username: { type: graphql.GraphQLString },
-    error: { type: graphql.GraphQLString },
+    error: { type: graphql.GraphQLBoolean },
     posts: {
       type: new graphql.GraphQLList(postType),
       resolve: postsResolver,

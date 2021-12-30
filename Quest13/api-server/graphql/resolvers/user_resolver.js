@@ -1,7 +1,4 @@
-const controller = require("../../controllers/index");
-const authkey = controller.createToken("user1");
-console.log(authkey);
-const userResolver = async (_, { token }) => {
+const userResolver = async (_, { token }, { controller }) => {
   try {
     const { username } = controller.validateToken(token);
     if (!username) throw new Error("");

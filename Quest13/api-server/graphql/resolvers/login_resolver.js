@@ -1,9 +1,5 @@
-const graphql = require("graphql");
-const controller = require("../../controllers/index");
-
-const loginResolver = async (_, { loginForm }) => {
+const loginResolver = async (_, { loginForm }, { controller }) => {
   try {
-    console.log("로그인 리졸버 실행");
     const { username, password } = loginForm;
     const userList = await controller.getUserPasswordList();
     const userInfo = userList[username];

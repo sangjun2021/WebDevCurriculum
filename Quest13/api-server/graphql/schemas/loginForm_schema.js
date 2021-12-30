@@ -1,13 +1,13 @@
-const graphql = require("graphql");
+const { GraphQLString, GraphQLInputObjectType } = require("graphql");
 
-const loginFormType = new graphql.GraphQLInputObjectType({
+const loginFormType = new GraphQLInputObjectType({
   name: "loginForm",
   fields: {
     username: {
-      type: graphql.GraphQLString,
+      type: GraphQLString,
     },
     password: {
-      type: graphql.GraphQLString,
+      type: GraphQLString,
     },
   },
 });

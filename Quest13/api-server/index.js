@@ -1,9 +1,9 @@
 const express = require("express");
 const https = require("https");
-const http = require("http");
 const fs = require("fs");
 const cors = require("cors");
 const { graphqlHTTP } = require("express-graphql");
+const controller = require("./controllers/index");
 const graphql = require("graphql");
 const corsOptions = {
   origin: "https://localhost:3001",
@@ -21,6 +21,9 @@ app.use(
   graphqlHTTP({
     schema: schema,
     graphiql: true,
+    context: {
+      controller,
+    },
   })
 );
 
@@ -29,6 +32,6 @@ const option = {
   cert: fs.readFileSync(__dirname + "/keys/cert.pem", "utf-8"),
 };
 
-https.createServer(option, app).listen(441, () => {
+https.createServer(option, app).listen(443, () => {
   console.log("server is running with https");
 });

@@ -15,10 +15,10 @@ class UserService {
       console.log("userService insert error : ", e.message);
     }
   }
-  async getUserId(username) {
+  async getUser(username) {
     try {
       const currentUser = await this.#userModel.findOne({
-        attributes: ["id"],
+        attributes: ["id", "username"],
         where: {
           username: username,
         },

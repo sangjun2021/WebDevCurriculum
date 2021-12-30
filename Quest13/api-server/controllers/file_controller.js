@@ -75,7 +75,7 @@ class File {
     const fileHandler = await fsPromise.open(`${this.#user}/fileList.txt`);
     const result = await fileHandler.readFile({ encoding: "utf-8" });
     await fileHandler.close();
-    return result;
+    return JSON.parse(result);
   }
 }
 

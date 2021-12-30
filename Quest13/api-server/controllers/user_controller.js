@@ -12,7 +12,7 @@ class UserController {
     return await this.#service.getUserPasswordList();
   }
   async getUserId(username) {
-    return await this.#service.getUserId(username);
+    return await this.#service.getUser(username);
   }
   async setUser(username) {
     const userId = await this.#service.getUserId(username);

@@ -13,6 +13,7 @@ class PostService {
           userId: userId,
         },
       });
+      console.log(result);
       return result.dataValues;
     } catch (e) {
       console.log("postService select error: ", e.message);
@@ -60,7 +61,7 @@ class PostService {
   async getPostList(userId) {
     try {
       const result = await this.#postModel.findAll({
-        attributes: ["id", "title"],
+        attributes: ["id", "title", "text"],
         where: {
           userId: userId,
         },
@@ -69,7 +70,8 @@ class PostService {
       result.forEach((record) => {
         const id = record.dataValues.id;
         const title = record.dataValues.title;
-        listArray.push({ id, title });
+        const text = record.dataValues.text;
+        listArray.push({ id, title, text });
       });
       return listArray;
     } catch (e) {

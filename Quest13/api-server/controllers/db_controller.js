@@ -46,7 +46,7 @@ class DbController {
   }
   async getFile(id) {
     const result = await this.#postController.getPost(id, this.#currentUser);
-    return JSON.stringify(result);
+    return result;
   }
   async deleteFile(id) {
     await this.#postController.deletePost(id, this.#currentUser);

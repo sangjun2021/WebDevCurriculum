@@ -32,7 +32,7 @@ class GraphQlAPI {
       const variables = { token };
       const result = await this.#request(query, variables);
       const { username } = result.data.user;
-      return username;
+      if (username) return username;
     } catch (e) {
       return false;
     }
@@ -52,12 +52,13 @@ class GraphQlAPI {
     `;
       const variables = { username, password };
       const result = await this.#request(query, variables);
-      console.log(result);
       const { token } = result.data.login;
+      if (!token) throw new Error();
       window.localStorage.setItem("jwt", token);
-      return token;
+      return { username };
     } catch (e) {
       console.log(e);
+      return false;
     }
   }
   async CheckOverLap(title) {

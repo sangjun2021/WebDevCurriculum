@@ -31,6 +31,7 @@ class List {
     try {
       this.#targetElement.innerHTML = this.#state
         .map((file) => {
+          if (!file.id) return;
           return `<li class="${this.#className} ${
             file.isSelected ? "js-selected" : ""
           }" data-id="${file.id}">

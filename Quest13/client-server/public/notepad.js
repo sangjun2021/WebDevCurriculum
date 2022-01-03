@@ -97,7 +97,7 @@ class Notepad {
         this.#editor.setState(this.#state.id);
         this.#isLoading = false;
       } catch (e) {
-        console.log(e.message);
+        console.log(e);
         this.#isLoading = false;
         return;
       }

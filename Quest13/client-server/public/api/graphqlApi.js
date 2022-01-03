@@ -21,6 +21,7 @@ class GraphQlAPI {
   async auth() {
     try {
       const token = window.localStorage.getItem("jwt");
+      if (!token) return;
       const query = `
     query($token : String!)
       {
@@ -84,7 +85,7 @@ class GraphQlAPI {
       const variables = { token, id };
       const result = await this.#request(query, variables);
       const { post } = result.data.user;
-      return JSON.stringify(post);
+      return post;
     } catch (e) {
       return false;
     }
@@ -151,8 +152,18 @@ class GraphQlAPI {
     `;
       const variables = { token, title, text };
       const result = await this.#request(query, variables);
-      return ({ title, text, id } = result.data.writeFile);
+      const {
+        title: newTitle,
+        text: newText,
+        id: newId,
+      } = result.data.writeFile;
+      return {
+        title: newTitle,
+        text: newText,
+        id: newId,
+      };
     } catch (e) {
+      console.log(e);
       return false;
     }
   }

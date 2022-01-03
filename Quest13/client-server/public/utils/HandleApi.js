@@ -30,11 +30,11 @@ class HandleApi {
       isEdited: false,
     };
     const data = await this.insertFile(file);
-    return JSON.parse(data);
+    return data;
   }
   async getFile(id) {
     const data = await this.#API.getFile(id);
-    return JSON.parse(data);
+    return data;
   }
   async checkOverLap(title) {
     return await this.#API.CheckOverLap(title);

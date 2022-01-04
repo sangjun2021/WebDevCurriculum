@@ -3,7 +3,7 @@ import List from './List.js';
 class Tab {
   #list;
 
-  constructor(targetElement) {
+  constructor(targetElement : HTMLElement) {
     this.#list = new List({
       targetElement,
       className: 'tab',

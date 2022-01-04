@@ -1,49 +1,60 @@
-import Event from "./Event.js";
+import Event from './Event';
 
 class Storage {
-  #storage;
-  #key;
-  #event = new Event();
-  constructor(storage) {
-    this.#storage = storage;
-    this.#onKey();
+  private storage : any;
+
+  private key : string;
+
+  private event : any = new Event();
+
+  constructor(storage : any) {
+    this.storage = storage;
+    this.onKey();
   }
+
   getList() {
     try {
-      const list = JSON.parse(this.#storage.getItem(this.#key)) || [];
+      const list = JSON.parse(this.storage.getItem(this.key)) || [];
       return list;
     } catch (e) {
       console.log(e.message);
       return [];
     }
   }
+
   setCurrentPage(id) {
-    this.#storage.setItem(`${this.#key}_currentPage`, id);
+    this.storage.setItem(`${this.key}_currentPage`, id);
   }
+
   getCurrentPage() {
-    return this.#storage.getItem(`${this.#key}_currentPage`) || null;
+    return this.storage.getItem(`${this.key}_currentPage`) || null;
   }
-  #onKey() {
-    this.#event.setEvent("onKey", (e) => {
-      this.#setKey(e.detail);
+
+  private onKey() {
+    this.event.setEvent('onKey', (e) => {
+      this.setKey(e.detail);
     });
   }
-  #setKey(key) {
-    this.#key = key;
+
+  private setKey(key : string) {
+    this.key = key;
   }
-  #setList(nextState) {
-    this.#storage.setItem(this.#key, JSON.stringify(nextState));
+
+  private setList(nextState) {
+    this.storage.setItem(this.key, JSON.stringify(nextState));
   }
+
   insertFile(nextFile) {
     const prevState = this.getList();
     const isExist = prevState.find((file) => file.id === nextFile.id);
     if (isExist) return;
     const nextState = [...prevState, nextFile];
-    this.#setList(nextState);
+    this.setList(nextState);
     return nextState;
   }
-  createFile({ title = "untitled", text = "" }) {
-    const id = this.#makeId();
+
+  createFile({ title = 'untitled', text = '' }) {
+    const id = this.makeId();
     const file = {
       title,
       text,
@@ -53,16 +64,21 @@ class Storage {
     this.insertFile(file);
     return file;
   }
+
   getFile(id) {
     const nextFile = this.getList().find((file) => file.id === id);
     return nextFile;
   }
+
   checkOverLap(title) {
     const prevState = this.getList().find((file) => file.title === title);
-    if (prevState) throw new Error("중복된 파일이름입니다.");
+    if (prevState) throw new Error('중복된 파일이름입니다.');
     return prevState;
   }
-  updateFile({ id, title, text, edit }) {
+
+  updateFile({
+    id, title, text, edit,
+  }) {
     let result;
     const prevState = this.getList();
     const nextState = prevState.map((file) => {
@@ -73,15 +89,17 @@ class Storage {
       result = file;
       return file;
     });
-    this.#setList(nextState);
+    this.setList(nextState);
     return result;
   }
+
   removeFile(id) {
     const prevState = this.getList();
     const nextState = prevState.filter((file) => file.id !== id);
-    this.#setList(nextState);
+    this.setList(nextState);
   }
-  #makeId() {
+
+  makeId() {
     const dateString = Date.now().toString(36);
     const randomness = Math.random().toString(36).substr(2);
     return dateString + randomness;

@@ -1,10 +1,12 @@
+import { eventType } from '../types/event';
+
 class Event {
-  constructor() {}
-  dispatch(type, data) {
+  dispatch(type : eventType, data) : void {
     const event = new CustomEvent(type, { detail: data });
     window.dispatchEvent(event);
   }
-  setEvent(type, func) {
+
+  setEvent(type :eventType, func : any) : void {
     window.addEventListener(type, (e) => {
       func(e);
     });

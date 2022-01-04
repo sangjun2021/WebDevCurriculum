@@ -1,12 +1,11 @@
 import Event from '../utils/Event.js';
-import { loginType } from '../types/login.d.ts';
 
-class Login implements loginType {
+class Login {
   private modal : HTMLElement | null = null;
 
   private login : HTMLElement | null = null;
 
-  private event = new Event();
+  private event : any = new Event();
 
   private userInput : HTMLElement | null = null;
 

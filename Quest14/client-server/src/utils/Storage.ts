@@ -1,7 +1,7 @@
-import Event from './Event';
-import { postType } from '../types/post.d.ts';
-import { storageType } from '../types/storage.d.ts';
-import { eventType } from '../types/event.d.ts';
+import Event from './Event.js';
+import { postType } from '../types/post';
+import { storageType } from '../types/storage';
+import { eventType } from '../types/event';
 
 class Storage implements storageType {
   private storage : any;
@@ -16,9 +16,9 @@ class Storage implements storageType {
     this.onKey();
   }
 
-  getList() : Array<postType | null> {
+  getList() : Array<postType> {
     try {
-      const list : Array<postType | null> = JSON.parse(this.storage.getItem(this.key)) || [];
+      const list : Array<postType> = JSON.parse(this.storage.getItem(this.key)) || [];
       return list;
     } catch (e : any) {
       console.log(e.message);
@@ -45,15 +45,21 @@ class Storage implements storageType {
     this.key = key;
   }
 
-  private setList(nextState : postType) : void {
+  private setList(nextState : Array<postType | null | undefined>) : void {
     this.storage.setItem(this.key, JSON.stringify(nextState));
   }
 
   insertFile(nextFile : postType) : Array<postType | null> | false {
-    const prevState : Array<postType> = this.getList();
-    const isExist : Array<postType> = prevState.find((file : postType) => file.id === nextFile.id);
-    if (isExist.length !== 0) return false;
-    const nextState = [...prevState, nextFile];
+    const prevState : Array<postType | null> = this.getList();
+    const isExist : postType | null | undefined = prevState.find((file : postType | null) => {
+      if (file !== null) {
+        return file.id === nextFile.id;
+      }
+    });
+    if (isExist !== undefined) {
+      return false;
+    }
+    const nextState : Array<postType | null> = [...prevState, nextFile];
     this.setList(nextState);
     return nextState;
   }
@@ -70,27 +76,31 @@ class Storage implements storageType {
     return file;
   }
 
-  getFile(id : string) : postType {
-    const nextFile : postType = this.getList().find((file) => file.id === id);
-    return nextFile;
+  getFile(id : string) : postType | null | undefined {
+    const nextFile : Array<postType | null | undefined> = this.getList().filter((file : postType | null) => {
+      if (file === null) return false;
+      return file.id === id;
+    });
+    const nextState = nextFile[0];
+    return nextState;
   }
 
-  checkOverLap(title :string) : postType {
-    const prevState : postType = this.getList().find((file) => file.title === title);
-    if (prevState) throw new Error('중복된 파일이름입니다.');
+  checkOverLap(title :string) : postType | null | undefined {
+    const prevState : postType | null | undefined = this.getList().find((file : postType) => file.title === title);
+    if (prevState === null || prevState === undefined) throw new Error('중복된 파일이름입니다.');
     return prevState;
   }
 
   updateFile({
-    id, title, text, edit,
+    id, title, text, isEdited,
   } : postType) : postType {
-    let result : postType;
-    const prevState : Array<postType | null> = this.getList();
-    const nextState : Array<postType | null> = prevState.map((file : postType) => {
+    let result : postType = { id };
+    const prevState : Array<postType> = this.getList();
+    const nextState : Array<postType | undefined> = prevState.map((file : postType) => {
       if (file.id !== id) return file;
       file.title = title || file.title;
       file.text = text || file.text;
-      file.isEdited = edit;
+      file.isEdited = isEdited;
       result = file;
       return file;
     });
@@ -99,8 +109,8 @@ class Storage implements storageType {
   }
 
   removeFile(id :string) : void {
-    const prevState : Array<postType | null> = this.getList();
-    const nextState : Array<postType|null> = prevState.filter((file : postType) => file.id !== id);
+    const prevState : Array<postType> = this.getList();
+    const nextState : Array<postType> = prevState.filter((file : postType) => file.id !== id);
     this.setList(nextState);
   }
 

@@ -1,50 +1,54 @@
 import Storage from '../utils/Storage.js';
 import Event from '../utils/Event.js';
+import { postType } from '../types/post';
+import { storageType } from '../types/storage';
+import { listArgsType, listType } from '../types/list';
 
-class List {
-  #className : string;
+class List implements listType {
+  private className : string;
 
-  #deleteEvent;
+  private deleteEvent : any;
 
-  #clickEvent;
+  private clickEvent : any;
 
-  #state;
+  private state : Array<postType | boolean> = [{}];
 
-  #targetElement : HTMLElement;
+  private targetElement : HTMLElement;
 
-  #event = new Event();
+  private event = new Event();
 
-  #storage;
+  private storage : storageType;
 
   constructor({
     targetElement, className, deleteEvent, clickEvent, storage,
-  }) {
-    this.#targetElement = targetElement;
-    this.#className = className;
-    this.#deleteEvent = deleteEvent;
-    this.#clickEvent = clickEvent;
-    this.#storage = new Storage(storage);
-    this.#render();
-    this.#setEvent();
+  } : listArgsType) {
+    this.targetElement = targetElement;
+    this.className = className;
+    this.deleteEvent = deleteEvent;
+    this.clickEvent = clickEvent;
+    this.storage = new Storage(storage);
+    this.render();
+    this.setEvent();
   }
 
-  #setEvent() {
-    this.#targetElement.addEventListener('click', (e) => {
+  private setEvent() : void {
+    this.targetElement.addEventListener('click', (e : any) => {
       const { id } = e.target.closest('li').dataset;
       if (e.target.id === 'js-close-button') {
-        this.#event.dispatch(this.#deleteEvent, id);
+        this.event.dispatch(this.deleteEvent, id);
       } else {
-        this.#event.dispatch(this.#clickEvent, id);
+        this.event.dispatch(this.clickEvent, id);
       }
     });
   }
 
-  #render() {
+  private render() : void {
     try {
-      this.#targetElement.innerHTML = this.#state
-        .map((file) => {
-          if (!file.id) return;
-          return `<li class="${this.#className} ${
+      this.targetElement.innerHTML = this.state
+        .map((file : postType | boolean) => {
+          if (typeof file === 'boolean') return;
+          if (file.id === undefined) return;
+          return `<li class="${this.className} ${
             file.isSelected ? 'js-selected' : ''
           }" data-id="${file.id}">
           <span class="title ${file.isEdited ? 'js-edited' : ''}">${
@@ -54,24 +58,30 @@ class List {
           </li>`;
         })
         .join('');
-    } catch (e) {
+    } catch (e : any) {
       console.log(e.message);
     }
   }
 
-  setState(id) {
-    const nextState = this.#storage.getList().map((tab) => {
+  setState(id : string | undefined) : void {
+    const nextState : Array<postType> = this.storage.getList().map((tab) => {
       if (tab.id !== id) return { ...tab, isSelected: false };
       return { ...tab, isSelected: true };
     });
-    this.#storage.setCurrentPage(id);
-    this.#state = nextState;
-    this.#render();
+    if (id === undefined) return;
+    this.storage.setCurrentPage(id);
+    this.state = nextState;
+    this.render();
   }
 
-  setStateByList(nextState) {
-    this.#state = nextState;
-    this.#render();
+  setStateByList(nextState : Array<postType | boolean>) : void {
+    if (typeof nextState === 'boolean') {
+      this.state = [];
+      this.render();
+      return;
+    }
+    this.state = nextState;
+    this.render();
   }
 }
 

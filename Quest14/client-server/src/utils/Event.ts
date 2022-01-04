@@ -1,4 +1,4 @@
-import { eventNameType, eventType } from '../types/event.d.ts';
+import { eventNameType, eventType } from '../types/event';
 
 class Event implements eventType {
   dispatch(type : eventNameType, data : any) : void {

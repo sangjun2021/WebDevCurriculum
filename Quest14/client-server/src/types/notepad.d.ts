@@ -1,25 +1,11 @@
-export interface notepadType{
-  checkTitle
-  saveFile
-  setNewEvent
-  setSaveEvent
-  setSaveAsEvent
-  setFileDeleteEvent
-  setTabDeleteEvent
-  setFileClickEvent
-  setTabClickEvent
-  setLoginEvent
-  setLogOutEvent
-  setInputEvent
-  setState
-  init
-}
+import { handleApiType } from './handleApi';
+import { storageType } from './storage';
 
-export interface notepadArgType{
-  editorTarget : HTMLElement,
-  tabTarget : HTMLElement,
-  buttonTarget : HTMLElement,
-  filesTarget : HTMLElement,
-  tabStorage: any,
-  fileStorage: any,
+export interface notepadArgsType{
+    editorTarget : HTMLElement | null
+    tabTarget : HTMLElement | null
+    buttonTarget :HTMLElement | null
+    filesTarget : HTMLElement | null
+    fileStorage : handleApiType | null
+    tabStorage : storageType | null
 }

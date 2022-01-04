@@ -1,6 +1,6 @@
-import { postType } from '../types/post.d.ts';
-import { apiType } from '../types/api.d.ts';
-import { handleApiType } from '../types/handleApi.d.ts';
+import { postType } from '../types/post';
+import { apiType } from '../types/api';
+import { handleApiType } from '../types/handleApi';
 
 class HandleApi implements handleApiType {
   private API : apiType;
@@ -9,7 +9,7 @@ class HandleApi implements handleApiType {
     this.API = api;
   }
 
-  async getList() : Promise<Array<postType> | boolean> {
+  async getList() : Promise<Array<postType | boolean>> {
     const result = await this.API.getFileList();
     return result;
   }
@@ -34,12 +34,12 @@ class HandleApi implements handleApiType {
   }
 
   async logOut() : Promise<void> {
-    const result = await this.API.logOut();
+    const result = await this.API.logout();
     return result;
   }
 
   async createFile() : Promise<postType | boolean> {
-    const file = {
+    const file : postType = {
       title: 'untitled',
       text: '',
       isEdited: false,
@@ -48,13 +48,13 @@ class HandleApi implements handleApiType {
     return data;
   }
 
-  async getFile(id :string) : Promise<postType> {
+  async getFile(id :string) : Promise<postType | boolean> {
     const data = await this.API.getFile(id);
     return data;
   }
 
   async checkOverLap(title : string) : Promise<boolean> {
-    const result = await this.API.CheckOverLap(title);
+    const result = await this.API.checkOverLap(title);
     return result;
   }
 

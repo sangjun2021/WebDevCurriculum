@@ -4,7 +4,8 @@
         "es2021": true
     },
     "extends": [
-        "airbnb-base"
+        "airbnb-base",
+        "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -15,5 +16,15 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "no-unused-vars": "warn",
+        "class-methods-use-this" : "warn",
+        "consistent-return" : "warn",
+        "no-param-reassign": "warn",
+        "no-alert" :"warn",
+        "no-new" : "warn",
+        "max-len" :"off",
+        "no-restricted-globals":"warn",
+        "array-callback-return" : "warn"
+        
     }
 }

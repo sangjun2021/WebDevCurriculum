@@ -1,39 +1,44 @@
 import Storage from '../utils/Storage.js';
 import Event from '../utils/Event.js';
+import { postType } from '../types/post';
+import { eventType } from '../types/event';
+import { editorType } from '../types/editor';
 
-class Editor {
-  #targetElement : HTMLElement;
+class Editor implements editorType {
+  private targetElement : HTMLElement;
 
-  #Storage = new Storage(window.localStorage);
+  private Storage : any = new Storage(window.localStorage);
 
-  #state = {};
+  private state : postType = {};
 
-  #event = new Event();
+  private event : eventType = new Event();
 
   constructor(targetElement :HTMLElement) {
-    this.#targetElement = targetElement;
-    this.#targetElement.addEventListener('input', (e : Event) => {
-      this.#onInput(e.target.innerText);
+    this.targetElement = targetElement;
+    this.targetElement.addEventListener('input', (e : any) => {
+      this.onInput(e.target.innerText);
     });
   }
 
-  #onInput(text :string) {
-    const nextState = this.#Storage.updateFile({
-      id: this.#state.id,
+  private onInput(text :string) : void {
+    const nextState = this.Storage.updateFile({
+      id: this.state.id,
       text,
-      title: this.#state.title,
-      edit: true,
+      title: this.state.title,
+      isEdited: true,
     });
-    this.#event.dispatch('updateText', nextState.text);
+    console.log(this.state.id);
+    this.event.dispatch('updateText', nextState.text);
   }
 
-  #render() {
-    this.#targetElement.innerText = this.#state.text || '';
+  private render() : void {
+    this.targetElement.innerText = this.state.text || '';
   }
 
-  setState(id : string) {
-    this.#state = this.#Storage.getFile(id) || { text: null };
-    this.#render();
+  setState(id : string | undefined) : void {
+    if (id === undefined) return;
+    this.state = this.Storage.getFile(id) || { text: null };
+    this.render();
   }
 }
 

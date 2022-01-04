@@ -1,7 +1,7 @@
 export interface postType {
-  id : string;
+  id? : string;
   title? : string;
   text? : string;
   isSelected? : boolean;
-  edit? : boolean;
+  isEdited? : boolean;
 }

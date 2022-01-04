@@ -1,10 +1,11 @@
+import { listType } from '../types/list';
 import List from './List.js';
 
 class Tab {
-  #list;
+  private list : listType;
 
   constructor(targetElement : HTMLElement) {
-    this.#list = new List({
+    this.list = new List({
       targetElement,
       className: 'tab',
       deleteEvent: 'onDeleteTab',
@@ -13,12 +14,12 @@ class Tab {
     });
   }
 
-  setState(id) {
-    this.#list.setState(id);
+  setState(id : string | undefined) : void {
+    this.list.setState(id);
   }
 
-  logout() {
-    this.#list.setStateByList([]);
+  logout() : void {
+    this.list.setStateByList([]);
   }
 }
 

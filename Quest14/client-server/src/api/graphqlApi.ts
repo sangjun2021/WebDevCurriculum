@@ -1,6 +1,6 @@
-import { postType } from '../types/post.ts';
-import { variablesType } from '../types/variables.ts';
-import { apiType } from '../types/api.d.ts';
+import { postType } from '../types/post';
+import { variablesType } from '../types/variables';
+import { apiType } from '../types/api';
 
 class GraphQlAPI implements apiType {
   private url : string;
@@ -9,7 +9,7 @@ class GraphQlAPI implements apiType {
     this.url = url;
   }
 
-  private async request(query : string, variables : variablesType) {
+  private async request(query : string, variables : variablesType) : Promise<any> {
     const data : Response = await fetch(`${this.url}/graphql`, {
       method: 'POST',
       headers: {
@@ -46,7 +46,7 @@ class GraphQlAPI implements apiType {
     }
   }
 
-  logOut() : void {
+  logout() : void {
     window.localStorage.removeItem('jwt');
   }
 
@@ -102,7 +102,7 @@ class GraphQlAPI implements apiType {
     }
   }
 
-  async getFileList() : Promise<Array<postType> | boolean> {
+  async getFileList() : Promise<Array<postType |boolean>> {
     try {
       const token :string | null = window.localStorage.getItem('jwt');
       const query : string = `
@@ -121,7 +121,7 @@ class GraphQlAPI implements apiType {
       const { posts } = result.data.user;
       return posts;
     } catch (e) {
-      return false;
+      return [false];
     }
   }
 

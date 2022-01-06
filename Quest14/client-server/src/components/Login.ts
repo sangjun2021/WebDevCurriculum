@@ -1,21 +1,22 @@
 import Event from '../utils/Event.js';
+import { loginType, eventType } from '../types';
 
-class Login {
-  private modal : HTMLElement | null = null;
+class Login implements loginType {
+  private modal : HTMLElement = document.createElement('div');
 
-  private login : HTMLElement | null = null;
+  private login : HTMLElement = document.createElement('div');
 
-  private event : any = new Event();
+  private event : eventType = new Event();
 
-  private userInput : HTMLElement | null = null;
+  private userInput : HTMLInputElement = document.createElement('input');
 
-  private passwordInput : HTMLElement | null = null;
+  private passwordInput : HTMLInputElement = document.createElement('input');
 
-  private submit : HTMLElement | null = null;
+  private submit : HTMLButtonElement = document.createElement('button');
 
   constructor() {
     this.makeModal();
-    this.makeLogin(this.modal);
+    this.makeLogin();
     this.onModalEvent();
     this.offModalEvent();
     this.onSubmit();
@@ -23,40 +24,44 @@ class Login {
 
   private onModalEvent() : void {
     this.event.setEvent('logIn', () => {
-      if (this.modal === null) return;
       this.modal.classList.remove('js-hide');
     });
   }
 
   private offModalEvent() : void {
     this.event.setEvent('modalOff', () => {
-      if (this.modal === null) return;
       this.modal.classList.add('js-hide');
     });
   }
 
   private makeModal() : void {
-    this.modal = document.createElement('div');
     this.modal.classList.add('modal');
     window.document.body.append(this.modal);
     this.modal.classList.add('js-hide');
   }
 
-  private makeLogin(target: HTMLElement | null) : void {
-    this.login = document.createElement('div');
+  private makeLogin() : void {
     this.login.classList.add('login');
-    this.login.innerHTML = `
-    <label for="js-login-user-name">사용자 이름</label>
-    <input type="text" name="user-name" id="js-login-user-name" class="input" />
-    <label for="js-login-password">비밀번호</label>
-    <input type="password" name="password" id="js-login-password" class="input" />
-    <button class="input" id="js-login-submit">로그인</button>
-    `;
-    if (target === null) return;
-    target.appendChild(this.login);
-    this.userInput = document.getElementById('js-login-user-name');
-    this.passwordInput = document.getElementById('js-login-password');
-    this.submit = document.getElementById('js-login-submit');
+    const labelForUser = document.createElement('label');
+    labelForUser.htmlFor = 'js-login-user-name';
+    labelForUser.innerText = '사용자 이름';
+    this.userInput.id = 'js-login-user-name';
+    this.userInput.classList.add('input');
+    this.userInput.type = 'text';
+    const labelForPassword = document.createElement('label');
+    labelForPassword.htmlFor = 'js-login-password';
+    labelForPassword.innerText = '비밀번호';
+    this.passwordInput.id = 'js-login-password';
+    this.passwordInput.classList.add('input');
+    this.passwordInput.type = 'password';
+    this.submit.classList.add('input');
+    this.submit.innerText = '로그인';
+    this.login.appendChild(labelForUser);
+    this.login.appendChild(this.userInput);
+    this.login.appendChild(labelForPassword);
+    this.login.appendChild(this.passwordInput);
+    this.login.appendChild(this.submit);
+    this.modal.appendChild(this.login);
   }
 
   private onSubmit() : void {

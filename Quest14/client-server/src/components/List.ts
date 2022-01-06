@@ -1,8 +1,8 @@
 import Storage from '../utils/Storage.js';
 import Event from '../utils/Event.js';
-import { postType } from '../types/post';
-import { storageType } from '../types/storage';
-import { listArgsType, listType } from '../types/list';
+import {
+  postType, storageType, listArgsType, listType,
+} from '../types';
 
 class List implements listType {
   private className : string;
@@ -26,7 +26,7 @@ class List implements listType {
     this.className = className;
     this.deleteEvent = deleteEvent;
     this.clickEvent = clickEvent;
-    this.storage = new Storage(storage);
+    this.storage = storage;
     this.render();
     this.setEvent();
   }
@@ -63,12 +63,13 @@ class List implements listType {
     }
   }
 
-  setState(id : string | undefined) : void {
-    const nextState : Array<postType> = this.storage.getList().map((tab) => {
+  async setState(id : string) : Promise<void> {
+    const state : Array<postType> = await this.storage.getList();
+    const nextState = state.map((tab) => {
       if (tab.id !== id) return { ...tab, isSelected: false };
       return { ...tab, isSelected: true };
     });
-    if (id === undefined) return;
+    if (this.storage?.setCurrentPage === undefined) return;
     this.storage.setCurrentPage(id);
     this.state = nextState;
     this.render();

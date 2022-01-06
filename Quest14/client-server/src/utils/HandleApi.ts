@@ -1,8 +1,6 @@
-import { postType } from '../types/post';
-import { apiType } from '../types/api';
-import { handleApiType } from '../types/handleApi';
+import { postType, apiType, storageType } from '../types';
 
-class HandleApi implements handleApiType {
+class HandleApi implements storageType {
   private API : apiType;
 
   constructor(api : apiType) {
@@ -14,28 +12,24 @@ class HandleApi implements handleApiType {
     return result;
   }
 
-  async insertFile(nextFile : postType) : Promise<postType | boolean> {
+  async insertFile(nextFile : postType) : Promise<postType> {
     const result = await this.API.createFile(nextFile);
+    if (typeof result === 'boolean') return {};
     return result;
   }
 
-  async login(username :string, password : string) : Promise<string | false | undefined> {
-    try {
-      const result = await this.API.login(username, password);
-      return result;
-    } catch (e) {
-      return false;
-    }
+  async login(username :string, password : string) : Promise<string | false> {
+    const result = await this.API.login(username, password);
+    return result;
   }
 
-  async auth(): Promise<string | false | undefined> {
+  async auth(): Promise<string | false> {
     const result = await this.API.auth();
     return result;
   }
 
   async logOut() : Promise<void> {
-    const result = await this.API.logout();
-    return result;
+    await this.API.logout();
   }
 
   async createFile() : Promise<postType | boolean> {
@@ -63,9 +57,8 @@ class HandleApi implements handleApiType {
     return reusult;
   }
 
-  async removeFile(id :string) : Promise<boolean> {
-    const result = await this.API.deleteFile(id);
-    return result;
+  async removeFile(id :string) : Promise<void> {
+    await this.API.deleteFile(id);
   }
 }
 

@@ -1,16 +1,16 @@
-import { listType } from '../types/list';
+import { listType, storageType } from '../types';
 import List from './List.js';
 
 class Tab {
   private list : listType;
 
-  constructor(targetElement : HTMLElement) {
+  constructor(targetElement : HTMLElement, stroage : storageType) {
     this.list = new List({
       targetElement,
       className: 'tab',
       deleteEvent: 'onDeleteTab',
       clickEvent: 'onClickTab',
-      storage: window.localStorage,
+      storage: stroage,
     });
   }
 

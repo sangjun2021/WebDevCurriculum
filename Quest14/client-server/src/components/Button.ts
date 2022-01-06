@@ -1,6 +1,5 @@
 import Event from '../utils/Event.js';
-import { eventNameType, eventType } from '../types/event';
-import { buttonType } from '../types/button';
+import { eventNameType, eventType, buttonType } from '../types';
 
 class Button implements buttonType {
   private targetElement : HTMLElement;

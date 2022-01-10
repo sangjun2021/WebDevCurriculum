@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "tsc && node index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "test" : "jest"
   },
   "keywords": [],
   "author": "",
@@ -15,11 +16,14 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "eslint": "^8.6.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.4"
+    "eslint-plugin-import": "^2.25.4",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.2"
   }
 }

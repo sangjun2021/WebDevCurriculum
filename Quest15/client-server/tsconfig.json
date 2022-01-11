@@ -5,6 +5,11 @@
   "exclude": [
     "node_modules"
   ],
+  "types": [
+     "puppeteer",
+     "jest-environment-puppeteer",
+     "expect-puppeteer"
+   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 

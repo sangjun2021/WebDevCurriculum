@@ -24,7 +24,8 @@
         "no-new" : "warn",
         "max-len" :"off",
         "no-restricted-globals":"warn",
-        "array-callback-return" : "warn"
+        "array-callback-return" : "warn",
+        "no-await-in-loop" : "off"
         
     }
 }

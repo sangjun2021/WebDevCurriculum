@@ -14,7 +14,6 @@ const corsOptions : corsOptionType = {
   optionsSuccessStatus: 200,
   credentials: true,
 };
-
 const schema = new GraphQLSchema({ query, mutation });
 const app = express();
 app.use(express.json());

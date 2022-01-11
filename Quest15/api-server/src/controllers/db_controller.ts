@@ -19,7 +19,7 @@ class DbController implements dbControllerType {
     this.init();
   }
 
-  private async init() : Promise<void> {
+  async init() : Promise<void> {
     try {
       await sequelize.sync({ force: true });
       console.log('All models were synchronized successfully.');

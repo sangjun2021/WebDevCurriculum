@@ -68,7 +68,6 @@ class Controller implements controllerType {
     return this.jwtController.validateToken(token);
   }
 }
-
 const controller = new Controller(dbController, hashController, jwtController);
 
 export default controller;

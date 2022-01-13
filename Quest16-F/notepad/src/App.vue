@@ -1,9 +1,9 @@
 <template>
-  
-</template>
-<script lang="ts">
 
+</template>
+
+<script>
 export default {
-  
+
 }
 </script>

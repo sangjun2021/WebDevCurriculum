@@ -24,8 +24,8 @@ export default {
   methods: {
     async clickPost(id : string) {
       if(this.isLoading) return;
-      await this.$store.dispatch('tab/selectPost',id);
       await this.$store.dispatch('file/selectPost',id);
+      await this.$store.dispatch('tab/selectPost',id);
     },
     async removePost(id : string) {
       if(this.isLoading) return;

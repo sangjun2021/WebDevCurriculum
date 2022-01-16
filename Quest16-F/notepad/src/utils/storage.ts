@@ -69,15 +69,16 @@ export default class Storage implements storageType {
   }
 
   async updatePost(key:string,{
-    id, title, text, isEdited,
+    id, title, text, isEdited, isSelected
   } : postType) : Promise<postType> {
     let result : postType = { id };
     const prevState : Array<postType> = await this.getPostList(key);
     const nextState : Array<postType> = prevState.map((file : postType) => {
-      if (file.id !== id) return file;
+      if (file.id !== id) return {...file, isSelected : false};
       file.title = title || file.title;
       file.text = text || file.text;
       file.isEdited = isEdited;
+      file.isSelected = isSelected;
       result = file;
       return file;
     });

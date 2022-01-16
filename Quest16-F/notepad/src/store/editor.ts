@@ -16,7 +16,7 @@ export default{
   },
   actions : {
     updateText({commit,state} : {commit : any, state : any},nextState : string) : void{
-      const nextPost = {...state.post, text : nextState, isEdited : true};
+      const nextPost = {...state.post, text : nextState, isEdited : true, isSelected : true};
       commit('setPost',nextPost);
       Store.dispatch('tab/updatePost',nextPost);
     },

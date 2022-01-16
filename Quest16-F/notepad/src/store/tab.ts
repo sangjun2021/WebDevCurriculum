@@ -63,6 +63,7 @@ export default{
         const key = Store.state.user.username;
         await state.storage.updatePost(key,nextState);
         const nextList = await state.storage.getPostList(key);
+        console.log(nextList);
         commit('setTabList',nextList);
       }catch(e){
         alert(e.message);

@@ -2,6 +2,7 @@
     <textarea
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
+      class="text-editor"
     />
 </template>
 
@@ -13,5 +14,8 @@ export default {
 }
 </script>
 <style>
-
+.text-editor {
+  flex-grow: 1;
+  padding: 16px;
+}
 </style>

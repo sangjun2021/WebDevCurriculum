@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="file-container">
   <li v-for="post in postList" :key="post.id">
     <Post :post="post" :selectFn="clickPost" :deleteFn="removePost"/>
   </li>
@@ -39,4 +39,9 @@ export default {
 </script>
 
 <style>
+.file-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 </style>

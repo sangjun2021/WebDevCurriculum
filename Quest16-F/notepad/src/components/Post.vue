@@ -1,10 +1,10 @@
 <template>
   <div
-    class="list"
+    class="post"
     :class="{selected : post.isSelected }"
     @click.stop="select"
   >
-    <span :class="{edited : post.isEdited}">{{ post.title }}</span>
+    <span :class="{edited : post.isEdited}" class="title">{{ post.title }}</span>
     <button @click.stop="remove">
       X
     </button>
@@ -31,6 +31,29 @@ export default {
 
 <style>
 .selected {
-  background: gray;
+  background: rgb(217, 216, 213);
+}
+.edited::after {
+  margin-left: 4px;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  background-color: red;
+  width: 12px;
+  height: 12px;
+}
+.title {
+  display: flex;
+  align-items: center;
+}
+.post {
+  height: 100%;
+  padding: 0 4px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  border: 1px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

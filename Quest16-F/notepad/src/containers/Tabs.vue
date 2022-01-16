@@ -1,6 +1,6 @@
 <template>
-  <ul>
-  <li v-for="post in postList" :key="post.id">
+  <ul class="tab-list">
+  <li v-for="post in postList" :key="post.id" class="tab" >
     <Post :post="post" :selectFn="clickPost" :deleteFn="removePost"/>
   </li>
   </ul>
@@ -36,4 +36,16 @@ export default {
 </script>
 
 <style>
+.tab-list {
+  flex-grow: 1;
+  display: flex;
+  overflow-x: hidden;
+}
+.tab{
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

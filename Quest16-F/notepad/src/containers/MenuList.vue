@@ -1,6 +1,6 @@
 <template>
-  <ul>
-  <li v-for="menu in menuList" :key="menu">
+  <ul class="button-container">
+  <li v-for="menu in menuList" :key="menu" class="">
     <Menu :name="menu" :clickEvent="clickEvent"/>
   </li>
   </ul>
@@ -30,4 +30,12 @@ export default {
 </script>
 
 <style>
+.button-container {
+  margin: 0;
+  height: 40px;
+  border-bottom: 1px solid;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
 </style>

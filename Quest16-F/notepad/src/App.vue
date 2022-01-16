@@ -1,17 +1,15 @@
 <template>
-<LoginModal/>
-  <div>
-    메뉴리스트
+  <aside class="left-sidebar">
     <MenuList/>
-    파일
     <Files/>
-  </div>
-  <div>
-    탭
-    <Tabs/>
-    에디터
-    <Editor/>
-  </div>
+  </aside>
+    <main class="editor-container">
+      <nav class="tab-container">
+        <Tabs/>
+      </nav> 
+      <Editor/>
+    </main>
+    <LoginModal/> 
 </template>
 
 <script>
@@ -29,3 +27,39 @@ export default {
   }
 };
 </script>
+
+<style>
+html,
+body{
+  height: 100%;
+}
+#app {
+  display: flex;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+ul,
+li {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+.left-sidebar {
+  border: 1px solid;
+  width: 300px;
+}
+.editor-container {
+  border: 1px solid;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.tab-container {
+  height: 40px;
+  display: flex;
+  border-bottom: 1px solid;
+}
+</style>

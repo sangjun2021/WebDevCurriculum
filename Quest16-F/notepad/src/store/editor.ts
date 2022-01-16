@@ -6,7 +6,7 @@ export default{
   state(){
     return{
       post : {text : ''},
-      sotrage : new localStorage(window.localStorage)
+      storage : new localStorage(window.localStorage)
     }
   },
   mutations :{
@@ -15,17 +15,16 @@ export default{
     }
   },
   actions : {
-    //to tab, editor
     updateText({commit,state} : {commit : any, state : any},nextState : string) : void{
       const nextPost = {...state.post, text : nextState, isEdited : true};
       commit('setPost',nextPost);
       Store.dispatch('tab/updatePost',nextPost);
     },
-    //to file,tab, editor
-    async getCurrentPage(){
-      const currentPageId = 1;
-      await Store.dispatch('file/selectPost',currentPageId)
-      await Store.dispatch('tab/selectPost',currentPageId)
+    updatePost({commit}:{commit : any},nextState : postType){
+      commit('setPost',nextState);
+    },
+    logout({commit} : {commit : any}){
+      commit('setPost',{})
     }
   }
 }

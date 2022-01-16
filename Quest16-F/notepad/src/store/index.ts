@@ -5,14 +5,16 @@ import tab from "./tab";
 import user from "./user";
 import modal from "./modal";
 import menu from './menu'
-const store = createStore({
+import loading from "./loading";
+const store : any = createStore({
   modules : {
     editor,
     file,
     tab,
     user,
     modal,
-    menu
+    menu,
+    loading
   }
 })
 

@@ -13,16 +13,26 @@ export default {
     Post,
   },
   computed :{
+    isLoading(){
+      return this.$store.state.loading.isLoading;
+    },
     postList(){
       return this.$store.state.file.fileList;
+    },
+    post(){
+      return this.$store.state.editor.post;
     }
   },
   methods: {
-    clickPost(id : string) {
-      this.$store.dispatch('file/clickFile',id);
+    async clickPost(id : string) {
+      if(this.isLoading) return;
+      await this.$store.dispatch('file/selectPost',id);
+      await this.$store.dispatch('tab/insertPost',this.post);
+      await this.$store.dispatch('tab/selectPost',id);
     },
-    removePost(id : string) {
-      this.$store.dispatch('file/deleteFile',id);
+    async removePost(id : string) {
+      if(this.isLoading) return;
+      await this.$store.dispatch('file/deletePost',id);
     },
   },
 };

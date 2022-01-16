@@ -7,29 +7,29 @@
 </template>
 
 <script lang="ts">
-import {Storage} from '../utils'
 import {Post} from '../components';
 
 export default {
   components: {
     Post,
   },
-  data(){
-    return{
-      storage : new Storage(window.localStorage),
-    }
-  },
   computed :{
+    isLoading(){
+      return this.$store.state.loading.isLoading;
+    },
     postList(){
-      return this.$store.state.tab.TabList;
+      return this.$store.state.tab.tabList;
     },
   },
   methods: {
-    clickPost(id : string) {
-      this.$store.dispatch('tab/clickTab',id);
+    async clickPost(id : string) {
+      if(this.isLoading) return;
+      await this.$store.dispatch('tab/selectPost',id);
+      await this.$store.dispatch('file/selectPost',id);
     },
-    removePost(id : string) {
-      this.$store.dispatch('tab/deleteTab',id);
+    async removePost(id : string) {
+      if(this.isLoading) return;
+      await this.$store.dispatch('tab/deletePost',id);
     },
   },
 };

@@ -27,7 +27,6 @@ export default class Storage implements storageType {
   private setList(key: string,nextState : Array<postType>) : void {
     this.storage.setItem(key, JSON.stringify(nextState));
   }
-
   async insertFile(key :string,nextFile : postType) : Promise<postType> {
     const prevState : Array<postType> = await this.getPostList(key);
     const isExist : postType | null | undefined = prevState.find((file : postType | null) => {

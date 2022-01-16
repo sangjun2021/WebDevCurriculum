@@ -9,13 +9,17 @@ export default {
     LoginModal
   },
   computed:{
+    isLoading(){
+      return this.$store.state.loading.isLoading;
+    },
     isModalOn(){
       return this.$store.state.modal.isModalOn;
     }
   },
   methods:{
-    login(username,password){
-      this.$store.dispatch('modal/login',{username,password});
+    async login(username,password){
+      if(this.isLoading) return;
+      await this.$store.dispatch('modal/login',{username,password});
     },
     modalOff(){
       this.$store.dispatch('modal/modalOff');

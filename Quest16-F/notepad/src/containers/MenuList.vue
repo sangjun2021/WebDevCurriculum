@@ -13,13 +13,17 @@ export default {
     Menu,
   },
   computed:{
+    isLoading(){
+      return this.$store.state.loading.isLoading;
+    },
     menuList(){
       return this.$store.state.menu.menuList;
     }
   },
   methods: {
-   clickEvent(menu :string){
-     this.$store.dispatch(`menu/${menu}`);
+   async clickEvent(menu :string){
+     if(this.isLoading) return;
+     await this.$store.dispatch(`menu/${menu}`);
    }
   }
 }

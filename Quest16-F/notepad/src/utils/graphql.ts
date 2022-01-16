@@ -1,6 +1,16 @@
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client/core'
 import {postType,storageType} from 'types/index'
 
+const defaultOptions : any = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+}
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
@@ -14,11 +24,12 @@ const cache = new InMemoryCache()
 const apolloClient = new ApolloClient({
   link: httpLink,
   cache,
+  defaultOptions,
 })
 export default class Graphql implements storageType{
   private client = apolloClient;
   async login(username : string, password : string) : Promise<string>{
-    const result = await  this.client.query({
+    const result = await this.client.query({
        query : gql`
         query{
           login(loginForm :{username : "${username}", password : "${password}"}){
@@ -74,28 +85,28 @@ export default class Graphql implements storageType{
     return result.data.user.post;
   }
   async deletePost(key : string, postId : string) : Promise<void>{
-    await this.client.query({
-      query : gql`
+    await this.client.mutate({
+      mutation : gql`
         mutation{
-          deleteFile(id : "${postId}", token : "${key}"){
+          deleteFile(token : "${key}",id : "${postId}"){
           error
         }
       }
-        }
       `
     })
+    return
   }
   async createPost(key : string,newPost : postType) : Promise<postType>{
     const {title, text} = newPost
-    const result = await this.client.query({
-      query : gql`
+    const result = await this.client.mutate({
+      mutation : gql`
         mutation{
           writeFile(
+            token : "${key}",
             payLoad : {
               title : "${title}",
               text : "${text}"
-            },
-            token : "${key}"
+            }
           ){
             id,
             title,
@@ -108,16 +119,16 @@ export default class Graphql implements storageType{
   }
   async updatePost(key : string,post : postType) : Promise<postType>{
     const {title,text,id} = post;
-    const result = await this.client.query({
-      query : gql`
+    const result = await this.client.mutate({
+      mutation : gql`
         mutation{
           writeFile(
-            payLoad : {
+            token : "${key}",
               id : "${id}"
+            payLoad : {
               title : "${title}",
               text : "${text}"
-            },
-            token : "${key}"
+            }
           ){
             id,
             title,
@@ -130,8 +141,8 @@ export default class Graphql implements storageType{
   }
   async checkOverLap(key : string,title :string) : Promise<boolean> {
     const posts : Array<postType> = await this.getPostList(key);
-    const result : Array<postType> = posts.filter((post : postType) => post.title !== title);
-    if (result.length === 0) return true;
+    const result : Array<postType> = posts.filter((post : postType) => post.title === title);
+    if (result.length !== 0) return true;
     return false;
   }
 }

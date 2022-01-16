@@ -24,5 +24,8 @@ export default {
     Tabs,
     LoginModal
   },
+  mounted(){
+    this.$store.dispatch('user/init');
+  }
 };
 </script>

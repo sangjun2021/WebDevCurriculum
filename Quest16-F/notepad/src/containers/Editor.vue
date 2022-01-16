@@ -7,25 +7,19 @@
 import {Editor} from '../components'
 export default{
   components : { Editor },
-  mounted(){
-    this.getCurrentPage();
-  },
   computed : {
     post(){
       return this.$store.state.editor.post;
     }
   },
   methods : {
-    updateText(nextText : string){
+    async updateText(nextText : string){
       if(!this.post.id){
         alert('글이 선택되지 않았습니다.');
         return;
       }
-      this.$store.dispatch("editor/updateText",nextText);
+      await this.$store.dispatch("editor/updateText",nextText);
     },
-    getCurrentPage(){
-      this.$store.dispatch("editor/getCurrentPage");
-    }
   }
 }
 </script>

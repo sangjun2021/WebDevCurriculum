@@ -1,8 +1,8 @@
-import {postType,storageType, localStorageType} from 'types/index'
+import {postType,storageType} from 'types/index'
 export default class Storage implements storageType {
   private storage;
 
-  constructor(storage : localStorageType) {
+  constructor(storage : any) {
     this.storage = storage;
   }
 

@@ -7,30 +7,29 @@
 </template>
 
 <script lang="ts">
-import {Post} from '../components/index';
-import { postType } from '../../types/postType';
+import {Storage} from '../utils'
+import {Post} from '../components';
 
 export default {
   components: {
     Post,
   },
+  data(){
+    return{
+      storage : new Storage(window.localStorage),
+    }
+  },
   computed :{
     postList(){
-      return this.$store.state.file.fileList;
-    }
+      return this.$store.state.tab.TabList;
+    },
   },
   methods: {
     clickPost(id : string) {
-      const nextState = this.postList.map((post : postType) => {
-        if (post.id === id) post.isSelected = true;
-        else post.isSelected = false;
-        return post;
-      });
-      this.$store.dispatch('file/updateFileList',nextState);
+      this.$store.dispatch('tab/clickTab',id);
     },
     removePost(id : string) {
-      const nextSTate = this.postList.filter((post : postType) => post.id !== id);
-      this.$store.dispatch('file/updateFileList',nextSTate);
+      this.$store.dispatch('tab/deleteTab',id);
     },
   },
 };

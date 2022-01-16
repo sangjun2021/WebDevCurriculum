@@ -1,9 +1,12 @@
 import { postType } from "types"
+import Store from './index'
+import {Storage as localStorage} from '../utils'
 export default{
   namespaced : true,
   state(){
     return{
-      post : {text : ''}
+      post : {text : ''},
+      sotrage : new localStorage(window.localStorage)
     }
   },
   mutations :{
@@ -12,8 +15,17 @@ export default{
     }
   },
   actions : {
-    updatePost({commit} : {commit : any},nextState : postType) : void{
-      commit('setPost',nextState);
+    //to tab, editor
+    updateText({commit,state} : {commit : any, state : any},nextState : string) : void{
+      const nextPost = {...state.post, text : nextState, isEdited : true};
+      commit('setPost',nextPost);
+      Store.dispatch('tab/updatePost',nextPost);
     },
+    //to file,tab, editor
+    async getCurrentPage(){
+      const currentPageId = 1;
+      await Store.dispatch('file/selectPost',currentPageId)
+      await Store.dispatch('tab/selectPost',currentPageId)
+    }
   }
 }

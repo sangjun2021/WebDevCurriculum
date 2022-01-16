@@ -12,8 +12,25 @@ export default{
     }
   },
   actions : {
-    updateTabList({commit} : {commit : any},nextState : Array<postType>) : void{
-      commit('setTabList',nextState);
+    async createPost({commit} : {commit : any}) : Promise<void>{
+      // create
+      // getList
+      // setList
     },
+    async deletePost({commit} : {commit : any},id : string) : Promise<void>{
+      // delete
+      // getList
+      // setList
+    },
+    async selectPost({commit, state} : {commit : any, state : any},id : string) : Promise<void>{
+      // getList
+      // insert isSelected
+      // setList
+    },
+    async updatePost({commit} : {commit : any}, nextState : postType) : Promise<void>{
+      // updatePost
+      // getList
+      // setList
+    }
   }
 }

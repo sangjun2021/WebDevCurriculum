@@ -37,8 +37,32 @@ describe('MyComponent.vue', () => {
 
   it('new button test', () => {
     const wrapper = shallowMount(MenuList, { store, localVue })
-    const button = wrapper.find('button[children="save"]');
+    const button = wrapper.find('button[children="new"]');
     button.trigger('click')
     expect(actions.new).toHaveBeenCalled(1)
+  })
+  it('save button test', () => {
+    const wrapper = shallowMount(MenuList, { store, localVue })
+    const button = wrapper.find('button[children="save"]');
+    button.trigger('click')
+    expect(actions.save).toHaveBeenCalled(1)
+  })
+  it('saveAs button test', () => {
+    const wrapper = shallowMount(MenuList, { store, localVue })
+    const button = wrapper.find('button[children="saveAs"]');
+    button.trigger('click')
+    expect(actions.saveAs).toHaveBeenCalled(1)
+  })
+  it('login button test', () => {
+    const wrapper = shallowMount(MenuList, { store, localVue })
+    const button = wrapper.find('button[children="login"]');
+    button.trigger('click')
+    expect(actions.login).toHaveBeenCalled(1)
+  })
+  it('login button test', () => {
+    const wrapper = shallowMount(MenuList, { store, localVue })
+    const button = wrapper.find('button[children="logout"]');
+    button.trigger('click')
+    expect(actions.logout).toHaveBeenCalled(1)
   })
 })

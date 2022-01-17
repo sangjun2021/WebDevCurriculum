@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div
-      v-for="todo in todos"
-      :key="todo.id"
-      data-test="todo"
-    >
+    <div v-for="todo in todos" :key="todo.id" data-test="todo">
       {{ todo.text }}
     </div>
   </div>
@@ -13,17 +9,16 @@
 <script>
 export default {
   name: 'TodoApp',
-
   data() {
     return {
       todos: [
         {
           id: 1,
           text: 'Learn Vue.js 3',
-          completed: false,
-        },
-      ],
-    };
-  },
-};
-</script>
+          completed: false
+        }
+      ]
+    }
+  }
+}
+</script> 

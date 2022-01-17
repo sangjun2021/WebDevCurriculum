@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import {Editor} from '../components'
+import {Editor} from '@/components'
 export default{
   components : { Editor },
   computed : {

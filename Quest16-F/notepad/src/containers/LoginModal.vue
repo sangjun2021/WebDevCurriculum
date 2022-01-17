@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {LoginModal} from '../components'
+import {LoginModal} from '@/components'
 export default {
   components : {
     LoginModal

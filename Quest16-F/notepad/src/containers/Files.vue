@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import {Post} from '../components';
+import {Post} from '@/components';
 export default {
   components: {
     Post,

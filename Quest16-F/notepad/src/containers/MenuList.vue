@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-  import {Menu} from '../components/'
+  import {Menu} from '@/components'
 export default {
   components: {
     Menu,

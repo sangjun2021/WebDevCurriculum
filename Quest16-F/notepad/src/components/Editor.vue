@@ -1,6 +1,7 @@
 <template>
-    <textarea
+    <div
       :value="modelValue"
+      contenteditable="true"
       @input="$emit('update:modelValue', $event.target.value)"
       class="text-editor"
     />

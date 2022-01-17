@@ -8,7 +8,7 @@ export default class Storage implements storageType {
 
   async getPostList(key : string) : Promise<Array<postType>> {
     try {
-      const list : Array<postType> = JSON.parse(this.storage.getItem(key)) || [{}];
+      const list : Array<postType> = JSON.parse(this.storage.getItem(key)) || [];
       return list;
     } catch (e : any) {
       console.log(e.message);

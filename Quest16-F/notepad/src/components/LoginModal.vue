@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { loginFormType } from '../../types/loginFormType';
+import { loginFormType } from 'types/loginFormType';
 
 export default {
   props: {

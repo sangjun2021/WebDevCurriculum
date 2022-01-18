@@ -12,19 +12,32 @@
 </template>
 
 <script lang="ts">
-import { loginFormType } from 'types/loginFormType';
-
 export default {
-  props: {
-    login: Function,
-    isModalOn : Boolean,
-    modalOff : Function
-  },
-  data() : loginFormType {
+  data() {
     return {
       username: '',
       password: '',
+      fileStore : this.$store.state.dependency.fileStorage,
     };
+  },
+  computed : {
+    isModalOn(){
+      return this.$store.state.modal.isModalOn
+    }
+  },
+  methods: {
+    async login() :Promise<void>{
+      try{
+      const token = await this.fileStorage.login?.(this.username,this.password);
+      if(!token) throw new Error('다시 입력해주세요');
+      this.modalOff();
+      }catch(e){
+        alert(e.message)
+      }
+    },
+    modalOff(){
+      this.$store.dispatch('modal/ModalOff');
+    }
   },
 };
 </script>

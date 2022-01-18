@@ -1,11 +1,11 @@
 <template>
   <aside class="left-sidebar">
     <MenuList/>
-    <Files/>
+    <Posts type="file"/>
   </aside>
     <main class="editor-container">
       <nav class="tab-container">
-        <Tabs/>
+        <Posts type="tab"/>
       </nav> 
       <Editor/>
     </main>
@@ -13,18 +13,36 @@
 </template>
 
 <script>
-import {Editor, Files, MenuList, Tabs, LoginModal} from './containers'
+import {Editor, MenuList, Posts, LoginModal} from './components'
 export default {
   components: {
     Editor,
-    Files,
     MenuList,
-    Tabs,
+    Posts,
     LoginModal
   },
-  mounted(){
-    this.$store.dispatch('user/init');
-  }
+  data(){
+    return {
+      fileStorage : this.$store.state.dependency.fileStorage,
+      tabStorage : this.$store.state.dependency.tabStorage
+    }
+  },
+  mounted() {
+    this.initFileList();
+    this.initTabList();
+    this.initInfo();
+  },
+  methods: {
+    initFileList(){
+      console.log('파일리스트 초기화')
+    },
+    initTabList(){
+      console.log('탭리스트 초기화')
+    },
+    initInfo(){
+      console.log('유저정보,포스트 초기화');
+    }
+  },
 };
 </script>
 

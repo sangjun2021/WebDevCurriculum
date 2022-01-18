@@ -1,10 +1,10 @@
 <template>
   <div
     class="post"
-    :class="{selected : post.isSelected }"
+    :class="{selected : post?.isSelected }"
     @click.stop="select"
   >
-    <span :class="{edited : post.isEdited}" class="title">{{ post.title }}</span>
+    <span :class="{edited : post?.isEdited}" class="title">{{ post?.title }}</span>
     <button @click.stop="remove">
       X
     </button>
@@ -14,16 +14,14 @@
 <script lang="ts">
 export default {
   props: {
-    post: Object,
-    selectFn: Function,
-    deleteFn: Function,
+    post: Object
   },
   methods: {
     select() {
-      this.selectFn(this.post.id);
+    console.log('탭 선택');
     },
     remove() {
-      this.deleteFn(this.post.id);
+     console.log('탭 삭제')
     },
   },
 };

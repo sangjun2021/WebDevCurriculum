@@ -2,19 +2,19 @@ import { createStore } from "vuex";
 import editor from "./editor";
 import file from "./file";
 import tab from "./tab";
-import user from "./user";
+import info from "./info";
 import modal from "./modal";
-import menu from './menu'
 import loading from "./loading";
+import dependency from "./dependency";
 const store : any = createStore({
   modules : {
     editor,
     file,
     tab,
-    user,
+    info,
     modal,
-    menu,
-    loading
+    loading,
+    dependency
   }
 })
 

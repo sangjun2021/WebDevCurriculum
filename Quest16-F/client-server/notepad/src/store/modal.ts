@@ -12,8 +12,6 @@ export default{
   state(){
     return{
       isModalOn : false,
-      fileStorage : new Graphql(),
-      tabStorage : new localStorage(window.localStorage),
     }
   },
   mutations :{
@@ -27,18 +25,6 @@ export default{
     },
     modalOff({commit} : {commit : Commit}) : void{
       commit('setIsModalOn',false);
-    },
-    async login({commit,state} : {commit : Commit,state: stateType},loginForm : {username :string, password : string}) :Promise<void>{
-      try{
-      const {username, password} = loginForm;
-      const token = await state.fileStorage.login?.(username,password);
-      if(!token) throw new Error('다시 입력해주세요');
-      commit('setIsModalOn',false);
-      window.localStorage.setItem('jwt',token);
-      Store.dispatch('user/init');
-      }catch(e){
-        alert(e.message)
-      }
     }
   }
 }

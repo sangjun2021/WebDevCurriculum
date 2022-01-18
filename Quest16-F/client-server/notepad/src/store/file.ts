@@ -1,6 +1,12 @@
 import { Graphql, Storage as localStorage } from "@/utils"
+import { Commit } from "vuex"
 import Store from './index'
-import { postType } from "types"
+import { postType, storageType } from "types"
+interface stateType {
+  fileList : Array<postType>;
+  fileStorage : storageType;
+  tabSStorage : storageType;
+}
 export default{
   namespaced : true,
   state(){
@@ -11,20 +17,20 @@ export default{
     }
   },
   mutations :{
-    setFileList(state : {fileList : Array<postType>},nextState : Array<postType>) : void{
+    setFileList(state : stateType, nextState : Array<postType>) : void{
       state.fileList = nextState
     }
   },
   actions : {
-    async init({commit,state} :{commit :any,state : any}){
+    async init({commit,state} :{commit :Commit,state : stateType}){
       const key = Store.state.user.token;
-      const auth = await state.fileStorage.auth(key);
+      const auth = await state.fileStorage.auth?.(key);
       if(!auth) return;
       const postList = await state.fileStorage.getPostList(key);
       await commit('setFileList',postList);
       await Store.dispatch('tab/init');
     },
-    async createPost({commit,state} : {commit : any, state : any}) : Promise<void>{
+    async createPost({commit,state} : {commit : Commit, state : stateType}) : Promise<void>{
       try{
         const token = Store.state.user.token;
         if(!token) throw new Error('로그인을 먼저해주세요')
@@ -40,7 +46,7 @@ export default{
         commit('setFileList',[]);
       }
     },
-    async deletePost({commit,state} : {commit : any,state : any},id : string) : Promise<void>{
+    async deletePost({commit,state} : {commit : Commit,state : stateType},id : string) : Promise<void>{
       try{
         const token = Store.state.user.token;
         if(!token) throw new Error('로그인을 먼저해주세요');
@@ -53,7 +59,7 @@ export default{
         commit('setFileList',[]);
       }
     },
-    async selectPost({commit, state} : {commit : any, state : any},id : string) : Promise<void>{
+    async selectPost({commit, state} : {commit : Commit, state : stateType},id : string) : Promise<void>{
       try{
         const token = Store.state.user.token;
         if(!token) throw new Error('로그인을 먼저해주세요')
@@ -69,7 +75,7 @@ export default{
         commit('setFileList',[]);
       }
     },
-    async updatePost({commit,state} : {commit : any, state : any}, nextState : postType) : Promise<void>{
+    async updatePost({commit,state} : {commit : Commit, state : stateType}, nextState : postType) : Promise<void>{
       try{
         const token = Store.state.user.token;
         if(!token) throw new Error('로그인을 먼저해주세요');
@@ -82,7 +88,7 @@ export default{
         commit('setFieList',[]);
       }
     },
-    logout({commit} : {commit : any}){
+    logout({commit} : {commit : Commit}){
       commit('setFileList',[])
     }
   },

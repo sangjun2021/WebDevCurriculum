@@ -1,6 +1,12 @@
-import { userType } from "types";
+import { storageType, userType } from "types";
 import Store from './index'
 import { Graphql } from "@/utils";
+import {Commit} from 'vuex';
+interface stateType {
+  fileStorage : storageType,
+  username : string,
+  token : string
+}
 export default{
   namespaced : true,
   state(){
@@ -18,28 +24,28 @@ export default{
   },
   actions : {
     updateUsername({commit, state} : {
-      commit : any, state : any
+      commit : Commit, state : stateType
     },nextState : string) : void{
       commit('setUser',{...state, username : nextState});
     },
     updateToken({commit, state} :{
-      commit : any, state : any
+      commit : Commit, state : stateType
     },nextState : string) : void{
       commit('setUser',{...state, token : nextState});
     },
     async init({commit,state} : {
-      commit : any, state : any
+      commit : Commit, state : stateType
     }) : Promise<void>{
       try{
       const token = window.localStorage.getItem('jwt');
-      const username = await state.fileStorage.auth(token);
+      const username = await state.fileStorage.auth?.(token || "");
       commit('setUser',{token,username});
       Store.dispatch('file/init');
       }catch(e){
         commit('setUser',{token : '', username : ''})
       }
     },
-    logout({commit} : {commit : any}){
+    logout({commit} : {commit : Commit}){
       commit('setUser',{token : '', username : ''})
       window.localStorage.removeItem('jwt');
     }

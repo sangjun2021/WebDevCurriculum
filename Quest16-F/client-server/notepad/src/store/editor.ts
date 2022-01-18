@@ -1,6 +1,12 @@
-import { postType } from "types"
+import { postType, storageType } from "types"
 import Store from './index'
+import { Commit } from "vuex"
 import {Storage as localStorage} from '../utils'
+interface stateType{
+  post : postType,
+  storage : storageType
+}
+
 export default{
   namespaced : true,
   state(){
@@ -10,20 +16,20 @@ export default{
     }
   },
   mutations :{
-    setPost(state : {post : postType},nextState : postType) : void{
+    setPost(state : stateType,nextState : postType) : void{
       state.post = nextState
     }
   },
   actions : {
-    updateText({commit,state} : {commit : any, state : any},nextState : string) : void{
+    updateText({commit,state} : {commit : Commit, state : stateType  },nextState : string) : void{
       const nextPost = {...state.post, text : nextState, isEdited : true, isSelected : true};
       commit('setPost',nextPost);
       Store.dispatch('tab/updatePost',nextPost);
     },
-    updatePost({commit}:{commit : any},nextState : postType){
+    updatePost({commit}:{commit : Commit},nextState : postType){
       commit('setPost',nextState);
     },
-    logout({commit} : {commit : any}){
+    logout({commit} : {commit : Commit}){
       commit('setPost',{})
     }
   }

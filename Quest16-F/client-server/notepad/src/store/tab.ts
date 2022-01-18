@@ -1,6 +1,11 @@
-import { postType } from "types"
+import { postType, storageType } from "types"
 import Store from './index'
 import {Storage as localStorage} from '../utils'
+import { Commit } from "vuex"
+interface stateType {
+  tabList : Array<postType>;
+  storage : storageType
+}
 export default{
   namespaced : true,
   state(){
@@ -10,21 +15,21 @@ export default{
     }
   },
   mutations :{
-    setTabList(state : {tabList : Array<postType>},nextState : Array<postType>) : void{
+    setTabList(state : stateType, nextState : Array<postType>) : void{
       state.tabList = nextState
     }
   },
   actions : {
-    async init({commit,state} :{commit :any,state : any}){
+    async init({commit,state} :{commit : Commit,state : stateType}){
       const key = Store.state.user.username;
       const postList = await state.storage.getPostList(key);
       commit('setTabList',postList);
     },
-    async insertPost({commit,state} : {commit : any, state : any}, nextState : postType) : Promise<void>{
+    async insertPost({commit,state} : {commit : Commit, state : stateType}, nextState : postType) : Promise<void>{
       try{
         const key = Store.state.user.username;
         if(!key) throw new Error('로그인을 먼저 해주세요')
-        await state.storage.insertFile(key,nextState);
+        await state.storage.insertFile?.(key,nextState);
         const newList = await state.storage.getPostList(key);
         commit('setTabList',newList);
       }catch(e){
@@ -32,7 +37,7 @@ export default{
         commit('setTabList',[])
       }
     },
-    async deletePost({commit,state} : {commit : any, state : any},id : string) : Promise<void>{
+    async deletePost({commit,state} : {commit : Commit, state : stateType},id : string) : Promise<void>{
       try{
         const key = Store.state.user.username;
         if(!key) throw new Error('로그인을 먼저 해주세요');
@@ -44,7 +49,7 @@ export default{
         commit('setTabList',[])
       }
     },
-    async selectPost({commit, state} : {commit : any, state : any},id : string) : Promise<void>{
+    async selectPost({commit, state} : {commit : Commit, state : stateType},id : string) : Promise<void>{
       try{
         const key = Store.state.user.username;
         const nextList = state.tabList.map((post : postType)=>{
@@ -58,7 +63,7 @@ export default{
         commit('setTabList',[])
       }
     },
-    async updatePost({commit,state} : {commit : any,state : any}, nextState : postType) : Promise<void>{
+    async updatePost({commit,state} : {commit : Commit,state : stateType}, nextState : postType) : Promise<void>{
       try{
         const key = Store.state.user.username;
         await state.storage.updatePost(key,nextState);
@@ -70,7 +75,7 @@ export default{
         commit('setTabList',[])
       }
     },
-    logout({commit} : {commit : any}){
+    logout({commit} : {commit : Commit}){
       commit('setTabList',[])
     }
   }

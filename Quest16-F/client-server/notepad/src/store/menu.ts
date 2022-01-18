@@ -1,25 +1,31 @@
 import Store from './index'
 import { Graphql } from '../utils'
+import { Commit } from 'vuex'
+import { storageType } from 'types'
+
+interface stateType {
+  fileStorage : storageType,
+  menuList : Array<string>
+}
 export default{
   namespaced : true,
   state(){
     return{
       fileStorage : new Graphql(),
-      menuList : ['newPost','save','saveAs','login','logout'],
-      username : '',
-      password : ''
+      menuList : ['newPost','save','saveAs','login','logout']
     }
   },
   actions:{
     newPost(){
       Store.dispatch('file/createPost');
     },
-    async save({commit,state} : {commit : any, state:any}){
+    async save({commit,state} : {commit : Commit, state: stateType}){
       try{
       const post = Store.state.editor.post;
       const token = Store.state.user.token;
       if(post.title === 'untitled'){
         const newTitle = prompt('제목을 입력해주세요');
+        if(!newTitle) return;
         const isOverLap = await state.fileStorage.checkOverLap(token,newTitle);
         if(isOverLap)throw new Error('중복된 제목입니다.');
         await Store.dispatch('file/updatePost',{...post, title : newTitle})
@@ -31,11 +37,12 @@ export default{
       alert(e.message);
     }
   },
-    async saveAs({commit,state} : {commit : any, state: any}){
+    async saveAs({commit,state} : {commit : Commit, state: stateType}){
       try{
       const post = Store.state.editor.post;
       const token = Store.state.user.token;
       const newTitle = prompt('제목을 입력해주세요');
+      if(!newTitle) return;
         const isOverLap = await state.fileStorage.checkOverLap(token,newTitle);
         if(isOverLap){
           throw new Error('중복된 제목입니다.');

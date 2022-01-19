@@ -6,7 +6,7 @@ const { graphqlHTTP } = require("express-graphql");
 const controller = require("./controllers/index");
 const graphql = require("graphql");
 const corsOptions = {
-  origin: "https://localhost:3001",
+  origin: "http://localhost:8080",
   optionsSuccessStatus: 200,
   credentials: true,
 };

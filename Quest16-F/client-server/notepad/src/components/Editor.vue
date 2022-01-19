@@ -1,6 +1,6 @@
 <template>
     <div
-      :value="text"
+      :value="modelValue"
       contenteditable="true"
       @input="updateText"
       class="text-editor"
@@ -8,10 +8,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import {postType} from '../../types'
-export default {
+export default defineComponent({
   computed : {
-    text(){
+    modelValue(){
       return this.$store.state.editor.text;
     },
     postId(){
@@ -19,15 +20,29 @@ export default {
     },
     tabList(){
       return this.$store.state.tab.postList;
+    },
+    tabStorage(){
+      return this.$store.state.dependency.tabStorage;
+    },
+    key(){
+      return this.$store.state.info.username;
+    },
+    post(){
+      return this.$store.state.info.post;
     }
   },
   methods: {
-    updateText(e : {
+    async updateText(e : {
       target : {
         value : string
       }
     }){
-      this.$store.dispatch('editor/updateText',e.target.value);
+      const {value} = e.target;
+      await this.tabStorage.updatePost(this.key, {...this.post, text : value});
+      const nextList = await this.tabStorage.getPostList(this.key);
+      this.$store.dispatch('tab/updatePostList',nextList);
+      this.$store.dispatch('editor/updateText',value);
+      this.editPost(this.postId);
     },
     editPost(id : string){
       const nextList = this.tabList.map((post : postType)=>{
@@ -36,7 +51,7 @@ export default {
       this.$store.dispatch('tab/updatePostList',nextList);
     }
   },
-}
+})
 </script>
 <style>
 .text-editor {

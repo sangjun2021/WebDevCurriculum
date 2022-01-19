@@ -13,8 +13,9 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import {Editor, MenuList, Posts, LoginModal} from './components'
-export default {
+export default defineComponent({
   components: {
     Editor,
     MenuList,
@@ -25,6 +26,11 @@ export default {
     return {
       fileStorage : this.$store.state.dependency.fileStorage,
       tabStorage : this.$store.state.dependency.tabStorage
+    }
+  },
+  computed :{
+    token(){
+      return this.$store.state.info.token
     }
   },
   mounted() {
@@ -43,7 +49,7 @@ export default {
       console.log('유저정보,포스트 초기화');
     }
   },
-};
+});
 </script>
 
 <style>

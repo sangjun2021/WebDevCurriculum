@@ -7,10 +7,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import File from "./File.vue"
 import Tab from "./Tab.vue"
 
-export default {
+export default defineComponent({
   props : {
     type : String
   },
@@ -22,7 +23,7 @@ export default {
       return this.$store.state[this.type].postList;
     },
   },
-};
+});
 </script>
 
 <style>

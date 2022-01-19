@@ -9,7 +9,7 @@ export default{
   namespaced : true,
   state(){
     return{
-      postList : [{title : '탭테스트'}]
+      postList : []
     }
   },
   mutations :{

@@ -9,7 +9,7 @@ export default{
   namespaced : true,
   state(){
     return{
-      postList : [{title : "파일 테스트"}]
+      postList : []
     }
   },
   mutations :{

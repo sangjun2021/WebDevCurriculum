@@ -1,8 +1,10 @@
+import { postType } from 'types';
 import {Commit} from 'vuex';
 interface stateType {
   username : string
   token : string
   postId : string
+  post : postType
 }
 export default{
   namespaced : true,
@@ -11,32 +13,41 @@ export default{
       username : '',
       token : '',
       postId : '',
+      post : {}
     }
   },
   mutations :{
-    setInfo(state : stateType,nextState : stateType) : void{
-      state.username = nextState.username;
-      state.token = nextState.token;
-      state.postId = nextState.postId;
+    setUsername(state : stateType,nextState : string) : void{
+      state.username = nextState;
+    },
+    setToken(state : stateType,nextState : string) : void{
+      state.token = nextState;
+    },
+    setPostId(state : stateType,nextState : string) : void{
+      state.postId = nextState;
+    },
+    setPost(state :stateType, nextState : postType) : void{
+      state.post = nextState;
     }
   },
   actions : {
-    updateUsername({commit, state} : {
-      commit : Commit, state : stateType
-    },nextState : string){
-      commit('setUser',{...state, username : nextState});
+    updateUsername({commit} : {commit : Commit} ,nextState : string){
+      commit('setUsername',nextState);
     },
-    updateToken({commit, state} :{
-      commit : Commit, state : stateType
-    },nextState : string){
+    updateToken({commit} :{commit : Commit}, nextState : string){
       window.localStorage.setItem('jwt',nextState);
-      commit('setUser',{...state, token : nextState});
+      commit('setToken',nextState);
     },
-    updatePostId({commit,state} : {commit : Commit, state : stateType}, nextId : string){
-      commit('setUser',{...state, postId : nextId})
+    updatePostId({commit} : {commit : Commit}, nextId : string){
+      commit('setPostId',nextId);
+    },
+    updatePost({commit} : {commit : Commit},nextPost :postType){
+      commit('setPost',nextPost);
     },
     logout({commit} : {commit : Commit}){
-      commit('setUser',{token : '', username : ''})
+      commit('setPostId',"");
+      commit('setUsername',"");
+      commit('setToken',"");
       window.localStorage.removeItem('jwt');
     }
   }

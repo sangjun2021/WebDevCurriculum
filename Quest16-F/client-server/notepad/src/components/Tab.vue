@@ -12,19 +12,53 @@
 </template>
 
 <script lang="ts">
-export default {
+import { postType } from '../../types';
+import { defineComponent } from 'vue'
+export default defineComponent({
   props: {
     post: Object
   },
-  methods: {
-    select() {
-    console.log('탭 선택');
+  computed:{
+    key(){
+      return this.$store.state.info.username;
     },
-    remove() {
-     console.log('탭 삭제')
+    fileStorage(){
+      return this.$store.state.dependency.fileStorage;
+    },
+    tabStorage(){
+      return this.$store.state.dependency.tabStorage
+    }
+  },
+  methods: {
+    async select() {
+     const nextFileList = this.$store.state.file.postList.map((post : postType)=>{
+       return {
+         ...post,
+         isSelected :post.id ===this.post.id
+       }
+     });
+     const nextTabList = this.$store.state.tab.postList.map((post : postType)=>{
+       return {
+         ...post,
+         isSelected :post.id ===this.post.id
+       }
+     })
+     const nextPost = await this.tabStorage.getPost(this.token, this.post.id);
+     this.$store.dispatch('info/updatePostId',this.post.id)
+     this.$store.dispatch('editor/updateText',nextPost.text);
+     this.$store.dispatch('info/updatePost',nextPost);
+     this.$store.dispatch('file/updatePostList',nextFileList);
+     this.$store.dispatch('tab/updatePostList',nextTabList);
+    },
+    async remove() {
+    await this.tabStorage.deletePost(this.key,this.post.id);
+    const nextTabList = await this.tabStorage.getPostList(this.key);
+    this.$store.dispatch('editor/updateText',"");
+    this.$store.dispatch('info/updatePostId',"");
+    this.$store.dispatch('tab/updatePostList',nextTabList);
     },
   },
-};
+});
 </script>
 
 <style>

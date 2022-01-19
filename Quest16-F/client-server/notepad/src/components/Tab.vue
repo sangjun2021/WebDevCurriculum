@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts">
-import { postType } from '../../types';
 import { defineComponent } from 'vue'
 export default defineComponent({
   props: {
@@ -31,32 +30,17 @@ export default defineComponent({
   },
   methods: {
     async select() {
-     const nextFileList = this.$store.state.file.postList.map((post : postType)=>{
-       return {
-         ...post,
-         isSelected :post.id ===this.post.id
-       }
-     });
-     const nextTabList = this.$store.state.tab.postList.map((post : postType)=>{
-       return {
-         ...post,
-         isSelected :post.id ===this.post.id
-       }
-     })
-     const nextPost = await this.tabStorage.getPost(this.token, this.post.id);
-     this.$store.dispatch('info/updatePostId',this.post.id)
-     this.$store.dispatch('editor/updateText',nextPost.text);
-     this.$store.dispatch('info/updatePost',nextPost);
-     this.$store.dispatch('file/updatePostList',nextFileList);
-     this.$store.dispatch('tab/updatePostList',nextTabList);
+     this.$store.dispatch('info/updatePost',this.post);
+     this.$store.dispatch('editor/updateText',this.post.text);
     },
     async remove() {
-    await this.tabStorage.deletePost(this.key,this.post.id);
-    const nextTabList = await this.tabStorage.getPostList(this.key);
-    this.$store.dispatch('editor/updateText',"");
-    this.$store.dispatch('info/updatePostId',"");
-    this.$store.dispatch('tab/updatePostList',nextTabList);
+      await this.tabStorage.deletePost(this.key,this.post.id);
+      await this.updateList();
     },
+    async updateList(){
+      const nextTabList = await this.tabStorage.getPostList(this.key);
+      this.$store.dispatch('tab/updatePostList',nextTabList);
+    }
   },
 });
 </script>

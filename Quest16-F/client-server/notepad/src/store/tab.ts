@@ -14,7 +14,7 @@ export default{
   },
   mutations :{
     setPostList(state : stateType, nextState : Array<postType>) : void{
-      state.postList = nextState
+      state.postList = nextState;
     }
   },
   actions : {
@@ -23,6 +23,6 @@ export default{
     },
     logout({commit} : {commit : Commit}){
       commit('setPostList',[])
-    }
+    },
   },
 }

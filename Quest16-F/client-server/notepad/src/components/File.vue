@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { postType } from '../../types';
 export default defineComponent({
   props: {
     post: Object
@@ -30,42 +29,30 @@ export default defineComponent({
     },
     key(){
       return this.$store.state.info.username;
-      
     }
   },
   methods: {
     async select() {
-     const nextFileList = this.$store.state.file.postList.map((post : postType)=>{
-       return {
-         ...post,
-         isSelected : post.id ===this.post.id
-       }
-     });
-    await this.tabStorage.insertFile(this.key,this.post);
-    const nextList = await this.tabStorage.getPostList(this.key);
-    this.$store.dispatch('tab/updatePostList',nextList);
-     const nextTabList = this.$store.state.tab.postList.map((post : postType)=>{
-       return {
-         ...post,
-         isSelected :post.id ===this.post.id
-       }
-     })
-     this.$store.dispatch('info/updatePostId',this.post.id)
-     this.$store.dispatch('info/updatePost',this.post);
-     this.$store.dispatch('editor/updateText',this.post.text);
-     this.$store.dispatch('file/updatePostList',nextFileList);
-     this.$store.dispatch('tab/updatePostList',nextTabList);
+      const nextPost = await this.tabStorage.getPost(this.key,this.post.id);
+     this.$store.dispatch('info/updatePost',nextPost);
+     this.$store.dispatch('editor/updateText',nextPost.text);
+     this.insertTab();
+    },
+    async insertTab(){
+      await this.tabStorage.insertFile(this.key,this.post);
+      await this.updateList();
     },
     async remove() {
-    await this.fileStorage.deletePost(this.token,this.post.id);
-    await this.tabStorage.deletePost(this.key,this.post.id);
-    const nextFileList = await this.fileStorage.getPostList(this.token);
-    const nextTabList = await this.tabStorage.getPostList(this.key);
-    this.$store.dispatch('editor/updateText',"");
-    this.$store.dispatch('info/updatePostId',"");
-    this.$store.dispatch('file/updatePostList',nextFileList);
-    this.$store.dispatch('tab/updatePostList',nextTabList);
+      await this.fileStorage.deletePost(this.token,this.post.id);
+      await this.tabStorage.deletePost(this.key,this.post.id);
+      await this.updateList();
     },
+    async updateList(){
+      const nextTabList = await this.tabStorage.getPostList(this.key);
+      const nextFileList = await this.fileStorage.getPostList(this.token);
+      this.$store.dispatch('tab/updatePostList',nextTabList);
+      this.$store.dispatch('file/updatePostList',nextFileList);
+    }
   },
 });
 </script>

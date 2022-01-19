@@ -1,7 +1,6 @@
 <template>
-    <div
+    <textarea
       :value="modelValue"
-      contenteditable="true"
       @input="updateText"
       class="text-editor"
     />
@@ -15,11 +14,8 @@ export default defineComponent({
     modelValue(){
       return this.$store.state.editor.text;
     },
-    postId(){
-      return this.$store.state.info.postId;
-    },
     tabList(){
-      return this.$store.state.tab.postList;
+       return this.$store.state.tab.postList.map((post:postType)=>({...post, isSelected : post.id === this.postId }));
     },
     tabStorage(){
       return this.$store.state.dependency.tabStorage;
@@ -34,7 +30,7 @@ export default defineComponent({
   methods: {
     async updateText(e : {
       target : {
-        value : string
+        value :string
       }
     }){
       const {value} = e.target;
@@ -42,7 +38,8 @@ export default defineComponent({
       const nextList = await this.tabStorage.getPostList(this.key);
       this.$store.dispatch('tab/updatePostList',nextList);
       this.$store.dispatch('editor/updateText',value);
-      this.editPost(this.postId);
+      this.$store.dispatch('info/updatePost',{...this.post, text : value});
+      this.editPost(this.post.id);
     },
     editPost(id : string){
       const nextList = this.tabList.map((post : postType)=>{

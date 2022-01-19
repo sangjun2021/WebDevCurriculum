@@ -3,7 +3,6 @@ import {Commit} from 'vuex';
 interface stateType {
   username : string
   token : string
-  postId : string
   post : postType
 }
 export default{
@@ -12,7 +11,6 @@ export default{
     return{
       username : '',
       token : '',
-      postId : '',
       post : {}
     }
   },
@@ -22,9 +20,6 @@ export default{
     },
     setToken(state : stateType,nextState : string) : void{
       state.token = nextState;
-    },
-    setPostId(state : stateType,nextState : string) : void{
-      state.postId = nextState;
     },
     setPost(state :stateType, nextState : postType) : void{
       state.post = nextState;

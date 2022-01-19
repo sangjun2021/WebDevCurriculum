@@ -31,6 +31,9 @@ export default defineComponent({
   computed :{
     token(){
       return this.$store.state.info.token
+    },
+    post(){
+      return this.$store.state.info.post
     }
   },
   mounted() {

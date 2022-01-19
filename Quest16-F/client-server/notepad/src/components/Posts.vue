@@ -10,7 +10,7 @@
 import { defineComponent } from 'vue'
 import File from "./File.vue"
 import Tab from "./Tab.vue"
-
+import {postType} from '../../types'
 export default defineComponent({
   props : {
     type : String
@@ -19,8 +19,11 @@ export default defineComponent({
    Tab, File
   },
   computed :{
+    postId(){
+      return this.$store.state.info.post.id;
+    },
     postList(){
-      return this.$store.state[this.type].postList;
+      return this.$store.state[this.type].postList.map((post:postType)=>({...post, isSelected : post.id === this.postId }));
     },
   },
 });

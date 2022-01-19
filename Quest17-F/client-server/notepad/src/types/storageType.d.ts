@@ -7,7 +7,7 @@ export interface storageType{
   getPostList(key : string) : Promise<Array<postType>>
   setCurrentPage? (key :string,id : string) : Promise<void>
   getCurrentPage? (key :string) : Promise<postType>
-  insertPost?(key:string,nextPost : postType) : Promise<postType>
+  insertFile?(key:string,nextPost : postType) : Promise<postType>
   createPost(key:string,post : postType) : Promise<postType>
   getPost(key:string,id : string) : Promise<postType>
   checkOverLap(key:string,title :string) : Promise<boolean>

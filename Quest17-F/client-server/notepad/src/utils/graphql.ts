@@ -1,5 +1,5 @@
 import { ApolloClient, createHttpLink, InMemoryCache, gql } from '@apollo/client/core'
-import {postType,storageType} from '@/types/index'
+import {postType,storageType} from '@/types'
 
 const defaultOptions : any = {
   watchQuery: {
@@ -97,7 +97,7 @@ export default class Graphql implements storageType{
     return
   }
   async createPost(key : string,newPost : postType) : Promise<postType>{
-    const {title, text} = newPost
+    const {title, text} = newPost;
     const result = await this.client.mutate({
       mutation : gql`
         mutation{

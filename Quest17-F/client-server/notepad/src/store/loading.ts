@@ -1,3 +1,7 @@
+import { Commit } from "vuex";
+interface stateType {
+  isLoading : boolean
+}
 export default {
   namespaced : true,
   state(){
@@ -6,15 +10,15 @@ export default {
     }
   },
   mutations : {
-    setIsLoading(state : {isLoading : boolean},nextState : boolean){
+    setIsLoading(state : stateType,nextState : boolean){
       state.isLoading = nextState;
     }
   },
   actions : {
-    lodingStart({commit} : {commit : any}){
+    lodingStart({commit} : {commit : Commit}){
       commit('setIsLoading',true);
     },
-    lodingEnd({commit} : {commit : any}){
+    lodingEnd({commit} : {commit : Commit}){
       commit('setIsLoading',false);
     }
   }

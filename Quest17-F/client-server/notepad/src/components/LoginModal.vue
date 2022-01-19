@@ -6,27 +6,75 @@
       <input id="js-username-input" type="text" v-model="username" class="input">
       <label for="js-password-input">비밀번호</label>
       <input id="js-password-input" type="password" v-model="password" class="input">
-      <button @click="login(username,password)" class="input">로그인</button>
+      <button @click="login" class="input">로그인</button>
     </div>
+    {{token}}
+    {{key}}
   </div>
 </template>
 
 <script lang="ts">
-import { loginFormType } from '../types/loginFormType';
-
-export default {
-  props: {
-    login: Function,
-    isModalOn : Boolean,
-    modalOff : Function
-  },
-  data() : loginFormType {
+import { defineComponent } from 'vue'
+export default defineComponent({
+  data() {
     return {
       username: '',
       password: '',
     };
   },
-};
+  computed : {
+    isModalOn(){
+      return this.$store.state.modal.isModalOn
+    },
+    key(){
+      return this.$store.state.info.username;
+    },
+    token(){
+      return this.$store.state.info.token;
+    },
+    fileStorage(){
+      return this.$store.state.dependency.fileStorage
+    }, 
+    tabStorage(){
+      return this.$store.state.dependency.tabStorage
+    } 
+  },
+  methods: {
+    async login() :Promise<void>{
+      try{
+      const token = await this.fileStorage.login?.(this.username,this.password);
+      if(!token) throw new Error('다시 입력해주세요');
+      this.setUserInfo(token);
+      this.setFileList(token);
+      this.setTabList();
+      this.modalOff();
+      this.removeInput();
+      }catch(e){
+        console.log(e);
+        alert(e.message)
+      }
+    },
+    removeInput(){
+      this.username = '';
+      this.password = '';
+    },
+    setUserInfo(token : string){
+      this.$store.dispatch('info/updateUsername',this.username);
+      this.$store.dispatch('info/updateToken',token);
+    },
+    async setFileList(token : string){
+      const nextList = await this.fileStorage.getPostList(token);
+      this.$store.dispatch('file/updatePostList',nextList);
+    },
+    async setTabList(){
+      const nextList = await this.tabStorage.getPostList(this.username);
+      this.$store.dispatch('tab/updatePostList',nextList);
+    },
+    modalOff(){
+      this.$store.dispatch('modal/modalOff');
+    }
+  },
+});
 </script>
 
 <style>

@@ -6,7 +6,7 @@
   "scripts": {
     "build:product": "webpack --config webpack.config.js",
     "build:dev" : "webpack --config webpack.config.dev.js",
-    "server" : "webpack serve --config webpack.config.dev.js"
+    "serve" : "webpack serve --config webpack.config.dev.js"
   },
   "keywords": [],
   "author": "",

@@ -1,30 +1,26 @@
-import { postType } from "@/types"
-import Store from './index'
-import {Storage as localStorage} from '@/utils'
+import { Commit } from "vuex"
+interface stateType{
+  text : string
+}
+
 export default{
   namespaced : true,
   state(){
     return{
-      post : {text : ''},
-      storage : new localStorage(window.localStorage)
+      text : ""
     }
   },
   mutations :{
-    setPost(state : {post : postType},nextState : postType) : void{
-      state.post = nextState
+    setText(state : stateType, nextState : string) : void{
+      state.text = nextState
     }
   },
   actions : {
-    updateText({commit,state} : {commit : any, state : any},nextState : string) : void{
-      const nextPost = {...state.post, text : nextState, isEdited : true, isSelected : true};
-      commit('setPost',nextPost);
-      Store.dispatch('tab/updatePost',nextPost);
+    updateText({commit} : {commit : Commit},nextText : string) : void{
+      commit('setText',nextText);
     },
-    updatePost({commit}:{commit : any},nextState : postType){
-      commit('setPost',nextState);
-    },
-    logout({commit} : {commit : any}){
-      commit('setPost',{})
+    logout({commit} : {commit : Commit}){
+      commit('setText',"")
     }
   }
 }

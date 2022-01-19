@@ -1,4 +1,4 @@
-import {postType,storageType} from '@/types/index'
+import {postType,storageType} from '@/types'
 export default class Storage implements storageType {
   private storage;
 

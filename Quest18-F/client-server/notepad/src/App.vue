@@ -34,12 +34,21 @@ export default defineComponent({
     },
     post(){
       return this.$store.state.info.post
+    },
+    isOnline(){
+      return this.$store.state.info.isOnline
     }
   },
   mounted() {
     this.initFileList();
     this.initTabList();
     this.initInfo();
+    window.addEventListener('online',()=>{
+      this.$store.dispatch('info/connect');
+    });
+    window.addEventListener('offline',()=>{
+      this.$store.dispatch('info/disConnect');
+    })
   },
   methods: {
     initFileList(){

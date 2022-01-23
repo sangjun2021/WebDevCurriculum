@@ -21,9 +21,6 @@ export default defineComponent({
     key(){
       return this.$store.state.info.username;
     },
-    fileStorage(){
-      return this.$store.state.dependency.fileStorage;
-    },
     tabStorage(){
       return this.$store.state.dependency.tabStorage
     }

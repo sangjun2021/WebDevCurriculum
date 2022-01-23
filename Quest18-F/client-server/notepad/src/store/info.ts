@@ -4,6 +4,7 @@ interface stateType {
   username : string
   token : string
   post : postType
+  isOnline : boolean
 }
 export default{
   namespaced : true,
@@ -11,7 +12,8 @@ export default{
     return{
       username : '',
       token : '',
-      post : {}
+      post : {},
+      isOnline : true
     }
   },
   mutations :{
@@ -23,9 +25,18 @@ export default{
     },
     setPost(state :stateType, nextState : postType) : void{
       state.post = nextState;
+    },
+    setIsOnline(state : stateType, nextState : boolean) : void {
+      state.isOnline = nextState;
     }
   },
   actions : {
+    connect({commit} : {commit : Commit}){
+      commit('setIsOnline',true)
+    },
+    disConnect({commit} : {commit : Commit}){
+      commit('setIsOnline',false)
+    },
     updateUsername({commit} : {commit : Commit} ,nextState : string){
       commit('setUsername',nextState);
     },

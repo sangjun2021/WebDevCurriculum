@@ -1,7 +1,9 @@
-import { Graphql } from "@/utils";
+import { GraphqlSync } from '@/utils';
 
-const graphql = new Graphql();
-const cacheName = 'version1-3';
+const graphqlSync = new GraphqlSync();
+const cacheName = 'version2_1';
+
+
 const filesToCache = [
   '/',
   '/manifest.json',
@@ -9,6 +11,10 @@ const filesToCache = [
   '/images/lighthouse.png'
 ];
 
+self.addEventListener('sync',(e : any)=>{
+  const [method,token,payLoad] = e.tag.split('?sync?')
+  e.waitUntil(graphqlSync[method](token,payLoad))
+})
 self.addEventListener('install', (e)=> {
   console.log(cacheName,'installed, remove all cache')
   caches.keys().then((cacheNames) => {
@@ -31,9 +37,7 @@ self.addEventListener('fetch', (e : any) => {
   e.respondWith(
     caches.open(cacheName).then((cache : any) => {
       return cache.match(e.request).then(function (response) {
-        return response || fetch(e.request).then(function(response) {
-          return response;
-        });
+        return response || fetch(e.request)
       });
     })
   );

@@ -1491,6 +1491,31 @@ class Graphql {
 
 /***/ }),
 
+/***/ "./src/utils/graphqlSync.ts":
+/*!**********************************!*\
+  !*** ./src/utils/graphqlSync.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ GraphqlSync)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils */ "./src/utils/index.ts");
+
+class GraphqlSync {
+    graphql = new _utils__WEBPACK_IMPORTED_MODULE_0__.Graphql();
+    async delete(token, id) {
+        this.graphql.deletePost(token, id);
+    }
+    async update(token, post) {
+        this.graphql.updatePost(token, JSON.parse(post));
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/utils/index.ts":
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
@@ -1500,10 +1525,16 @@ class Graphql {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Graphql": () => (/* reexport safe */ _graphql__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "Storage": () => (/* reexport safe */ _storage__WEBPACK_IMPORTED_MODULE_1__["default"])
+/* harmony export */   "Storage": () => (/* reexport safe */ _storage__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   "Sync": () => (/* reexport safe */ _sync__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   "GraphqlSync": () => (/* reexport safe */ _graphqlSync__WEBPACK_IMPORTED_MODULE_3__["default"])
 /* harmony export */ });
 /* harmony import */ var _graphql__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./graphql */ "./src/utils/graphql.ts");
 /* harmony import */ var _storage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storage */ "./src/utils/storage.ts");
+/* harmony import */ var _sync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sync */ "./src/utils/sync.ts");
+/* harmony import */ var _graphqlSync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./graphqlSync */ "./src/utils/graphqlSync.ts");
+
+
 
 
 
@@ -1608,6 +1639,34 @@ class Storage {
         const dateString = Date.now().toString(36);
         const randomness = Math.random().toString(36).substr(2);
         return dateString + randomness;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/sync.ts":
+/*!***************************!*\
+  !*** ./src/utils/sync.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Sync)
+/* harmony export */ });
+class Sync {
+    async sendSync(tag) {
+        const res = await navigator.serviceWorker.ready;
+        res.sync.register(tag);
+    }
+    updatePost(token, post) {
+        const payLoad = `update?sync?${token}?sync?${JSON.stringify(post)}`;
+        this.sendSync(payLoad);
+    }
+    deletePost(token, id) {
+        const payLoad = `delete?sync?${token}?sync?${id}`;
+        this.sendSync(payLoad);
     }
 }
 
@@ -14530,15 +14589,18 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils */ "./src/utils/index.ts");
 
-const graphql = new _utils__WEBPACK_IMPORTED_MODULE_0__.Graphql();
-console.log(graphql);
-const cacheName = 'version1-3';
+const graphqlSync = new _utils__WEBPACK_IMPORTED_MODULE_0__.GraphqlSync();
+const cacheName = 'version2_1';
 const filesToCache = [
     '/',
     '/manifest.json',
-    '/vue_bundle.js',
+    '/main.js',
     '/images/lighthouse.png'
 ];
+self.addEventListener('sync', (e) => {
+    const [method, token, payLoad] = e.tag.split('?sync?');
+    e.waitUntil(graphqlSync[method](token, payLoad));
+});
 self.addEventListener('install', (e) => {
     console.log(cacheName, 'installed, remove all cache');
     caches.keys().then((cacheNames) => {
@@ -14556,9 +14618,7 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
     e.respondWith(caches.open(cacheName).then((cache) => {
         return cache.match(e.request).then(function (response) {
-            return response || fetch(e.request).then(function (response) {
-                return response;
-            });
+            return response || fetch(e.request);
         });
     }));
 });

@@ -29,13 +29,19 @@ export default defineComponent({
     },
     key(){
       return this.$store.state.info.username;
+    },
+    fileList(){
+      return this.$store.state.file.postList;
+    },
+    syncStorage(){
+      return this.$store.state.dependency.syncStorage;
     }
   },
   methods: {
     async select() {
       const nextPost = await this.tabStorage.getPost(this.key,this.post.id);
-     this.$store.dispatch('info/updatePost',nextPost);
-     this.$store.dispatch('editor/updateText',nextPost.text);
+     this.$store.dispatch('info/updatePost',this.post);
+     this.$store.dispatch('editor/updateText',nextPost?.text || this.post.text);
      this.insertTab();
     },
     async insertTab(){
@@ -43,15 +49,15 @@ export default defineComponent({
       await this.updateList();
     },
     async remove() {
-      await this.fileStorage.deletePost(this.token,this.post.id);
+      this.syncStorage.deletePost(this.token,this.post.id);
+      const nextList = this.fileList.filter((post)=> post.id !== this.post.id);
+      this.$store.dispatch('file/updatePostList',nextList);
       await this.tabStorage.deletePost(this.key,this.post.id);
       await this.updateList();
     },
     async updateList(){
       const nextTabList = await this.tabStorage.getPostList(this.key);
-      const nextFileList = await this.fileStorage.getPostList(this.token);
       this.$store.dispatch('tab/updatePostList',nextTabList);
-      this.$store.dispatch('file/updatePostList',nextFileList);
     }
   },
 });

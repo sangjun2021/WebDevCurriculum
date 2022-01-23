@@ -33,44 +33,73 @@ export default defineComponent({
     },
     post(){
       return this.$store.state.info.post;
-    }
+    },
+    isOnline(){
+      return this.$store.state.info.isOnline;
+    },
+    fileList(){
+      return this.$store.state.file.postList;
+    },
+    syncStorage(){
+      return this.$store.state.dependency.syncStorage;
+    },
    },
   methods: {
    clickEvent(name :string){
      this[name]();
    },
    async new(){
+     if(this.isOnline){
      const nextPost = await this.fileStorage.createPost(this.token,{title : 'untitled', text : ''});
      await this.tabStorage.insertFile(this.key,nextPost);
      this.updateList();
+     const nextList = [...this.fileList, nextPost];
+    this.$store.dispatch('file/updatePostList',nextList)
+     }else{
+      const nextPost = {id : Date.now().toString(36)+Math.random(), title : 'untitled', text : ""}
+      this.syncStorage.updatePost(this.token,nextPost);
+      await this.tabStorage.insertFile(this.key,nextPost);
+      this.updateList();
+      const nextList = [...this.fileList, nextPost];
+      this.$store.dispatch('file/updatePostList',nextList)
+     }
    },
    async updateList(){
-     const nextFileList = await this.fileStorage.getPostList(this.token);
      const nextTabList = await this.tabStorage.getPostList(this.key);
-     this.$store.dispatch('file/updatePostList',nextFileList);
      this.$store.dispatch('tab/updatePostList',nextTabList);
    },
    async save(){
-     console.log(this.post.title)
      if(this.post.title === 'untitled'){
        this.saveAs();
        return;
      }
-     await this.fileStorage.updatePost(this.token, this.post);
      await this.tabStorage.updatePost(this.key, {...this.post, isEdited : false});
+     if(this.isOnline) this.fileStorage.updatePost(this.token, this.post);
+     else this.syncStorage.update(this.token,this.post);
      this.updateList();
+     const nextList = this.fileList.map(post=> {
+       if(post.id !== this.post) return post;
+       return this.post;
+     })
+     this.$store.dispatch('file/updatePostList',nextList)
    },
    async saveAs(){
      try{
       const title = prompt('이름을 입력해주세요');
     if (!title) return;
-    const checking = await this.fileStorage.checkOverLap(title);
-    if (checking) throw new Error('중복된 제목입니다.');
-     await this.fileStorage.updatePost(this.token,{...this.post, title});
+    const checking = this.fileList.filter(post=> post.title === title);
+    if (checking.length) throw new Error('중복된 제목입니다.');
+       
+     if(this.isOnline)this.fileStorage.updatePost(this.token,{...this.post, title});
+     else this.syncStorage.updatePost(this.token,{...this.post,title});
      await this.tabStorage.updatePost(this.key,{...this.post,title, isEdited : false});
     this.updateList();
+       const nextList = this.fileList.map(post=> {
+       if(post.id !== this.post.id) return post;
+       return {...this.post, title};
+     })
+     this.$store.dispatch('file/updatePostList',nextList)
      }catch(e : any){
-       console.dir(e);
        alert(e.message);
      }
    },

@@ -12279,7 +12279,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nhtml,\nbody{\n  height: 100%;\n}\n#app {\n  display: flex;\n  height: 100%;\n}\n* {\n  box-sizing: border-box;\n}\nul,\nli {\n  padding-left: 0;\n  margin: 0;\n  list-style: none;\n}\n.left-sidebar {\n  border: 1px solid;\n  width: 300px;\n}\n.editor-container {\n  border: 1px solid;\n  flex-grow: 1;\n  display: flex;\n  flex-direction: column;\n}\n.tab-container {\n  height: 40px;\n  display: flex;\n  border-bottom: 1px solid;\n}\n", "",{"version":3,"sources":["webpack://./src/App.vue"],"names":[],"mappings":";AA0DA;;EAEE,YAAY;AACd;AACA;EACE,aAAa;EACb,YAAY;AACd;AAEA;EACE,sBAAsB;AACxB;AACA;;EAEE,eAAe;EACf,SAAS;EACT,gBAAgB;AAClB;AACA;EACE,iBAAiB;EACjB,YAAY;AACd;AACA;EACE,iBAAiB;EACjB,YAAY;EACZ,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,YAAY;EACZ,aAAa;EACb,wBAAwB;AAC1B","sourcesContent":["<template>\n  <aside class=\"left-sidebar\">\n    <MenuList/>\n    <Posts type=\"file\"/>\n  </aside>\n    <main class=\"editor-container\">\n      <nav class=\"tab-container\">\n        <Posts type=\"tab\"/>\n      </nav> \n      <Editor/>\n    </main>\n    <LoginModal/> \n</template>\n\n<script>\nimport { defineComponent } from 'vue'\nimport {Editor, MenuList, Posts, LoginModal} from '@/components'\nexport default defineComponent({\n  components: {\n    Editor,\n    MenuList,\n    Posts,\n    LoginModal\n  },\n  data(){\n    return {\n      fileStorage : this.$store.state.dependency.fileStorage,\n      tabStorage : this.$store.state.dependency.tabStorage\n    }\n  },\n  computed :{\n    token(){\n      return this.$store.state.info.token\n    },\n    post(){\n      return this.$store.state.info.post\n    }\n  },\n  mounted() {\n    this.initFileList();\n    this.initTabList();\n    this.initInfo();\n  },\n  methods: {\n    initFileList(){\n      console.log('파일리스트 초기화')\n    },\n    initTabList(){\n      console.log('탭리스트 초기화')\n    },\n    initInfo(){\n      console.log('유저정보,포스트 초기화');\n    }\n  },\n});\n</script>\n\n<style>\nhtml,\nbody{\n  height: 100%;\n}\n#app {\n  display: flex;\n  height: 100%;\n}\n\n* {\n  box-sizing: border-box;\n}\nul,\nli {\n  padding-left: 0;\n  margin: 0;\n  list-style: none;\n}\n.left-sidebar {\n  border: 1px solid;\n  width: 300px;\n}\n.editor-container {\n  border: 1px solid;\n  flex-grow: 1;\n  display: flex;\n  flex-direction: column;\n}\n.tab-container {\n  height: 40px;\n  display: flex;\n  border-bottom: 1px solid;\n}\n</style>\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nhtml,\nbody{\n  height: 100%;\n}\n#app {\n  display: flex;\n  height: 100%;\n}\n* {\n  box-sizing: border-box;\n}\nul,\nli {\n  padding-left: 0;\n  margin: 0;\n  list-style: none;\n}\n.left-sidebar {\n  border: 1px solid;\n  width: 300px;\n}\n.editor-container {\n  border: 1px solid;\n  flex-grow: 1;\n  display: flex;\n  flex-direction: column;\n}\n.tab-container {\n  height: 40px;\n  display: flex;\n  border-bottom: 1px solid;\n}\n", "",{"version":3,"sources":["webpack://./src/App.vue"],"names":[],"mappings":";AAmEA;;EAEE,YAAY;AACd;AACA;EACE,aAAa;EACb,YAAY;AACd;AAEA;EACE,sBAAsB;AACxB;AACA;;EAEE,eAAe;EACf,SAAS;EACT,gBAAgB;AAClB;AACA;EACE,iBAAiB;EACjB,YAAY;AACd;AACA;EACE,iBAAiB;EACjB,YAAY;EACZ,aAAa;EACb,sBAAsB;AACxB;AACA;EACE,YAAY;EACZ,aAAa;EACb,wBAAwB;AAC1B","sourcesContent":["<template>\n  <aside class=\"left-sidebar\">\n    <MenuList/>\n    <Posts type=\"file\"/>\n  </aside>\n    <main class=\"editor-container\">\n      <nav class=\"tab-container\">\n        <Posts type=\"tab\"/>\n      </nav> \n      <Editor/>\n    </main>\n    <LoginModal/> \n</template>\n\n<script>\nimport { defineComponent } from 'vue'\nimport {Editor, MenuList, Posts, LoginModal} from '@/components'\nexport default defineComponent({\n  components: {\n    Editor,\n    MenuList,\n    Posts,\n    LoginModal\n  },\n  data(){\n    return {\n      fileStorage : this.$store.state.dependency.fileStorage,\n      tabStorage : this.$store.state.dependency.tabStorage\n    }\n  },\n  computed :{\n    token(){\n      return this.$store.state.info.token\n    },\n    post(){\n      return this.$store.state.info.post\n    },\n    isOnline(){\n      return this.$store.state.info.isOnline\n    }\n  },\n  mounted() {\n    this.initFileList();\n    this.initTabList();\n    this.initInfo();\n    window.addEventListener('online',()=>{\n      this.$store.dispatch('info/connect');\n    });\n    window.addEventListener('offline',()=>{\n      this.$store.dispatch('info/disConnect');\n    })\n  },\n  methods: {\n    initFileList(){\n      console.log('파일리스트 초기화')\n    },\n    initTabList(){\n      console.log('탭리스트 초기화')\n    },\n    initInfo(){\n      console.log('유저정보,포스트 초기화');\n    }\n  },\n});\n</script>\n\n<style>\nhtml,\nbody{\n  height: 100%;\n}\n#app {\n  display: flex;\n  height: 100%;\n}\n\n* {\n  box-sizing: border-box;\n}\nul,\nli {\n  padding-left: 0;\n  margin: 0;\n  list-style: none;\n}\n.left-sidebar {\n  border: 1px solid;\n  width: 300px;\n}\n.editor-container {\n  border: 1px solid;\n  flex-grow: 1;\n  display: flex;\n  flex-direction: column;\n}\n.tab-container {\n  height: 40px;\n  display: flex;\n  border-bottom: 1px solid;\n}\n</style>\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -12333,7 +12333,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/File.vue"],"names":[],"mappings":";AA4DA;EACE,8BAA8B;AAChC;AACA;EACE,gBAAgB;EAChB,YAAY;EACZ,cAAc;EACd,kBAAkB;EAClB,qBAAqB;EACrB,WAAW;EACX,YAAY;AACd;AACA;EACE,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,YAAY;EACZ,cAAc;EACd,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB","sourcesContent":["<template>\n  <div\n    class=\"post\"\n    :class=\"{selected : post?.isSelected }\"\n    @click.stop=\"select\"\n  >\n    <span :class=\"{edited : post?.isEdited}\" class=\"title\">{{ post?.title }}</span>\n    <button @click.stop=\"remove\">\n      X\n    </button>\n  </div>\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue'\nexport default defineComponent({\n  props: {\n    post: Object\n  },\n  computed:{\n    fileStorage(){\n       return this.$store.state.dependency.fileStorage\n     },\n    tabStorage(){\n       return this.$store.state.dependency.tabStorage\n     },\n    token(){\n      return this.$store.state.info.token;\n    },\n    key(){\n      return this.$store.state.info.username;\n    }\n  },\n  methods: {\n    async select() {\n      const nextPost = await this.tabStorage.getPost(this.key,this.post.id);\n     this.$store.dispatch('info/updatePost',nextPost);\n     this.$store.dispatch('editor/updateText',nextPost.text);\n     this.insertTab();\n    },\n    async insertTab(){\n      await this.tabStorage.insertFile(this.key,this.post);\n      await this.updateList();\n    },\n    async remove() {\n      await this.fileStorage.deletePost(this.token,this.post.id);\n      await this.tabStorage.deletePost(this.key,this.post.id);\n      await this.updateList();\n    },\n    async updateList(){\n      const nextTabList = await this.tabStorage.getPostList(this.key);\n      const nextFileList = await this.fileStorage.getPostList(this.token);\n      this.$store.dispatch('tab/updatePostList',nextTabList);\n      this.$store.dispatch('file/updatePostList',nextFileList);\n    }\n  },\n});\n</script>\n\n<style>\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/File.vue"],"names":[],"mappings":";AAkEA;EACE,8BAA8B;AAChC;AACA;EACE,gBAAgB;EAChB,YAAY;EACZ,cAAc;EACd,kBAAkB;EAClB,qBAAqB;EACrB,WAAW;EACX,YAAY;AACd;AACA;EACE,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,YAAY;EACZ,cAAc;EACd,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB","sourcesContent":["<template>\n  <div\n    class=\"post\"\n    :class=\"{selected : post?.isSelected }\"\n    @click.stop=\"select\"\n  >\n    <span :class=\"{edited : post?.isEdited}\" class=\"title\">{{ post?.title }}</span>\n    <button @click.stop=\"remove\">\n      X\n    </button>\n  </div>\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue'\nexport default defineComponent({\n  props: {\n    post: Object\n  },\n  computed:{\n    fileStorage(){\n       return this.$store.state.dependency.fileStorage\n     },\n    tabStorage(){\n       return this.$store.state.dependency.tabStorage\n     },\n    token(){\n      return this.$store.state.info.token;\n    },\n    key(){\n      return this.$store.state.info.username;\n    },\n    fileList(){\n      return this.$store.state.file.postList;\n    },\n    syncStorage(){\n      return this.$store.state.dependency.syncStorage;\n    }\n  },\n  methods: {\n    async select() {\n      const nextPost = await this.tabStorage.getPost(this.key,this.post.id);\n     this.$store.dispatch('info/updatePost',this.post);\n     this.$store.dispatch('editor/updateText',nextPost?.text || this.post.text);\n     this.insertTab();\n    },\n    async insertTab(){\n      await this.tabStorage.insertFile(this.key,this.post);\n      await this.updateList();\n    },\n    async remove() {\n      this.syncStorage.deletePost(this.token,this.post.id);\n      const nextList = this.fileList.filter((post)=> post.id !== this.post.id);\n      this.$store.dispatch('file/updatePostList',nextList);\n      await this.tabStorage.deletePost(this.key,this.post.id);\n      await this.updateList();\n    },\n    async updateList(){\n      const nextTabList = await this.tabStorage.getPostList(this.key);\n      this.$store.dispatch('tab/updatePostList',nextTabList);\n    }\n  },\n});\n</script>\n\n<style>\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -12387,7 +12387,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.button-container {\n  margin: 0;\n  height: 40px;\n  border-bottom: 1px solid;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/MenuList.vue"],"names":[],"mappings":";AA0FA;EACE,SAAS;EACT,YAAY;EACZ,wBAAwB;EACxB,aAAa;EACb,6BAA6B;EAC7B,mBAAmB;AACrB","sourcesContent":["<template>\n  <ul class=\"button-container\">\n  <li v-for=\"menu in menuList\" :key=\"menu\">\n    <Menu :name=\"menu\" :clickEvent=\"clickEvent\"/>\n  </li>\n  </ul>\n</template>\n\n<script lang=\"ts\">\n  import Menu from \"./Menu.vue\"\n  import { defineComponent } from 'vue'\nexport default defineComponent({\n  components: {\n    Menu,\n  },\n  data(){\n    return {\n      menuList : ['new','save','saveAs','login','logout']\n    }\n  },\n     computed:{\n     fileStorage(){\n       return this.$store.state.dependency.fileStorage\n     },\n     tabStorage(){\n       return this.$store.state.dependency.tabStorage\n     },\n    token(){\n       return this.$store.state.info.token\n    },\n    key(){\n      return this.$store.state.info.username;\n    },\n    post(){\n      return this.$store.state.info.post;\n    }\n   },\n  methods: {\n   clickEvent(name :string){\n     this[name]();\n   },\n   async new(){\n     const nextPost = await this.fileStorage.createPost(this.token,{title : 'untitled', text : ''});\n     await this.tabStorage.insertFile(this.key,nextPost);\n     this.updateList();\n   },\n   async updateList(){\n     const nextFileList = await this.fileStorage.getPostList(this.token);\n     const nextTabList = await this.tabStorage.getPostList(this.key);\n     this.$store.dispatch('file/updatePostList',nextFileList);\n     this.$store.dispatch('tab/updatePostList',nextTabList);\n   },\n   async save(){\n     console.log(this.post.title)\n     if(this.post.title === 'untitled'){\n       this.saveAs();\n       return;\n     }\n     await this.fileStorage.updatePost(this.token, this.post);\n     await this.tabStorage.updatePost(this.key, {...this.post, isEdited : false});\n     this.updateList();\n   },\n   async saveAs(){\n     try{\n      const title = prompt('이름을 입력해주세요');\n    if (!title) return;\n    const checking = await this.fileStorage.checkOverLap(title);\n    if (checking) throw new Error('중복된 제목입니다.');\n     await this.fileStorage.updatePost(this.token,{...this.post, title});\n     await this.tabStorage.updatePost(this.key,{...this.post,title, isEdited : false});\n    this.updateList();\n     }catch(e : any){\n       console.dir(e);\n       alert(e.message);\n     }\n   },\n   async login(){\n     this.$store.dispatch('modal/modalOn')\n   },\n   logout(){\n     this.$store.dispatch('file/logout');\n     this.$store.dispatch('tab/logout');\n     this.$store.dispatch('editor/logout');\n     this.$store.dispatch('info/logout');\n   }\n  }\n})\n</script>\n\n<style>\n.button-container {\n  margin: 0;\n  height: 40px;\n  border-bottom: 1px solid;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.button-container {\n  margin: 0;\n  height: 40px;\n  border-bottom: 1px solid;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/MenuList.vue"],"names":[],"mappings":";AAuHA;EACE,SAAS;EACT,YAAY;EACZ,wBAAwB;EACxB,aAAa;EACb,6BAA6B;EAC7B,mBAAmB;AACrB","sourcesContent":["<template>\n  <ul class=\"button-container\">\n  <li v-for=\"menu in menuList\" :key=\"menu\">\n    <Menu :name=\"menu\" :clickEvent=\"clickEvent\"/>\n  </li>\n  </ul>\n</template>\n\n<script lang=\"ts\">\n  import Menu from \"./Menu.vue\"\n  import { defineComponent } from 'vue'\nexport default defineComponent({\n  components: {\n    Menu,\n  },\n  data(){\n    return {\n      menuList : ['new','save','saveAs','login','logout']\n    }\n  },\n     computed:{\n     fileStorage(){\n       return this.$store.state.dependency.fileStorage\n     },\n     tabStorage(){\n       return this.$store.state.dependency.tabStorage\n     },\n    token(){\n       return this.$store.state.info.token\n    },\n    key(){\n      return this.$store.state.info.username;\n    },\n    post(){\n      return this.$store.state.info.post;\n    },\n    isOnline(){\n      return this.$store.state.info.isOnline;\n    },\n    fileList(){\n      return this.$store.state.file.postList;\n    },\n    syncStorage(){\n      return this.$store.state.dependency.syncStorage;\n    },\n   },\n  methods: {\n   clickEvent(name :string){\n     this[name]();\n   },\n   async new(){\n     if(this.isOnline){\n     const nextPost = await this.fileStorage.createPost(this.token,{title : 'untitled', text : ''});\n     await this.tabStorage.insertFile(this.key,nextPost);\n     this.updateList();\n     const nextList = [...this.fileList, nextPost];\n    this.$store.dispatch('file/updatePostList',nextList)\n     }else{\n      const nextPost = {id : Date.now().toString(36)+Math.random(), title : 'untitled', text : \"\"}\n      this.syncStorage.updatePost(this.token,nextPost);\n      await this.tabStorage.insertFile(this.key,nextPost);\n      this.updateList();\n      const nextList = [...this.fileList, nextPost];\n      this.$store.dispatch('file/updatePostList',nextList)\n     }\n   },\n   async updateList(){\n     const nextTabList = await this.tabStorage.getPostList(this.key);\n     this.$store.dispatch('tab/updatePostList',nextTabList);\n   },\n   async save(){\n     if(this.post.title === 'untitled'){\n       this.saveAs();\n       return;\n     }\n     await this.tabStorage.updatePost(this.key, {...this.post, isEdited : false});\n     if(this.isOnline) this.fileStorage.updatePost(this.token, this.post);\n     else this.syncStorage.update(this.token,this.post);\n     this.updateList();\n     const nextList = this.fileList.map(post=> {\n       if(post.id !== this.post) return post;\n       return this.post;\n     })\n     this.$store.dispatch('file/updatePostList',nextList)\n   },\n   async saveAs(){\n     try{\n      const title = prompt('이름을 입력해주세요');\n    if (!title) return;\n    const checking = this.fileList.filter(post=> post.title === title);\n    if (checking.length) throw new Error('중복된 제목입니다.');\n       \n     if(this.isOnline)this.fileStorage.updatePost(this.token,{...this.post, title});\n     else this.syncStorage.updatePost(this.token,{...this.post,title});\n     await this.tabStorage.updatePost(this.key,{...this.post,title, isEdited : false});\n    this.updateList();\n       const nextList = this.fileList.map(post=> {\n       if(post.id !== this.post.id) return post;\n       return {...this.post, title};\n     })\n     this.$store.dispatch('file/updatePostList',nextList)\n     }catch(e : any){\n       alert(e.message);\n     }\n   },\n   async login(){\n     this.$store.dispatch('modal/modalOn')\n   },\n   logout(){\n     this.$store.dispatch('file/logout');\n     this.$store.dispatch('tab/logout');\n     this.$store.dispatch('editor/logout');\n     this.$store.dispatch('info/logout');\n   }\n  }\n})\n</script>\n\n<style>\n.button-container {\n  margin: 0;\n  height: 40px;\n  border-bottom: 1px solid;\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -12441,7 +12441,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/Tab.vue"],"names":[],"mappings":";AAgDA;EACE,8BAA8B;AAChC;AACA;EACE,gBAAgB;EAChB,YAAY;EACZ,cAAc;EACd,kBAAkB;EAClB,qBAAqB;EACrB,WAAW;EACX,YAAY;AACd;AACA;EACE,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,YAAY;EACZ,cAAc;EACd,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB","sourcesContent":["<template>\n  <div\n    class=\"post\"\n    :class=\"{selected : post?.isSelected }\"\n    @click.stop=\"select\"\n  >\n    <span :class=\"{edited : post?.isEdited}\" class=\"title\">{{ post?.title }}</span>\n    <button @click.stop=\"remove\">\n      X\n    </button>\n  </div>\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue'\nexport default defineComponent({\n  props: {\n    post: Object\n  },\n  computed:{\n    key(){\n      return this.$store.state.info.username;\n    },\n    fileStorage(){\n      return this.$store.state.dependency.fileStorage;\n    },\n    tabStorage(){\n      return this.$store.state.dependency.tabStorage\n    }\n  },\n  methods: {\n    async select() {\n     this.$store.dispatch('info/updatePost',this.post);\n     this.$store.dispatch('editor/updateText',this.post.text);\n    },\n    async remove() {\n      await this.tabStorage.deletePost(this.key,this.post.id);\n      await this.updateList();\n    },\n    async updateList(){\n      const nextTabList = await this.tabStorage.getPostList(this.key);\n      this.$store.dispatch('tab/updatePostList',nextTabList);\n    }\n  },\n});\n</script>\n\n<style>\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n", "",{"version":3,"sources":["webpack://./src/components/Tab.vue"],"names":[],"mappings":";AA6CA;EACE,8BAA8B;AAChC;AACA;EACE,gBAAgB;EAChB,YAAY;EACZ,cAAc;EACd,kBAAkB;EAClB,qBAAqB;EACrB,WAAW;EACX,YAAY;AACd;AACA;EACE,aAAa;EACb,mBAAmB;AACrB;AACA;EACE,YAAY;EACZ,cAAc;EACd,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB","sourcesContent":["<template>\n  <div\n    class=\"post\"\n    :class=\"{selected : post?.isSelected }\"\n    @click.stop=\"select\"\n  >\n    <span :class=\"{edited : post?.isEdited}\" class=\"title\">{{ post?.title }}</span>\n    <button @click.stop=\"remove\">\n      X\n    </button>\n  </div>\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue'\nexport default defineComponent({\n  props: {\n    post: Object\n  },\n  computed:{\n    key(){\n      return this.$store.state.info.username;\n    },\n    tabStorage(){\n      return this.$store.state.dependency.tabStorage\n    }\n  },\n  methods: {\n    async select() {\n     this.$store.dispatch('info/updatePost',this.post);\n     this.$store.dispatch('editor/updateText',this.post.text);\n    },\n    async remove() {\n      await this.tabStorage.deletePost(this.key,this.post.id);\n      await this.updateList();\n    },\n    async updateList(){\n      const nextTabList = await this.tabStorage.getPostList(this.key);\n      this.$store.dispatch('tab/updatePostList',nextTabList);\n    }\n  },\n});\n</script>\n\n<style>\n.selected {\n  background: rgb(217, 216, 213);\n}\n.edited::after {\n  margin-left: 4px;\n  content: \" \";\n  display: block;\n  border-radius: 50%;\n  background-color: red;\n  width: 12px;\n  height: 12px;\n}\n.title {\n  display: flex;\n  align-items: center;\n}\n.post {\n  height: 100%;\n  padding: 0 4px;\n  flex-grow: 1;\n  flex-shrink: 1;\n  border: 1px solid;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n</style>\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13508,13 +13508,19 @@ __webpack_require__.r(__webpack_exports__);
         },
         key() {
             return this.$store.state.info.username;
+        },
+        fileList() {
+            return this.$store.state.file.postList;
+        },
+        syncStorage() {
+            return this.$store.state.dependency.syncStorage;
         }
     },
     methods: {
         async select() {
             const nextPost = await this.tabStorage.getPost(this.key, this.post.id);
-            this.$store.dispatch('info/updatePost', nextPost);
-            this.$store.dispatch('editor/updateText', nextPost.text);
+            this.$store.dispatch('info/updatePost', this.post);
+            this.$store.dispatch('editor/updateText', nextPost?.text || this.post.text);
             this.insertTab();
         },
         async insertTab() {
@@ -13522,15 +13528,15 @@ __webpack_require__.r(__webpack_exports__);
             await this.updateList();
         },
         async remove() {
-            await this.fileStorage.deletePost(this.token, this.post.id);
+            this.syncStorage.deletePost(this.token, this.post.id);
+            const nextList = this.fileList.filter((post) => post.id !== this.post.id);
+            this.$store.dispatch('file/updatePostList', nextList);
             await this.tabStorage.deletePost(this.key, this.post.id);
             await this.updateList();
         },
         async updateList() {
             const nextTabList = await this.tabStorage.getPostList(this.key);
-            const nextFileList = await this.fileStorage.getPostList(this.token);
             this.$store.dispatch('tab/updatePostList', nextTabList);
-            this.$store.dispatch('file/updatePostList', nextFileList);
         }
     },
 }));
@@ -13679,47 +13685,82 @@ __webpack_require__.r(__webpack_exports__);
         },
         post() {
             return this.$store.state.info.post;
-        }
+        },
+        isOnline() {
+            return this.$store.state.info.isOnline;
+        },
+        fileList() {
+            return this.$store.state.file.postList;
+        },
+        syncStorage() {
+            return this.$store.state.dependency.syncStorage;
+        },
     },
     methods: {
         clickEvent(name) {
             this[name]();
         },
         async new() {
-            const nextPost = await this.fileStorage.createPost(this.token, { title: 'untitled', text: '' });
-            await this.tabStorage.insertFile(this.key, nextPost);
-            this.updateList();
+            if (this.isOnline) {
+                const nextPost = await this.fileStorage.createPost(this.token, { title: 'untitled', text: '' });
+                await this.tabStorage.insertFile(this.key, nextPost);
+                this.updateList();
+                const nextList = [...this.fileList, nextPost];
+                this.$store.dispatch('file/updatePostList', nextList);
+            }
+            else {
+                const nextPost = { id: Date.now().toString(36) + Math.random(), title: 'untitled', text: "" };
+                this.syncStorage.updatePost(this.token, nextPost);
+                await this.tabStorage.insertFile(this.key, nextPost);
+                this.updateList();
+                const nextList = [...this.fileList, nextPost];
+                this.$store.dispatch('file/updatePostList', nextList);
+            }
         },
         async updateList() {
-            const nextFileList = await this.fileStorage.getPostList(this.token);
             const nextTabList = await this.tabStorage.getPostList(this.key);
-            this.$store.dispatch('file/updatePostList', nextFileList);
             this.$store.dispatch('tab/updatePostList', nextTabList);
         },
         async save() {
-            console.log(this.post.title);
             if (this.post.title === 'untitled') {
                 this.saveAs();
                 return;
             }
-            await this.fileStorage.updatePost(this.token, this.post);
             await this.tabStorage.updatePost(this.key, { ...this.post, isEdited: false });
+            if (this.isOnline)
+                this.fileStorage.updatePost(this.token, this.post);
+            else
+                this.syncStorage.update(this.token, this.post);
             this.updateList();
+            const nextList = this.fileList.map(post => {
+                if (post.id !== this.post)
+                    return post;
+                return this.post;
+            });
+            this.$store.dispatch('file/updatePostList', nextList);
         },
         async saveAs() {
             try {
                 const title = prompt('이름을 입력해주세요');
                 if (!title)
                     return;
-                const checking = await this.fileStorage.checkOverLap(title);
-                if (checking)
+                const checking = this.fileList.filter(post => post.title === title);
+                if (checking.length)
                     throw new Error('중복된 제목입니다.');
-                await this.fileStorage.updatePost(this.token, { ...this.post, title });
+                if (this.isOnline)
+                    this.fileStorage.updatePost(this.token, { ...this.post, title });
+                else
+                    this.syncStorage.updatePost(this.token, { ...this.post, title });
                 await this.tabStorage.updatePost(this.key, { ...this.post, title, isEdited: false });
                 this.updateList();
+                const nextList = this.fileList.map(post => {
+                    if (post.id !== this.post.id)
+                        return post;
+                    return { ...this.post, title };
+                });
+                this.$store.dispatch('file/updatePostList', nextList);
             }
             catch (e) {
-                console.dir(e);
                 alert(e.message);
             }
         },
@@ -13795,9 +13836,6 @@ __webpack_require__.r(__webpack_exports__);
     computed: {
         key() {
             return this.$store.state.info.username;
-        },
-        fileStorage() {
-            return this.$store.state.dependency.fileStorage;
         },
         tabStorage() {
             return this.$store.state.dependency.tabStorage;
@@ -14104,7 +14142,8 @@ __webpack_require__.r(__webpack_exports__);
     state() {
         return {
             fileStorage: new _utils__WEBPACK_IMPORTED_MODULE_0__.Graphql(),
-            tabStorage: new _utils__WEBPACK_IMPORTED_MODULE_0__.Storage(window.localStorage)
+            tabStorage: new _utils__WEBPACK_IMPORTED_MODULE_0__.Storage(window.localStorage),
+            syncStorage: new _utils__WEBPACK_IMPORTED_MODULE_0__.Sync(),
         };
     }
 });
@@ -14244,7 +14283,8 @@ __webpack_require__.r(__webpack_exports__);
         return {
             username: '',
             token: '',
-            post: {}
+            post: {},
+            isOnline: true
         };
     },
     mutations: {
@@ -14256,9 +14296,18 @@ __webpack_require__.r(__webpack_exports__);
         },
         setPost(state, nextState) {
             state.post = nextState;
+        },
+        setIsOnline(state, nextState) {
+            state.isOnline = nextState;
         }
     },
     actions: {
+        connect({ commit }) {
+            commit('setIsOnline', true);
+        },
+        disConnect({ commit }) {
+            commit('setIsOnline', false);
+        },
         updateUsername({ commit }, nextState) {
             commit('setUsername', nextState);
         },
@@ -14556,6 +14605,32 @@ class Graphql {
 
 /***/ }),
 
+/***/ "./src/utils/graphqlSync.ts":
+/*!**********************************!*\
+  !*** ./src/utils/graphqlSync.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ GraphqlSync)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/utils */ "./src/utils/index.ts");
+
+class GraphqlSync {
+    graphql = new _utils__WEBPACK_IMPORTED_MODULE_0__.Graphql();
+    async delete(token, id) {
+        this.graphql.deletePost(token, id);
+    }
+    async update(token, post) {
+        this.graphql.updatePost(token, JSON.parse(post));
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/utils/index.ts":
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!
@@ -14566,10 +14641,16 @@ class Graphql {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Graphql": () => (/* reexport safe */ _graphql__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "Storage": () => (/* reexport safe */ _storage__WEBPACK_IMPORTED_MODULE_1__["default"])
+/* harmony export */   "Storage": () => (/* reexport safe */ _storage__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   "Sync": () => (/* reexport safe */ _sync__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   "GraphqlSync": () => (/* reexport safe */ _graphqlSync__WEBPACK_IMPORTED_MODULE_3__["default"])
 /* harmony export */ });
 /* harmony import */ var _graphql__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./graphql */ "./src/utils/graphql.ts");
 /* harmony import */ var _storage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storage */ "./src/utils/storage.ts");
+/* harmony import */ var _sync__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sync */ "./src/utils/sync.ts");
+/* harmony import */ var _graphqlSync__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./graphqlSync */ "./src/utils/graphqlSync.ts");
+
+
 
 
 
@@ -14675,6 +14756,35 @@ class Storage {
         const dateString = Date.now().toString(36);
         const randomness = Math.random().toString(36).substr(2);
         return dateString + randomness;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/sync.ts":
+/*!***************************!*\
+  !*** ./src/utils/sync.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Sync)
+/* harmony export */ });
+class Sync {
+    async sendSync(tag) {
+        const res = await navigator.serviceWorker.ready;
+        res.sync.register(tag);
+    }
+    updatePost(token, post) {
+        const payLoad = `update?sync?${token}?sync?${JSON.stringify(post)}`;
+        this.sendSync(payLoad);
+    }
+    deletePost(token, id) {
+        const payLoad = `delete?sync?${token}?sync?${id}`;
+        this.sendSync(payLoad);
     }
 }
 
@@ -15046,12 +15156,21 @@ __webpack_require__.r(__webpack_exports__);
     },
     post(){
       return this.$store.state.info.post
+    },
+    isOnline(){
+      return this.$store.state.info.isOnline
     }
   },
   mounted() {
     this.initFileList();
     this.initTabList();
     this.initInfo();
+    window.addEventListener('online',()=>{
+      this.$store.dispatch('info/connect');
+    });
+    window.addEventListener('offline',()=>{
+      this.$store.dispatch('info/disConnect');
+    })
   },
   methods: {
     initFileList(){
